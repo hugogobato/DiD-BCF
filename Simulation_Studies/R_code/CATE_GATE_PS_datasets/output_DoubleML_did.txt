@@ -1,0 +1,78 @@
+linearity_degree=1 
+Mean RMSE for 100 simulations: 5.091558
+Standard Deviation RMSE for 100 simulations: 18.294235
+Mean MAE for 100 simulations: 3.019090
+Standard Deviation MAE for 100 simulations: 7.224523
+Mean MAPE for 100 simulations: 0.957154
+Standard Deviation MAPE for 100 simulations: 2.466332
+Mean RMSE for 100 simulations for group 1: 5.591430
+Standard Deviation RMSE for 100 simulations for group 1: 23.215542
+Mean MAE for 100 simulations for group 1: 3.649831
+Standard Deviation MAE for 100 simulations for group 1: 11.889354
+Mean MAPE for 100 simulations for group 1: 1.120770
+Standard Deviation MAPE for 100 simulations for group 1: 3.627509
+Mean RMSE for 100 simulations for group 2: 2.315075
+Standard Deviation RMSE for 100 simulations for group 2: 1.310711
+Mean MAE for 100 simulations for group 2: 1.868867
+Standard Deviation MAE for 100 simulations for group 2: 0.926641
+Mean MAPE for 100 simulations for group 2: 0.563574
+Standard Deviation MAPE for 100 simulations for group 2: 0.254857
+Mean RMSE for 100 simulations for group 3: 2.612747
+Standard Deviation RMSE for 100 simulations for group 3: 1.308837
+Mean MAE for 100 simulations for group 3: 2.141322
+Standard Deviation MAE for 100 simulations for group 3: 0.970067
+Mean MAPE for 100 simulations for group 3: 0.692384
+Standard Deviation MAPE for 100 simulations for group 3: 0.356229
+
+linearity_degree=2 
+Mean RMSE for 100 simulations: 10.566071
+Standard Deviation RMSE for 100 simulations: 16.251480
+Mean MAE for 100 simulations: 7.560840
+Standard Deviation MAE for 100 simulations: 7.462799
+Mean MAPE for 100 simulations: 2.392110
+Standard Deviation MAPE for 100 simulations: 2.657719
+Mean RMSE for 100 simulations for group 1: 10.923351
+Standard Deviation RMSE for 100 simulations for group 1: 20.096185
+Mean MAE for 100 simulations for group 1: 8.317406
+Standard Deviation MAE for 100 simulations for group 1: 11.255604
+Mean MAPE for 100 simulations for group 1: 2.580681
+Standard Deviation MAPE for 100 simulations for group 1: 3.570519
+Mean RMSE for 100 simulations for group 2: 6.820229
+Standard Deviation RMSE for 100 simulations for group 2: 3.666360
+Mean MAE for 100 simulations for group 2: 5.762397
+Standard Deviation MAE for 100 simulations for group 2: 2.893693
+Mean MAPE for 100 simulations for group 2: 1.804256
+Standard Deviation MAPE for 100 simulations for group 2: 1.018369
+Mean RMSE for 100 simulations for group 3: 7.905034
+Standard Deviation RMSE for 100 simulations for group 3: 4.426197
+Mean MAE for 100 simulations for group 3: 6.484755
+Standard Deviation MAE for 100 simulations for group 3: 3.106664
+Mean MAPE for 100 simulations for group 3: 2.204416
+Standard Deviation MAPE for 100 simulations for group 3: 1.636709
+
+linearity_degree=3 
+Mean RMSE for 100 simulations: 8.994288
+Standard Deviation RMSE for 100 simulations: 6.453738
+Mean MAE for 100 simulations: 6.824801
+Standard Deviation MAE for 100 simulations: 3.998001
+Mean MAPE for 100 simulations: 1.278152
+Standard Deviation MAPE for 100 simulations: 0.829468
+Mean RMSE for 100 simulations for group 1: 8.458888
+Standard Deviation RMSE for 100 simulations for group 1: 6.655696
+Mean MAE for 100 simulations for group 1: 7.025527
+Standard Deviation MAE for 100 simulations for group 1: 5.568446
+Mean MAPE for 100 simulations for group 1: 1.320326
+Standard Deviation MAPE for 100 simulations for group 1: 1.043711
+Mean RMSE for 100 simulations for group 2: 7.690785
+Standard Deviation RMSE for 100 simulations for group 2: 8.818629
+Mean MAE for 100 simulations for group 2: 6.101525
+Standard Deviation MAE for 100 simulations for group 2: 4.882729
+Mean MAPE for 100 simulations for group 2: 1.188378
+Standard Deviation MAPE for 100 simulations for group 2: 1.216212
+Mean RMSE for 100 simulations for group 3: 7.618872
+Standard Deviation RMSE for 100 simulations for group 3: 3.604172
+Mean MAE for 100 simulations for group 3: 6.282130
+Standard Deviation MAE for 100 simulations for group 3: 2.819814
+Mean MAPE for 100 simulations for group 3: 1.116301
+Standard Deviation MAPE for 100 simulations for group 3: 0.653057
+
