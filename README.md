@@ -2,7 +2,7 @@
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-This is the Github Repository for the paper "Forests for Differences: Robust Causal Inference Beyond Parametric DiD".
+This is the Github Repository for the paper "Forests for Differences: Robust Causal Inference Beyond Parametric DiD" (https://doi.org/10.48550/arXiv.2505.09706).
 
 ## Paper Abstract
 
