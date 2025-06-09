@@ -1,0 +1,84 @@
+linearity_degree=1 
+Number of iterations (out of 100) with at least two p-values above 0.05 (i.e., we assume that the Parallel Trend Assumption holds): 0
+Mean RMSE for 100 simulations: 0.855529
+Standard Deviation RMSE for 100 simulations: 0.036700
+Mean MAE for 100 simulations: 0.738722
+Standard Deviation MAE for 100 simulations: 0.039202
+Mean MAPE for 100 simulations: 1.395719
+Standard Deviation MAPE for 100 simulations: 0.238444
+Mean RMSE for 100 simulations for group 1: 0.898900
+Standard Deviation RMSE for 100 simulations for group 1: 0.037299
+Mean MAE for 100 simulations for group 1: 0.788966
+Standard Deviation MAE for 100 simulations for group 1: 0.024740
+Mean MAPE for 100 simulations for group 1: 1.390581
+Standard Deviation MAPE for 100 simulations for group 1: 0.234924
+Mean RMSE for 100 simulations for group 2: 0.806599
+Standard Deviation RMSE for 100 simulations for group 2: 0.053161
+Mean MAE for 100 simulations for group 2: 0.685333
+Standard Deviation MAE for 100 simulations for group 2: 0.065161
+Mean MAPE for 100 simulations for group 2: 1.420853
+Standard Deviation MAPE for 100 simulations for group 2: 0.319626
+Mean RMSE for 100 simulations for group 3: 0.703423
+Standard Deviation RMSE for 100 simulations for group 3: 0.072764
+Mean MAE for 100 simulations for group 3: 0.586427
+Standard Deviation MAE for 100 simulations for group 3: 0.100910
+Mean MAPE for 100 simulations for group 3: 1.380847
+Standard Deviation MAPE for 100 simulations for group 3: 0.341646
+Metrics data saved to sheet 'Metrics' in synthdid_CATE_GATE_PS_and_PValues_linearity_degree=1.xlsx
+P-Values data saved to sheet 'P_Values' in synthdid_CATE_GATE_PS_and_PValues_linearity_degree=1.xlsx
+linearity_degree=2 
+Number of iterations (out of 100) with at least two p-values above 0.05 (i.e., we assume that the Parallel Trend Assumption holds): 0
+Mean RMSE for 100 simulations: 1.092908
+Standard Deviation RMSE for 100 simulations: 0.320419
+Mean MAE for 100 simulations: 0.914857
+Standard Deviation MAE for 100 simulations: 0.306364
+Mean MAPE for 100 simulations: 1.796141
+Standard Deviation MAPE for 100 simulations: 0.885908
+Mean RMSE for 100 simulations for group 1: 1.129697
+Standard Deviation RMSE for 100 simulations for group 1: 0.317469
+Mean MAE for 100 simulations for group 1: 0.950280
+Standard Deviation MAE for 100 simulations for group 1: 0.290744
+Mean MAPE for 100 simulations for group 1: 1.801772
+Standard Deviation MAPE for 100 simulations for group 1: 0.898205
+Mean RMSE for 100 simulations for group 2: 1.050744
+Standard Deviation RMSE for 100 simulations for group 2: 0.327767
+Mean MAE for 100 simulations for group 2: 0.878038
+Standard Deviation MAE for 100 simulations for group 2: 0.329129
+Mean MAPE for 100 simulations for group 2: 1.809414
+Standard Deviation MAPE for 100 simulations for group 2: 0.948045
+Mean RMSE for 100 simulations for group 3: 0.963017
+Standard Deviation RMSE for 100 simulations for group 3: 0.358113
+Mean MAE for 100 simulations for group 3: 0.807616
+Standard Deviation MAE for 100 simulations for group 3: 0.386774
+Mean MAPE for 100 simulations for group 3: 1.702268
+Standard Deviation MAPE for 100 simulations for group 3: 0.787023
+Metrics data saved to sheet 'Metrics' in synthdid_CATE_GATE_PS_and_PValues_linearity_degree=2.xlsx
+P-Values data saved to sheet 'P_Values' in synthdid_CATE_GATE_PS_and_PValues_linearity_degree=2.xlsx
+linearity_degree=3 
+Number of iterations (out of 100) with at least two p-values above 0.05 (i.e., we assume that the Parallel Trend Assumption holds): 0
+Mean RMSE for 100 simulations: 1.127869
+Standard Deviation RMSE for 100 simulations: 0.394795
+Mean MAE for 100 simulations: 0.949357
+Standard Deviation MAE for 100 simulations: 0.387921
+Mean MAPE for 100 simulations: 1.858826
+Standard Deviation MAPE for 100 simulations: 0.987565
+Mean RMSE for 100 simulations for group 1: 1.165593
+Standard Deviation RMSE for 100 simulations for group 1: 0.394691
+Mean MAE for 100 simulations for group 1: 0.985220
+Standard Deviation MAE for 100 simulations for group 1: 0.378208
+Mean MAPE for 100 simulations for group 1: 1.853928
+Standard Deviation MAPE for 100 simulations for group 1: 0.983797
+Mean RMSE for 100 simulations for group 2: 1.084957
+Standard Deviation RMSE for 100 simulations for group 2: 0.401031
+Mean MAE for 100 simulations for group 2: 0.911467
+Standard Deviation MAE for 100 simulations for group 2: 0.405930
+Mean MAPE for 100 simulations for group 2: 1.910032
+Standard Deviation MAPE for 100 simulations for group 2: 1.119597
+Mean RMSE for 100 simulations for group 3: 0.993594
+Standard Deviation RMSE for 100 simulations for group 3: 0.419222
+Mean MAE for 100 simulations for group 3: 0.840863
+Standard Deviation MAE for 100 simulations for group 3: 0.446491
+Mean MAPE for 100 simulations for group 3: 1.771833
+Standard Deviation MAPE for 100 simulations for group 3: 0.912885
+Metrics data saved to sheet 'Metrics' in synthdid_CATE_GATE_PS_and_PValues_linearity_degree=3.xlsx
+P-Values data saved to sheet 'P_Values' in synthdid_CATE_GATE_PS_and_PValues_linearity_degree=3.xlsx

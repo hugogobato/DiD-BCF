@@ -1,0 +1,81 @@
+linearity_degree=1 
+Mean RMSE for 100 simulations: 0.091330
+Standard Deviation RMSE for 100 simulations: 0.066441
+Mean MAE for 100 simulations: 0.091330
+Standard Deviation MAE for 100 simulations: 0.066441
+Mean MAPE for 100 simulations: NaN
+Standard Deviation MAPE for 100 simulations: NA
+Mean RMSE for 100 simulations for group 1: 0.091330
+Standard Deviation RMSE for 100 simulations for group 1: 0.066441
+Mean MAE for 100 simulations for group 1: 0.091330
+Standard Deviation MAE for 100 simulations for group 1: 0.066441
+Mean MAPE for 100 simulations for group 1: NaN
+Standard Deviation MAPE for 100 simulations for group 1: NA
+Mean RMSE for 100 simulations for group 2: 0.091330
+Standard Deviation RMSE for 100 simulations for group 2: 0.066441
+Mean MAE for 100 simulations for group 2: 0.091330
+Standard Deviation MAE for 100 simulations for group 2: 0.066441
+Mean MAPE for 100 simulations for group 2: NaN
+Standard Deviation MAPE for 100 simulations for group 2: NA
+Mean RMSE for 100 simulations for group 3: 0.091330
+Standard Deviation RMSE for 100 simulations for group 3: 0.066441
+Mean MAE for 100 simulations for group 3: 0.091330
+Standard Deviation MAE for 100 simulations for group 3: 0.066441
+Mean MAPE for 100 simulations for group 3: NaN
+Standard Deviation MAPE for 100 simulations for group 3: NA
+Metrics data saved to sheet 'Metrics' in synthdid_GATE_and_PValues_linearity_degree=1.xlsx
+P-Values data saved to sheet 'P_Values' in synthdid_GATE_and_PValues_linearity_degree=1.xlsx
+linearity_degree=2 
+Mean RMSE for 100 simulations: 0.122410
+Standard Deviation RMSE for 100 simulations: 0.091630
+Mean MAE for 100 simulations: 0.122410
+Standard Deviation MAE for 100 simulations: 0.091630
+Mean MAPE for 100 simulations: NaN
+Standard Deviation MAPE for 100 simulations: NA
+Mean RMSE for 100 simulations for group 1: 0.122410
+Standard Deviation RMSE for 100 simulations for group 1: 0.091630
+Mean MAE for 100 simulations for group 1: 0.122410
+Standard Deviation MAE for 100 simulations for group 1: 0.091630
+Mean MAPE for 100 simulations for group 1: NaN
+Standard Deviation MAPE for 100 simulations for group 1: NA
+Mean RMSE for 100 simulations for group 2: 0.122410
+Standard Deviation RMSE for 100 simulations for group 2: 0.091630
+Mean MAE for 100 simulations for group 2: 0.122410
+Standard Deviation MAE for 100 simulations for group 2: 0.091630
+Mean MAPE for 100 simulations for group 2: NaN
+Standard Deviation MAPE for 100 simulations for group 2: NA
+Mean RMSE for 100 simulations for group 3: 0.122410
+Standard Deviation RMSE for 100 simulations for group 3: 0.091630
+Mean MAE for 100 simulations for group 3: 0.122410
+Standard Deviation MAE for 100 simulations for group 3: 0.091630
+Mean MAPE for 100 simulations for group 3: NaN
+Standard Deviation MAPE for 100 simulations for group 3: NA
+Metrics data saved to sheet 'Metrics' in synthdid_GATE_and_PValues_linearity_degree=2.xlsx
+P-Values data saved to sheet 'P_Values' in synthdid_GATE_and_PValues_linearity_degree=2.xlsx
+linearity_degree=3 
+Mean RMSE for 100 simulations: 0.168660
+Standard Deviation RMSE for 100 simulations: 0.133570
+Mean MAE for 100 simulations: 0.168660
+Standard Deviation MAE for 100 simulations: 0.133570
+Mean MAPE for 100 simulations: NaN
+Standard Deviation MAPE for 100 simulations: NA
+Mean RMSE for 100 simulations for group 1: 0.168660
+Standard Deviation RMSE for 100 simulations for group 1: 0.133570
+Mean MAE for 100 simulations for group 1: 0.168660
+Standard Deviation MAE for 100 simulations for group 1: 0.133570
+Mean MAPE for 100 simulations for group 1: NaN
+Standard Deviation MAPE for 100 simulations for group 1: NA
+Mean RMSE for 100 simulations for group 2: 0.168660
+Standard Deviation RMSE for 100 simulations for group 2: 0.133570
+Mean MAE for 100 simulations for group 2: 0.168660
+Standard Deviation MAE for 100 simulations for group 2: 0.133570
+Mean MAPE for 100 simulations for group 2: NaN
+Standard Deviation MAPE for 100 simulations for group 2: NA
+Mean RMSE for 100 simulations for group 3: 0.168660
+Standard Deviation RMSE for 100 simulations for group 3: 0.133570
+Mean MAE for 100 simulations for group 3: 0.168660
+Standard Deviation MAE for 100 simulations for group 3: 0.133570
+Mean MAPE for 100 simulations for group 3: NaN
+Standard Deviation MAPE for 100 simulations for group 3: NA
+Metrics data saved to sheet 'Metrics' in synthdid_GATE_and_PValues_linearity_degree=3.xlsx
+P-Values data saved to sheet 'P_Values' in synthdid_GATE_and_PValues_linearity_degree=3.xlsx
