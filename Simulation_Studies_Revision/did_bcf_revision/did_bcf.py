@@ -196,4 +196,36 @@ def plain_estimands(fit: FitResult, pretrend_recenter: bool = True) -> pd.DataFr
         add("ES", f"k={int(k)}", np.nan, np.nan, int(k), grp.index.to_numpy())
     add("ATT", "ATT", np.nan, np.nan, np.nan, treated_post.index.to_numpy())
 
+    # CATT surface: per-observation heterogeneous effect.  This is the paper's
+    # headline RMSE/MAE/MAPE (over individual treated obs) plus a *pointwise*
+    # CATT coverage -- the evidence that DiD-BCF recovers the heterogeneous
+    # effect that GATT-only methods cannot.
+    surf = _surface_record(df, catt, "plain")
+    if surf is not None:
+        records.append(surf)
+
     return pd.DataFrame.from_records(records)
+
+
+def _surface_record(df: pd.DataFrame, catt: np.ndarray, method: str) -> dict | None:
+    """One ``estimand_type='CATT'`` row: within-rep CATT-surface error metrics.
+
+    ``catt`` is the ``(n_obs, S)`` per-observation posterior draw array (NaN off
+    the treated-post rows).  Compares the per-observation posterior mean and
+    pointwise credible bounds to the true individual ``CATT``.
+    """
+    from .metrics import surface_summary
+
+    rows = df.index[(df["D"] == 1)].to_numpy()
+    rows = rows[~np.isnan(catt[rows, 0])]
+    if rows.size == 0:
+        return None
+    obs = catt[rows, :]                                   # (n_treated, S)
+    est = np.nanmean(obs, axis=1)
+    lo90 = np.nanquantile(obs, 0.05, axis=1); hi90 = np.nanquantile(obs, 0.95, axis=1)
+    lo95 = np.nanquantile(obs, 0.025, axis=1); hi95 = np.nanquantile(obs, 0.975, axis=1)
+    true = df.loc[rows, "CATT"].to_numpy(dtype=float)
+    rec = {"estimand_type": "CATT", "estimand_id": "surface",
+           "g": np.nan, "t": np.nan, "k": np.nan, "method": method}
+    rec.update(surface_summary(true, est, lo90, hi90, lo95, hi95))
+    return rec

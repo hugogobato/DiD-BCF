@@ -244,4 +244,39 @@ def corrected_estimands(fit: FitResult, propensity_method: str = "logit",
         rec.update(_summarise_draws(draws, "corrected"))
         records.append(rec)
 
+    # CATT surface: the correction is a cell-level (GATT) estimator, so -- like
+    # the GATT-only R benchmarks -- its corrected estimate and interval are
+    # broadcast to each treated observation in the cell and compared to the true
+    # individual CATT.  Puts the correction in the same surface table as plain
+    # DiD-BCF / TWFE.
+    surf = _corrected_surface_record(treated_post, cell_draws)
+    if surf is not None:
+        records.append(surf)
+
     return pd.DataFrame.from_records(records)
+
+
+def _corrected_surface_record(treated_post: pd.DataFrame,
+                              cell_draws: dict) -> dict | None:
+    """One ``estimand_type='CATT'`` row for the posterior correction."""
+    from .metrics import surface_summary
+
+    est, lo90, hi90, lo95, hi95, true = [], [], [], [], [], []
+    for (g, t), draws in cell_draws.items():
+        members = treated_post[(treated_post["cohort"] == g) &
+                               (treated_post["time"] == t)]
+        n = len(members)
+        if n == 0:
+            continue
+        est += [float(np.mean(draws))] * n
+        lo90 += [float(np.quantile(draws, 0.05))] * n
+        hi90 += [float(np.quantile(draws, 0.95))] * n
+        lo95 += [float(np.quantile(draws, 0.025))] * n
+        hi95 += [float(np.quantile(draws, 0.975))] * n
+        true += members["CATT"].astype(float).tolist()
+    if not est:
+        return None
+    rec = {"estimand_type": "CATT", "estimand_id": "surface",
+           "g": np.nan, "t": np.nan, "k": np.nan, "method": "corrected"}
+    rec.update(surface_summary(true, est, lo90, hi90, lo95, hi95))
+    return rec

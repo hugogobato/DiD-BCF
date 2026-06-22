@@ -207,7 +207,8 @@ BCF_PIP = """# Colab: install the DiD-BCF dependencies (stochtree provides the B
 
 BCF_SETUP = BOOTSTRAP + """
 from did_bcf_revision.runner import run_named
-from did_bcf_revision.metrics import compute_metrics, plain_vs_corrected"""
+from did_bcf_revision.metrics import (compute_metrics, plain_vs_corrected,
+                                      surface_metrics)"""
 
 BCF_RUN = """REPS = 100      # replications (lower for a quick smoke test)
 JOBS = 1        # parallel reps (keep 1 on a single-core/GPU Colab)
@@ -225,10 +226,19 @@ summaries = run_named(
 )
 summaries.head()"""
 
-BCF_METRICS = """# Decomposed metrics: bias, MC SD, RMSE, coverage 90/95, interval length,
-# size/power -- for plain AND corrected DiD-BCF.
+BCF_METRICS = """# Decomposed metrics: bias, MC SD/variance, RMSE, MAE, MAPE, coverage 90/95,
+# interval length, calibration ratio (avg_post_sd/emp_sd), size/power and their
+# Monte-Carlo SEs -- for plain AND corrected DiD-BCF.
 metrics = compute_metrics(summaries)
 plain_vs_corrected(metrics)"""
+
+BCF_SURFACE_MD = """## CATT-surface metrics (the paper's headline RMSE/MAE/MAPE)
+
+Within-replication RMSE/MAE/MAPE over the *individual* treated observations
+(mean +/- SD across runs) plus the *pointwise* CATT coverage -- the evidence
+that DiD-BCF recovers the heterogeneous effect that GATT-only methods cannot."""
+
+BCF_SURFACE = """surface_metrics(summaries)"""
 
 BCF_GB_MD = """## Goodman-Bacon decomposition (TWFE contamination)
 
@@ -258,7 +268,7 @@ stochtree), so it runs on a laptop with parallelisation.
 
 OLS_SETUP = BOOTSTRAP + """
 from did_bcf_revision.twfe_runner import run_twfe_named
-from did_bcf_revision.metrics import compute_metrics"""
+from did_bcf_revision.metrics import compute_metrics, surface_metrics"""
 
 OLS_RUN = """REPS = 100
 JOBS = 1        # raise to parallelise replications on your PC
@@ -266,7 +276,11 @@ JOBS = 1        # raise to parallelise replications on your PC
 summaries = run_twfe_named("__SCEN__", linearity_degree=__LIN__, reps=REPS, jobs=JOBS)
 summaries.head()"""
 
-OLS_METRICS = """compute_metrics(summaries)"""
+OLS_METRICS = """# Decomposed metrics (incl. MAE/MAPE, calibration ratio, MC SEs) and the
+# CATT-surface RMSE/MAE/MAPE (TWFE's event-study coef broadcast to each obs --
+# where heterogeneity-blind TWFE pays its price).
+display(compute_metrics(summaries))
+surface_metrics(summaries)"""
 
 
 # ---- R benchmark templates (token: @@SCEN@@) ----------------------------- #
@@ -575,6 +589,8 @@ def main():
                 _cell("code", sub(BCF_SETUP, **c)),
                 _cell("code", sub(BCF_RUN, **c)),
                 _cell("code", sub(BCF_METRICS, **c)),
+                _cell("markdown", sub(BCF_SURFACE_MD, **c)),
+                _cell("code", sub(BCF_SURFACE, **c)),
             ]
             if e.dgp == "staggered":
                 bcf_cells += [_cell("markdown", sub(BCF_GB_MD, **c)),

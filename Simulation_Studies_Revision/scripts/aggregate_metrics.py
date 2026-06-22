@@ -3,11 +3,17 @@
 
 Reads ``Results/summaries_*.csv`` (written by ``run_did_bcf.py``) and writes:
 
-* ``Results/metrics_long.csv``       -- bias / variance / RMSE / coverage /
-                                        interval length / size-power, one row per
-                                        (dgp, setting, N, estimand, method);
+* ``Results/metrics_long.csv``       -- bias / variance / RMSE / MAE / MAPE /
+                                        coverage / interval length / calibration
+                                        ratio / size-power (+ Monte-Carlo SEs),
+                                        one row per (dgp, setting, N, estimand,
+                                        method);
 * ``Results/metrics_plain_vs_corrected.csv`` -- the same with plain and corrected
                                         columns side by side;
+* ``Results/metrics_surface.csv``    -- the paper's CATT-surface RMSE/MAE/MAPE
+                                        (mean +/- SD across runs) + pointwise
+                                        CATT coverage, one row per (dgp, setting,
+                                        N, method);
 * ``Results/sqrt_n_ATT.csv``         -- sqrt(N) * (ATT_hat - ATT) mean/SD by N,
                                         the BvM / sqrt(N) evidence;
 * ``Results/metrics_summary.xlsx``   -- all of the above as sheets.
@@ -54,13 +60,16 @@ def main():
 
     metrics_long = M.compute_metrics(summaries)
     wide = M.plain_vs_corrected(metrics_long)
+    surface = M.surface_metrics(summaries)
     sqrtn = M.sqrt_n_summary(summaries, "ATT", "ATT")
 
     p_long = os.path.join(args.results, "metrics_long.csv")
     p_wide = os.path.join(args.results, "metrics_plain_vs_corrected.csv")
+    p_surf = os.path.join(args.results, "metrics_surface.csv")
     p_sqrt = os.path.join(args.results, "sqrt_n_ATT.csv")
     metrics_long.to_csv(p_long, index=False)
     wide.to_csv(p_wide, index=False)
+    surface.to_csv(p_surf, index=False)
     sqrtn.to_csv(p_sqrt, index=False)
 
     try:
@@ -68,12 +77,20 @@ def main():
         with pd.ExcelWriter(xlsx, engine="openpyxl") as w:
             metrics_long.to_excel(w, sheet_name="metrics_long", index=False)
             wide.to_excel(w, sheet_name="plain_vs_corrected", index=False)
+            surface.to_excel(w, sheet_name="surface_metrics", index=False)
             sqrtn.to_excel(w, sheet_name="sqrt_n_ATT", index=False)
         print(f"Wrote {xlsx}")
     except Exception as e:  # openpyxl missing etc. -- CSVs are still written
         print(f"(skipped xlsx: {e})")
 
-    print(f"Wrote:\n  {p_long}\n  {p_wide}\n  {p_sqrt}")
+    print(f"Wrote:\n  {p_long}\n  {p_wide}\n  {p_surf}\n  {p_sqrt}")
+
+    if not surface.empty:
+        scols = ["setting", "N", "method", "surf_rmse_mean", "surf_mae_mean",
+                 "surf_mape_mean", "surf_cover95_mean"]
+        scols = [c for c in scols if c in surface.columns]
+        print("\nCATT-surface metrics (paper RMSE/MAE/MAPE + pointwise coverage):")
+        print(surface[scols].to_string(index=False))
 
     # Console preview: the headline ATT coverage comparison.
     att = metrics_long[metrics_long["estimand_type"] == "ATT"]

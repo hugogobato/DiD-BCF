@@ -57,6 +57,33 @@ def _normal_summary(coef: float, se: float) -> dict:
     }
 
 
+def _twfe_surface_record(df: pd.DataFrame, es: pd.DataFrame) -> dict | None:
+    """One ``estimand_type='CATT'`` row: TWFE event-study coef broadcast to obs."""
+    from .metrics import surface_summary
+
+    kmap = {int(r["k"]): (float(r["coef"]), float(r["se"]))
+            for _, r in es.iterrows() if int(r["k"]) >= 0}
+    tp = df[df["D"] == 1]
+    est, lo90, hi90, lo95, hi95, true = [], [], [], [], [], []
+    for k_val, c_se in kmap.items():
+        members = tp[tp["event_time"] == k_val]
+        n = len(members)
+        if n == 0:
+            continue
+        coef, se = c_se
+        se = se if np.isfinite(se) and se > 0 else 0.0
+        est += [coef] * n
+        lo90 += [coef - _Z90 * se] * n; hi90 += [coef + _Z90 * se] * n
+        lo95 += [coef - _Z95 * se] * n; hi95 += [coef + _Z95 * se] * n
+        true += members["CATT"].astype(float).tolist()
+    if not est:
+        return None
+    rec = {"estimand_type": "CATT", "estimand_id": "surface",
+           "g": np.nan, "t": np.nan, "k": np.nan, "method": "twfe"}
+    rec.update(surface_summary(true, est, lo90, hi90, lo95, hi95))
+    return rec
+
+
 def process_rep(dgp: str, dgp_params: dict, N: int, rep: int, setting: str) -> pd.DataFrame:
     """Run one replication of the TWFE benchmark; return tidy summary rows."""
     gen = _GENERATORS[dgp]
@@ -80,6 +107,15 @@ def process_rep(dgp: str, dgp_params: dict, N: int, rep: int, setting: str) -> p
            "g": np.nan, "t": np.nan, "k": np.nan, "method": "twfe"}
     rec.update(_normal_summary(coef, se))
     records.append(rec)
+
+    # CATT surface: TWFE has no individual effect, so -- as in the original
+    # study's RMSE/MAE/MAPE comparison -- its event-study coefficient ATT(k) is
+    # broadcast to every treated observation of event-time k and compared to the
+    # true individual CATT (this is where heterogeneity-blind TWFE pays its
+    # price).  Reported in the same surface table as DiD-BCF.
+    surf = _twfe_surface_record(df, es)
+    if surf is not None:
+        records.append(surf)
 
     out = pd.DataFrame.from_records(records)
     truth = true_estimands(df)[["estimand_type", "estimand_id", "true"]]

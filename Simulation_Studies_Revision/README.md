@@ -8,10 +8,13 @@ New simulation suite for the JBES revision, built on top of
   (a unit fixed effect `alpha_i` correlated with treatment), persistent
   covariates, AR(1) serially correlated errors, and covariate-dependent trends
   (so parallel trends holds only *conditional* on covariates).
-* **B2 — decomposed metrics + sample-size sweep**: bias, variance, RMSE,
-  coverage (90/95%), interval length, size/power — plus an `N ∈ {200, 400, 800,
-  1600}` sweep (anchored at the base size 200) exhibiting bias→0, variance→0 and
-  √N stabilisation.
+* **B2 — decomposed metrics + sample-size sweep**: bias, variance, RMSE, **MAE,
+  MAPE** (for parity with the paper's tables), coverage (90/95%), interval
+  length, the **calibration ratio** `avg_post_sd / emp_sd`, size/power and their
+  **Monte-Carlo standard errors** — plus the paper's **CATT-surface RMSE/MAE/MAPE**
+  (over the individual treated observations, mean ± SD across runs) with a
+  *pointwise* CATT coverage, and an `N ∈ {200, 400, 800, 1600}` sweep (anchored
+  at the base size 200) exhibiting bias→0, variance→0 and √N stabilisation.
 * **D — staggered adoption** with treatment effects that vary by **both
   event-time and cohort**, the **Goodman-Bacon decomposition** of TWFE, and a
   contamination sweep tracing how TWFE degrades as the weight on
@@ -50,6 +53,7 @@ original `../Simulation_Studies/`, adapted to the revision DGPs:
 3. (PC, fast)      DGPs/data_creation_<scen>.py         -> R_code/<scen>_datasets/.../iteration_*.csv
 4. (R, fast)       R_code/<scen>_datasets/*.R           -> *_GATE_and_PValues_*.xlsx
 5. (PC, fast)      scripts/aggregate_metrics.py         -> Results/metrics_*.csv / .xlsx
+5b.(PC, fast)      scripts/aggregate_r_metrics.py       -> Results/metrics_r_*.csv
 6. (PC, parallel)  scripts/run_goodman_bacon.py         -> Results/goodman_bacon_*.csv
 7. (PC, fast)      scripts/make_figures.py              -> Results/B2_sweep_*.png
 ```
@@ -80,6 +84,9 @@ python DGPs/data_creation_D_staggered.py --jobs 8
 
 # 4. decomposed metrics, all methods (plain / corrected / twfe) side by side
 python scripts/aggregate_metrics.py
+#    bring the R benchmarks (CS, did2s, DoubleML, synthdid) into the same
+#    bias/variance/coverage/RMSE-MAE-MAPE comparison:
+python scripts/aggregate_r_metrics.py
 
 # 5. Goodman-Bacon + TWFE vs truth (Workstream D)
 python scripts/run_goodman_bacon.py --experiment D_staggered --reps 500 --jobs 8
@@ -154,6 +161,7 @@ Simulation_Studies_Revision/
 | `GATT` | cohort × calendar-time cell, `g=<g>_t=<t>`, for `t ≥ g` |
 | `ES`   | event-study, `k=<k>` (averaged over cohorts), `k ≥ 0` |
 | `ATT`  | overall average over all treated post observations |
+| `CATT` | one **per-replication** surface row (`estimand_id='surface'`) carrying the within-rep RMSE/MAE/MAPE over the *individual* treated observations + pointwise CATT coverage/length |
 
 Per-replication summary rows carry `post_mean, sd, q025, q05, q95, q975,
 p_bayes` for each `method ∈ {plain, corrected, twfe}`, plus the `true` value and
@@ -161,6 +169,17 @@ a `linearity_degree` column, so `metrics.compute_metrics` aggregates every model
 and every linearity degree in one table. (Plain TWFE reports only `ES` and `ATT`
 — pooling cohorts into clean `GATT(g,t)` is exactly the contamination it suffers
 from, so `GATT` is left to DiD-BCF and the Callaway–Sant'Anna R benchmark.)
+
+The `CATT`/`surface` rows instead carry `surf_rmse, surf_mae, surf_mape,
+surf_cover90, surf_cover95, surf_len90, surf_len95, surf_n` (the point-estimate
+columns are left blank). `metrics.compute_metrics` **excludes** them — they are
+within-replication error metrics, not a sampling distribution — and
+`metrics.surface_metrics` aggregates them into the paper's `mean ± SD`
+RMSE/MAE/MAPE tables. For TWFE the surface estimate is the event-study
+coefficient `ATT(k)` broadcast to every treated observation; for the posterior
+correction it is the cell-level `GATT(g,t)` broadcast to its members — exactly
+how the GATT-only R benchmarks are scored, so all methods land in one
+`metrics_surface.csv` / `metrics_r_surface.csv` comparison.
 
 ---
 
