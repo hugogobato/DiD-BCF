@@ -116,7 +116,8 @@ def bayesian_bootstrap_weights(unit_ids: np.ndarray, n_draws: int,
 # --------------------------------------------------------------------------- #
 def _cell_corrected_draws(fit: FitResult, g: float, t: int,
                           bb_weights: dict, propensity_method: str,
-                          n_splits: int, seed: int) -> np.ndarray | None:
+                          n_splits: int, seed: int,
+                          covariate_cols=None) -> np.ndarray | None:
     """Return the ``S`` corrected draws ``check_theta^s`` for cell (g, t)."""
     df = fit.df
     S = fit.n_draws
@@ -150,7 +151,8 @@ def _cell_corrected_draws(fit: FitResult, g: float, t: int,
     mbar = M.mean(axis=1)                                   # (n_g,)
 
     # Pilot propensity and Riesz representer.
-    Xcov = df.loc[rows_t, COVARIATE_COLS].to_numpy(dtype=float)
+    covariate_cols = tuple(covariate_cols or COVARIATE_COLS)
+    Xcov = df.loc[rows_t, list(covariate_cols)].to_numpy(dtype=float)
     pi = _fit_propensity(Xcov, delta.astype(int), propensity_method,
                          n_splits, seed)
     barpi = float(delta.mean())
@@ -186,7 +188,8 @@ def _summarise_draws(draws: np.ndarray, method: str) -> dict:
 
 
 def corrected_estimands(fit: FitResult, propensity_method: str = "logit",
-                        n_splits: int = 2, seed: int = 0) -> pd.DataFrame:
+                        n_splits: int = 2, seed: int = 0,
+                        covariate_cols=None) -> pd.DataFrame:
     """Posterior-corrected GATT(g,t), event-study ATT(k) and overall ATT.
 
     Aggregated estimands reuse the per-cell corrected draws with treated-count
@@ -205,7 +208,8 @@ def corrected_estimands(fit: FitResult, propensity_method: str = "logit",
     records = []
     for g, t in cells.itertuples(index=False):
         draws = _cell_corrected_draws(fit, float(g), int(t), bb,
-                                      propensity_method, n_splits, seed)
+                                      propensity_method, n_splits, seed,
+                                      covariate_cols=covariate_cols)
         if draws is None:
             continue
         cell_draws[(float(g), int(t))] = draws

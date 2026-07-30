@@ -18,7 +18,12 @@ Design summary
 
 Every scenario is run at each ``linearity_degree in {1, 2, 3}`` -- one notebook
 per model (DiD-BCF, OLS/TWFE), per scenario, per linearity degree, mirroring the
-original ``Simulation_Studies/`` layout.
+original ``Simulation_Studies/`` layout.  The degree changes the covariate
+parameterisation handed to the estimators (and, at ``d = 3``, the shape of
+``tau``); see the module docstring of :mod:`did_bcf_revision.dgps`.  Note that
+under ``selection="unobservable"`` the covariates are balanced across arms, so
+the degree loads only through nuisance-fitting variance; it moves *bias* only
+in ``B1_selection_obs`` and ``B1_selection_both``.
 * **D** (staggered, cohort x event-time effects): the headline staggered DGP and
   a "contamination" variant with stronger dynamics (larger weight on
   already-treated comparisons) for the Goodman-Bacon analysis.
@@ -78,6 +83,12 @@ def all_experiments(reps: int = DEFAULT_REPS) -> list:
                    _canon(alpha_sd=1.0, conf_strength=0.0, selection="observable"),
                    n_values=(BASE_N,), reps=reps,
                    note="continuity check: selection on observables only"),
+        Experiment("B1_selection_both", "B1", "canonical",
+                   _canon(alpha_sd=1.0, conf_strength=1.0, selection="both"),
+                   n_values=(BASE_N,), reps=reps,
+                   note="unobserved confounder AND covariate-driven assignment: "
+                        "the only setting where conditional parallel trends is "
+                        "violated, so the linearity degree loads through bias"),
         Experiment("B1_null", "B1", "canonical",
                    _canon(base_effect=0.0, effect_type="homogeneous",
                           alpha_sd=1.0, conf_strength=1.0),

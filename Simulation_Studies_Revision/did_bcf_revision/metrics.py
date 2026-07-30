@@ -44,8 +44,16 @@ import pandas as pd
 __all__ = ["compute_metrics", "plain_vs_corrected", "sqrt_n_summary",
            "surface_summary", "surface_metrics"]
 
-GROUP_KEYS = ["dgp", "setting", "linearity_degree", "N",
+# ``spec`` is the identification specification the fit used ("published" and the
+# repairs of ``Results/identification_note.tex``).  It is a grouping key wherever
+# it is present, so a route run and a published run never pool into one row;
+# summaries written before it existed simply lack the column and are grouped as
+# before.  ``scripts/aggregate_metrics.py`` fills it with "published" so a mixed
+# set of files still lines up.
+SPEC_KEY = "spec"
+GROUP_KEYS = ["dgp", "setting", "linearity_degree", "N", SPEC_KEY,
               "estimand_type", "estimand_id", "method"]
+SURFACE_GROUP_KEYS = ["dgp", "setting", "linearity_degree", "N", SPEC_KEY, "method"]
 SURFACE_TYPE = "CATT"
 SURFACE_COLS = ["surf_rmse", "surf_mae", "surf_mape",
                 "surf_cover90", "surf_cover95", "surf_len90", "surf_len95"]
@@ -174,8 +182,7 @@ def surface_metrics(summaries: pd.DataFrame) -> pd.DataFrame:
     sub = summaries[summaries["estimand_type"] == SURFACE_TYPE].copy()
     if sub.empty:
         return pd.DataFrame()
-    keys = [k for k in ["dgp", "setting", "linearity_degree", "N", "method"]
-            if k in sub.columns]
+    keys = [k for k in SURFACE_GROUP_KEYS if k in sub.columns]
     cols = [c for c in SURFACE_COLS if c in sub.columns]
     records = []
     for key_vals, g in sub.groupby(keys, dropna=False):
@@ -199,7 +206,7 @@ def plain_vs_corrected(metrics: pd.DataFrame,
                                 "cover90", "cover95", "len95",
                                 "sd_ratio", "reject05")) -> pd.DataFrame:
     """Pivot the metrics table to put plain and corrected side by side."""
-    idx = [k for k in ["dgp", "setting", "linearity_degree", "N",
+    idx = [k for k in ["dgp", "setting", "linearity_degree", "N", SPEC_KEY,
                        "estimand_type", "estimand_id", "role"]
            if k in metrics.columns]
     columns = [c for c in columns if c in metrics.columns]
@@ -220,8 +227,7 @@ def sqrt_n_summary(summaries: pd.DataFrame, estimand_type: str = "ATT",
     sub = summaries[(summaries["estimand_type"] == estimand_type) &
                     (summaries["estimand_id"] == estimand_id)].copy()
     sub["scaled_err"] = np.sqrt(sub["N"].astype(float)) * (sub["post_mean"] - sub["true"])
-    keys = [k for k in ["dgp", "setting", "linearity_degree", "N", "method"]
-            if k in sub.columns]
+    keys = [k for k in SURFACE_GROUP_KEYS if k in sub.columns]
     return (sub.groupby(keys, dropna=False)["scaled_err"]
             .agg(mean="mean", sd="std", rmse=lambda x: np.sqrt(np.mean(x ** 2)))
             .reset_index())

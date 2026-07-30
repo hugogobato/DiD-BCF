@@ -14,7 +14,12 @@ from . import dgps, metrics, twfe, goodman_bacon, config, exports  # noqa: F401
 # stochtree until a fit actually runs.  The TWFE runner is pure numpy/pandas.
 from . import did_bcf, posterior_correction, runner, twfe_runner  # noqa: F401
 
+# Identification repairs: `did_bcf.SPECS` holds the argument changes to the
+# same stochtree call; `structured` is the corrected DiD-BCF implementation,
+# which fits the two-way-restricted model of the theory note.
+from . import structured  # noqa: F401
+
 __all__ = [
     "dgps", "did_bcf", "posterior_correction", "runner", "twfe_runner",
-    "metrics", "twfe", "goodman_bacon", "config", "exports",
+    "structured", "metrics", "twfe", "goodman_bacon", "config", "exports",
 ]

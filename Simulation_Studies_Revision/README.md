@@ -124,7 +124,8 @@ Simulation_Studies_Revision/
 ├── README.md
 ├── did_bcf_revision/              # importable engine (the source of truth)
 │   ├── dgps.py                    # canonical (B1) + staggered (D) DGPs, true_estimands()
-│   ├── did_bcf.py                 # stochtree BCF fit + PLAIN estimand summaries
+│   ├── did_bcf.py                 # stochtree BCF fit + PLAIN estimand summaries; SPECS (routes 1-2)
+│   ├── structured.py              # corrected DiD-BCF adapter -> ../../didbcf_structured/
 │   ├── posterior_correction.py    # Algorithm 1 (DR post-processing) -> CORRECTED summaries
 │   ├── runner.py                  # DiD-BCF Monte-Carlo driver (used by DiD_BCF/ notebooks + CLI)
 │   ├── twfe.py                    # static + event-study TWFE with cluster-robust SEs
@@ -142,7 +143,8 @@ Simulation_Studies_Revision/
 ├── R_code/                        # R benchmarks, one folder per scenario (9 × 4 scripts)
 │   └── <scenario>_datasets/{did_dr_new.R, did2s.R, DoubleML_did.R, synthdid.R}
 ├── scripts/                       # the cheap / parallel local steps
-│   ├── run_did_bcf.py             # headless equivalent of the DiD_BCF/ notebooks
+│   ├── run_did_bcf.py             # headless equivalent of the DiD_BCF/ notebooks (--spec)
+│   ├── run_identification_routes.py  # the identification acceptance test, all routes
 │   ├── run_twfe.py                # headless equivalent of the TWFE/ notebooks
 │   ├── aggregate_metrics.py       # decomposed metrics, all methods (B2)
 │   ├── run_goodman_bacon.py       # Goodman-Bacon + TWFE-vs-truth (D)
@@ -207,24 +209,42 @@ $$
 
 with $\sigma_\alpha=$ `alpha_sd`.
 
-**Prognostic covariate level** $f(X_i)$, by `linearity_degree` $d$:
+**Prognostic covariate level**, linear in the latent covariates at every degree:
 
 $$
-f(X_i)=
-\begin{cases}
--0.75X_{1i}+0.5X_{2i}-0.5X_{3i}-1.3X_{4i}+1.8X_{5i}, & d=1,\\[2pt]
--0.75X_{1i}^2+0.5\,e^{X_{2i}/2}-0.5X_{3i}-1.3X_{4i}+1.8X_{5i}, & d=2,\\[2pt]
--0.75X_{1i}+0.5|X_{2i}|+0.8\sin(2X_{3i})-1.3\sqrt{|X_{4i}|}+1.8X_{5i}^2, & d\ge 3.
-\end{cases}
+f(X_i)=-0.75X_{1i}+0.5X_{2i}-0.5X_{3i}-1.3X_{4i}+1.8X_{5i}.
 $$
 
-**Common time effect** $\gamma_t=\beta_{\text{time}}\,t$ for $d<3$ and
-$\gamma_t=\beta_{\text{time}}\,t^2$ for $d\ge 3$, with $\beta_0=-0.5$,
+**Common time effect** $\gamma_t=\beta_{\text{time}}\,t$, with $\beta_0=-0.5$,
 $\beta_{\text{time}}=0.2$.
 
 **Covariate-dependent trend** (makes parallel trends hold only *conditional* on
-$X$): $s(X_i)=\rho_{\text{tr}}\,X_{3i}$ with $\rho_{\text{tr}}=$
-`trend_heterogeneity`.
+$X$): $s(X_i)=\rho_{\text{tr}}\,(0.7X_{4i}+\sqrt{0.51}\,X_{3i})$ with
+$\rho_{\text{tr}}=$ `trend_heterogeneity`, so $\mathrm{Var}(s)=\rho_{\text{tr}}^2$.
+$X_4$ enters the assignment utility and $X_3$ does not, so the treated and
+control groups genuinely have different average slopes.
+
+> **Note.** Under `selection="unobservable"` the covariates are balanced across
+> arms, so this trend produces no bias and no adjustment is needed. It violates
+> conditional parallel trends only in `B1_selection_obs` and
+> `B1_selection_both`.
+
+**Linearity degree.** The DGP above never varies with $d$. What varies is the
+covariate parameterisation the estimators are handed, and (at $d=3$) the shape
+of $\tau$:
+
+| $d$ | what the estimator observes | $\tau(X_i)$ |
+|---|---|---|
+| 1 | the latent $X_1,\dots,X_5$; every nuisance function is linear in them | $\tau_0+1.5X_1+0.75X_2$ |
+| 2 | $X_3,X_4,X_5$ replaced by Kang–Schafer transforms $\big((X_3X_4/5+0.6)^3,\ e^{X_4/2},\ (X_3+X_5+2)^2\big)$, standardised | unchanged |
+| 3 | as $d=2$ | $\tau_0+1.5X_1+0.75\big[(X_2^2-1)/\sqrt2+(2X_1-1)X_2\big]/\sqrt2$ |
+
+At $d=2$ the outcome and every true estimand are **bit-identical** to $d=1$, so
+any difference in estimator performance is misspecification alone. $X_1,X_2$
+are never transformed, keeping "non-linear nuisance" and "non-linear effect" as
+separate axes, and $\mathrm{Var}(\tau)$ is held constant so the CATT-surface
+metrics stay comparable. Asserted by
+`Results/_staging/check_linearity_axis.py`.
 
 **Errors** $\varepsilon_{it}$ are AR(1) within unit (iid when `ar1_rho` $=0$),
 initialised at the stationary distribution so $\mathrm{Var}(\varepsilon_{it})=\sigma^2$ for all $t$:
@@ -499,6 +519,82 @@ Below is the complete mathematical description for each of the 9 scenarios.
     \text{CATT}_{it} = m_{G_i} \cdot (1 + 0.8 \cdot k) \cdot \tau(X_i)
     $$
   - All other formulas are identical to `D_staggered`.
+
+---
+
+## Identification specifications (the three repairs)
+
+`Results/identification_note.tex` shows that with an unrestricted prognostic
+forest over `(D_i, t, X)` the pair `(mu + c·tau·D, (1−c)·tau)` has the same
+likelihood for every `c ∈ [0,1]`, so `mu` and `tau` are not separately
+identified and only the priors break the tie — more decisively the more data
+there are, which is why the bias *grows* in `N`. The note proposes three
+repairs; all three are implemented and selectable with `--spec`.
+
+| `--spec` | route | what changes |
+|---|---|---|
+| `published` | — | the submitted specification, as the revision runs it |
+| `published_constant_pi` | — | the same, with the original notebooks' `pi = 0.5` |
+| `rfx` | 1 | group indicators out of `mu`; additive **group** random intercept |
+| `rfx_unit` | 1 | same, with **unit**-level random intercepts |
+| `propensity` | 2 | group indicators out of `mu`; unit-level `P(ever treated \| X)` in |
+| `rfx_propensity` | 1+2 | both, which the note observes compose |
+| `structured` | corrected | `mu(g,t,x) = a(g,x) + b(t,x)` fitted as two separate forests |
+| `structured_rfx_unit` | corrected | corrected DiD-BCF plus unit-level random intercepts |
+
+The first two repairs are argument changes to the same `stochtree` call and live
+in `did_bcf_revision.did_bcf.SPECS`. The corrected DiD-BCF is a different model
+with three forests sharing one residual, and lives in the standalone
+`../didbcf_structured/` package, wired in through
+`did_bcf_revision/structured.py`. All of them return
+the same `FitResult`, so `plain_estimands`, `corrected_estimands` and the whole
+metrics layer work on any of them unchanged.
+
+> **A code-level defect found while testing this.** `BCFModel.sample` defaults
+> to `propensity_covariate="prognostic"`, and `did_bcf.py` passes no propensity,
+> so `stochtree` fits an *internal* BART model of `Z = D_it` on `X` — which
+> contains `time` and `treatment_group`, of which `D_it` is a deterministic
+> function — and appends the fitted `pi_hat` to `mu`'s split set with non-zero
+> weight **regardless of `keep_vars`**. Measured on `B1_baseline`,
+> `corr(pi_hat, D_it) = 0.97` at `N = 200` and `0.98` at `N = 800`, with the
+> arms perfectly separated, so one split on `pi_hat > 0.5` reproduces `D_it`
+> exactly. The note's flat direction needs two splits; this needs one, on a
+> covariate purpose-built to be a perfect proxy for the treatment. The original
+> notebooks passed the constant `pi_train = 0.5` and so never had this channel,
+> which is why the published results are unaffected.
+> `published_constant_pi` isolates it.
+
+### The acceptance test
+
+The note's own criterion — *on `B2_sweep`, the bias of both plain and corrected
+DiD-BCF must decrease in `N`* — is implemented as a script that runs it for
+every specification at once, and also reports the retention `tau_hat / ATT` on
+treated post-treatment rows (Table 1 of the note):
+
+```bash
+python scripts/run_identification_routes.py --reps 50 --jobs 4
+python scripts/run_identification_routes.py --reps 5 --n 200 400 \
+    --specs published rfx structured --jobs 4      # quick look
+```
+
+It writes `Results/identification/routes_{raw,summary,acceptance}_*.csv`. It
+uses a lighter sampler than production by default (`--num-gfr 25 --num-mcmc 200
+--keep-every 2 --num-chains 2`), because it measures a bias that is a property
+of the model rather than of the number of draws.
+
+For a full production run under one repair, `run_did_bcf.py` takes the same
+flag and appends it to the output filename, so route runs never overwrite the
+published-specification ones:
+
+```bash
+python scripts/run_did_bcf.py --experiment B2_sweep --spec structured --jobs 4
+```
+
+Per-replication summaries carry a `spec` column and `metrics.GROUP_KEYS`
+includes it, so `aggregate_metrics.py` reports each specification as its own
+row instead of pooling it with the published run. Summary files written before
+this existed have no such column and are labelled `published`, so their numbers
+are unchanged.
 
 ---
 

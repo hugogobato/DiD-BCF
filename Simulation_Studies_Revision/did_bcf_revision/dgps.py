@@ -33,6 +33,41 @@ computed downstream.  The unobserved effect ``alpha`` is included in the frame
 The conventions (column names, ``cohort`` = first treated period with
 ``np.inf`` for never-treated, ``D`` = post-treatment indicator) are shared by
 the estimation, metrics and Goodman-Bacon modules.
+
+Linearity degrees
+-----------------
+``linearity_degree`` controls *where* non-linearity enters, and is designed so
+that each degree is visible to a differencing estimator:
+
+The data-generating process itself is written entirely in terms of *latent*
+covariates and never changes: the same trend ``s(X_i) t``, the same assignment
+utility, the same prognostic level.  What ``linearity_degree`` changes is the
+parameterisation the estimator is handed.
+
+``d = 1``
+    Fully linear.  Estimators observe the latent covariates, so every nuisance
+    function (trend, propensity, prognostic level) is linear in the data they
+    see and linear adjustment is correctly specified.
+``d = 2``
+    Non-linear in the **covariates**.  The three nuisance covariates are
+    replaced by their Kang--Schafer (2007) transforms, exactly as in the
+    misspecified designs of Sant'Anna and Zhao (2020).  Every true estimand is
+    bit-identical to ``d = 1``; only the difficulty of recovering the nuisance
+    functions changes.  Linear adjustment now leaves a residual violation of
+    conditional parallel trends, while a flexible learner should not.
+``d = 3``
+    Non-linear in the covariates **and** in the treatment effect: everything
+    from ``d = 2``, plus a ``tau(X_i)`` that is quadratic in ``X_2`` with an
+    ``X_1``-by-``X_2`` interaction, so the CATT surface is non-linear and
+    non-additive in the modifiers.
+
+``Var(tau(X_i))`` is held constant across the three degrees, so the axis
+changes functional *shape* without changing how much effect heterogeneity is
+present.  The effect modifiers ``X_1`` and ``X_2`` are never transformed, which
+keeps "non-linear nuisance" (``d = 2``) and "non-linear effect" (``d = 3``)
+separate.
+
+Verify with ``Results/_staging/check_linearity_axis.py``.
 """
 
 from __future__ import annotations
@@ -90,29 +125,98 @@ def _covariate_block(n_units: int, rng: np.random.Generator) -> dict:
     }
 
 
-def _prognostic_levels(Xu: dict, linearity_degree: int) -> np.ndarray:
-    """Time-invariant part of E[Y(0)] driven by covariates, f(X_i)."""
+def _observed_covariates(Xu: dict, linearity_degree: int) -> dict:
+    """Covariates as *seen by the estimators*, given the latent draws ``Xu``.
+
+    At ``linearity_degree == 1`` the estimator sees the latent covariates and
+    every nuisance function (trend, propensity, prognostic level) is linear in
+    them, so linear adjustment is correctly specified.
+
+    At ``linearity_degree >= 2`` the three nuisance covariates are replaced by
+    the Kang and Schafer (2007) transforms used for the misspecified designs of
+    Sant'Anna and Zhao (2020).  The data-generating process is untouched: the
+    true trend, propensity and treatment effect are exactly the same functions
+    of the same latent variables, and every true estimand is therefore
+    identical across degrees.  What changes is that recovering them now
+    requires undoing ``exp``, a cubic of an interaction and a square of a sum,
+    which no additive-linear model in the observed covariates can do.
+
+    The effect modifiers ``X1`` and ``X2`` are deliberately left untransformed,
+    so that non-linearity of the *treatment effect* remains a separate axis
+    controlled by ``linearity_degree == 3`` alone.  Transformed columns are
+    standardised within the replication so that reported coefficient scales and
+    tree split points stay comparable across degrees.
+    """
+    if linearity_degree == 1:
+        return dict(Xu)
+
+    def _std(v: np.ndarray) -> np.ndarray:
+        sd = v.std()
+        return (v - v.mean()) / (sd if sd > 0 else 1.0)
+
     X1, X2, X3, X4, X5 = (Xu["X1"], Xu["X2"], Xu["X3"], Xu["X4"], Xu["X5"])
-    if linearity_degree == 1:                       # fully linear
-        return -0.75 * X1 + 0.5 * X2 - 0.5 * X3 - 1.3 * X4 + 1.8 * X5
-    if linearity_degree == 2:                       # half non-linear
-        return (-0.75 * X1 ** 2 + 0.5 * np.exp(X2 / 2.0)
-                - 0.5 * X3 - 1.3 * X4 + 1.8 * X5)
-    # linearity_degree >= 3: strongly non-linear
-    return (-0.75 * X1 + 0.5 * np.abs(X2) + 0.8 * np.sin(2 * X3)
-            - 1.3 * np.sqrt(np.abs(X4)) + 1.8 * X5 ** 2)
+    return {
+        "X1": X1,                                            # effect modifier
+        "X2": X2,                                            # effect modifier
+        "X3": _std((X3 * X4 / 5.0 + 0.6) ** 3),              # cubic interaction
+        "X4": _std(np.exp(X4 / 2.0)),                        # convex, monotone
+        "X5": _std((X3 + X5 + 2.0) ** 2),                    # square of a sum
+    }
 
 
-def _effect_function(Xu: dict, base: float, effect_type: str) -> np.ndarray:
+def _prognostic_levels(Xu: dict) -> np.ndarray:
+    """Time-invariant part of E[Y(0)] driven by the latent covariates, f(X_i).
+
+    Linear in the *latent* covariates at every degree.  At
+    ``linearity_degree >= 2`` the estimator only observes transforms of them
+    (see :func:`_observed_covariates`), so this is already a non-linear
+    function of the data any estimator actually has.
+    """
+    X1, X2, X3, X4, X5 = (Xu["X1"], Xu["X2"], Xu["X3"], Xu["X4"], Xu["X5"])
+    return -0.75 * X1 + 0.5 * X2 - 0.5 * X3 - 1.3 * X4 + 1.8 * X5
+
+
+def _trend_function(Xu: dict, rho: float) -> np.ndarray:
+    """Covariate-dependent trend slope s(X_i): E[Y(0)] moves as s(X_i) t.
+
+    Multiplying by ``t`` is what makes the covariate dependence survive a DiD
+    contrast.  The covariates are drawn once per unit, so anything entered at
+    the *level* of Y(0) is a unit constant and is differenced away; the trend
+    is therefore the only channel through which conditioning on covariates can
+    matter for a differencing estimator (see Section 8.3 of the revision
+    report).
+
+    ``X4`` enters the assignment utility and ``X3`` does not, so this is a
+    genuine conditional-parallel-trends violation: the treated and control
+    groups have different average slopes, and the difference is removable only
+    by adjusting for ``X4``.  ``Var(s) = rho^2``.
+    """
+    return rho * (0.7 * Xu["X4"] + np.sqrt(1.0 - 0.49) * Xu["X3"])
+
+
+def _effect_function(Xu: dict, base: float, effect_type: str,
+                     linearity_degree: int = 1) -> np.ndarray:
     """Unit-level treatment-effect function tau(X_i).
 
-    ``homogeneous`` -> constant ``base``.
+    ``homogeneous`` -> constant ``base`` at every degree (there is no surface to
+    make non-linear).
+
     ``heterogeneous`` -> effect modulated by X1 (binary) and X2 (continuous).
+    At ``linearity_degree <= 2`` the modulation is linear in X2 and additive.
+    At ``linearity_degree == 3`` the same variance is redistributed into a
+    centred quadratic in X2 plus an X1-by-X2 interaction, so tau is both
+    non-linear and non-additive in the modifiers.  ``Var(tau) = 1.125`` and
+    ``E[tau] = base + 0.75`` at every degree, so the CATT-surface metrics stay
+    comparable across the axis.
     """
     if effect_type == "homogeneous":
         return np.full_like(Xu["X1"], base, dtype=float)
-    modifier = 1.5 * Xu["X1"] + 0.75 * np.tanh(Xu["X2"])
-    return base + modifier
+    X1, X2 = Xu["X1"], Xu["X2"]
+    if linearity_degree >= 3:
+        nl = ((X2 ** 2 - 1.0) / np.sqrt(2.0)
+              + (2.0 * X1 - 1.0) * X2) / np.sqrt(2.0)
+        return base + 1.5 * X1 + 0.75 * nl
+    return base + 1.5 * X1 + 0.75 * X2
 
 
 # --------------------------------------------------------------------------- #
@@ -201,9 +305,11 @@ def generate_canonical_did(seed: int = 0, **overrides) -> pd.DataFrame:
     cohort = np.where(treated == 1, float(adoption), np.inf)
 
     # --- effect and trend functions --------------------------------------- #
-    tau_i = _effect_function(Xu, float(p["base_effect"]), p["effect_type"])
-    f_levels = _prognostic_levels(Xu, int(p["linearity_degree"]))
-    slope_i = p["trend_heterogeneity"] * Xu["X3"]         # covariate trend
+    tau_i = _effect_function(Xu, float(p["base_effect"]), p["effect_type"],
+                             int(p["linearity_degree"]))
+    f_levels = _prognostic_levels(Xu)
+    slope_i = _trend_function(Xu, float(p["trend_heterogeneity"]))
+    Xobs = _observed_covariates(Xu, int(p["linearity_degree"]))
 
     eps = _ar1_errors(n, n_periods, float(p["ar1_rho"]),
                       float(p["epsilon_scale"]), rng)
@@ -212,7 +318,7 @@ def generate_canonical_did(seed: int = 0, **overrides) -> pd.DataFrame:
     beta_0, beta_time = -0.5, 0.2
     rows = []
     for t in range(n_periods):
-        gamma_t = beta_time * (t ** 2 if int(p["linearity_degree"]) >= 3 else t)
+        gamma_t = beta_time * t
         D = ((cohort != np.inf) & (t >= cohort)).astype(int)
         y0 = (beta_0 + alpha + gamma_t + f_levels + slope_i * t + eps[:, t])
         catt = tau_i * D
@@ -224,7 +330,7 @@ def generate_canonical_did(seed: int = 0, **overrides) -> pd.DataFrame:
             "D": D,
             "eventually_treated": treated,
             "event_time": np.where(cohort == np.inf, np.nan, t - cohort),
-            **{k: Xu[k] for k in Xu},
+            **{k: Xobs[k] for k in Xobs},
             "alpha": alpha,                 # UNOBSERVED -- diagnostics only
             "tau_true": tau_i,
             "CATT": catt,
@@ -339,9 +445,11 @@ def generate_staggered_did(seed: int = 0, **overrides) -> pd.DataFrame:
     if (cohort_idx == 0).sum() == 0:
         cohort[0], cohort_idx[0] = np.inf, 0
 
-    tau_i = _effect_function(Xu, float(p["base_effect"]), p["effect_type"])
-    f_levels = _prognostic_levels(Xu, int(p["linearity_degree"]))
-    slope_i = p["trend_heterogeneity"] * Xu["X3"]
+    tau_i = _effect_function(Xu, float(p["base_effect"]), p["effect_type"],
+                             int(p["linearity_degree"]))
+    f_levels = _prognostic_levels(Xu)
+    slope_i = _trend_function(Xu, float(p["trend_heterogeneity"]))
+    Xobs = _observed_covariates(Xu, int(p["linearity_degree"]))
     eps = _ar1_errors(n, n_periods, float(p["ar1_rho"]),
                       float(p["epsilon_scale"]), rng)
     cohort_mult = list(p["cohort_multipliers"])
@@ -352,7 +460,7 @@ def generate_staggered_did(seed: int = 0, **overrides) -> pd.DataFrame:
     beta_0, beta_time = -0.5, 0.2
     rows = []
     for t in range(n_periods):
-        gamma_t = beta_time * (t ** 2 if int(p["linearity_degree"]) >= 3 else t)
+        gamma_t = beta_time * t
         D = ((cohort != np.inf) & (t >= cohort)).astype(int)
         k = np.where(cohort == np.inf, np.nan, t - cohort)
         # cohort- and event-time-varying multiplier on the unit effect
@@ -371,7 +479,7 @@ def generate_staggered_did(seed: int = 0, **overrides) -> pd.DataFrame:
             "D": D,
             "eventually_treated": (cohort_idx > 0).astype(int),
             "event_time": k,
-            **{c: Xu[c] for c in Xu},
+            **{c: Xobs[c] for c in Xobs},
             "alpha": alpha,                 # UNOBSERVED -- diagnostics only
             "tau_true": tau_i,
             "CATT": catt,

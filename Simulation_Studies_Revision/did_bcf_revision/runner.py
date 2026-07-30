@@ -13,22 +13,38 @@ import os
 import pandas as pd
 
 from .dgps import generate_canonical_did, generate_staggered_did, true_estimands
-from .did_bcf import fit_did_bcf, plain_estimands
+from .did_bcf import DEFAULT_SPEC, fit_did_bcf, plain_estimands
 from .posterior_correction import corrected_estimands
+from .structured import fit_structured, is_structured
 from . import config as cfg
 
 RESULTS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "Results")
 _GENERATORS = {"canonical": generate_canonical_did, "staggered": generate_staggered_did}
 
 
+def fit_any(df, bcf_params: dict | None = None, seed: int | None = None,
+            spec: str = DEFAULT_SPEC):
+    """Fit whichever estimator ``spec`` names.
+
+    The stochtree-based specifications (``published``, ``rfx``, ``propensity``,
+    ...) differ only in the arguments handed to ``BCFModel``; the ``structured``
+    ones are a different model and go through :mod:`did_bcf_revision.structured`.
+    Both return the same ``FitResult``.
+    """
+    if is_structured(spec):
+        return fit_structured(df, bcf_params=bcf_params, seed=seed, spec=spec)
+    return fit_did_bcf(df, bcf_params=bcf_params, seed=seed, spec=spec)
+
+
 def process_rep(dgp: str, dgp_params: dict, N: int, rep: int, setting: str,
                 bcf_params: dict | None = None, prop_method: str = "logit",
-                n_splits: int = 2, pretrend_recenter: bool = True) -> pd.DataFrame:
+                n_splits: int = 2, pretrend_recenter: bool = False,
+                spec: str = DEFAULT_SPEC) -> pd.DataFrame:
     """Run one replication; return tidy summary rows for both methods."""
     gen = _GENERATORS[dgp]
     df = gen(seed=int(rep), **{**dgp_params, "n_units": int(N)})
 
-    fit = fit_did_bcf(df, bcf_params=bcf_params, seed=int(rep))
+    fit = fit_any(df, bcf_params=bcf_params, seed=int(rep), spec=spec)
     plain = plain_estimands(fit, pretrend_recenter=pretrend_recenter)
     corrected = corrected_estimands(fit, propensity_method=prop_method,
                                     n_splits=n_splits, seed=int(rep))
@@ -41,20 +57,24 @@ def process_rep(dgp: str, dgp_params: dict, N: int, rep: int, setting: str,
     out.insert(2, "linearity_degree", int(dgp_params.get("linearity_degree", 1)))
     out.insert(3, "N", int(N))
     out.insert(4, "rep", int(rep))
+    out.insert(5, "spec", spec)
     return out
 
 
 def run_experiment(exp: "cfg.Experiment", bcf_params: dict | None = None,
                    prop_method: str = "logit", n_splits: int = 2,
-                   pretrend_recenter: bool = True, jobs: int = 1,
+                   pretrend_recenter: bool = False, jobs: int = 1,
                    linearity_degree: int | None = None,
-                   out_dir: str | None = None, save: bool = True) -> pd.DataFrame:
+                   out_dir: str | None = None, save: bool = True,
+                   spec: str = DEFAULT_SPEC) -> pd.DataFrame:
     """Run every (N, rep) of ``exp`` and (optionally) save the summaries.
 
     Returns the concatenated summary DataFrame (plain + corrected DiD-BCF).
     When ``linearity_degree`` is given it overrides the scenario default and is
     appended to the output filename; writes
-    ``<out_dir>/summaries_<exp.name>[_lin_<d>].csv`` when ``save`` is true.
+    ``<out_dir>/summaries_<exp.name>[_lin_<d>][_<spec>].csv`` when ``save`` is
+    true.  A non-default ``spec`` is appended so route comparisons do not
+    overwrite the published-specification runs.
     """
     out_dir = out_dir or RESULTS_DIR
     params = dict(exp.dgp_params)
@@ -62,14 +82,17 @@ def run_experiment(exp: "cfg.Experiment", bcf_params: dict | None = None,
     if linearity_degree is not None:
         params["linearity_degree"] = int(linearity_degree)
         suffix = f"_lin_{int(linearity_degree)}"
+    if spec != DEFAULT_SPEC:
+        suffix += f"_{spec}"
 
     tasks = [(N, rep) for N in exp.n_values for rep in range(exp.reps)]
     print(f"[{exp.name}{suffix}] {exp.dgp} DGP | N={exp.n_values} | reps={exp.reps} "
-          f"| {len(tasks)} fits | jobs={jobs}")
+          f"| spec={spec} | {len(tasks)} fits | jobs={jobs}")
 
     def _one(N, rep):
         return process_rep(exp.dgp, params, N, rep, exp.name,
-                           bcf_params, prop_method, n_splits, pretrend_recenter)
+                           bcf_params, prop_method, n_splits, pretrend_recenter,
+                           spec)
 
     if jobs and jobs > 1:
         from joblib import Parallel, delayed

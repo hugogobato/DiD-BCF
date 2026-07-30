@@ -46,7 +46,15 @@ def load_summaries(results_dir: str, pattern: str = "summaries_*.csv") -> pd.Dat
     frames = [pd.read_csv(f) for f in files]
     print(f"Loaded {len(files)} summary file(s), "
           f"{sum(len(x) for x in frames)} rows.")
-    return pd.concat(frames, ignore_index=True)
+    out = pd.concat(frames, ignore_index=True)
+    # Runs under an identification repair carry a `spec` column and are grouped
+    # separately; files written before it existed are the published one.
+    out["spec"] = (out["spec"] if "spec" in out.columns else "published")
+    out["spec"] = out["spec"].fillna("published")
+    specs = sorted(out["spec"].unique())
+    if specs != ["published"]:
+        print(f"  specifications present: {specs}")
+    return out
 
 
 def main():

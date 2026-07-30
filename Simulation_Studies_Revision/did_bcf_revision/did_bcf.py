@@ -11,20 +11,90 @@ exposes a clean, reusable interface:
 * :func:`plain_estimands` -> tidy posterior summaries for the *uncorrected*
   DiD-BCF GATT(g,t), event-study ATT(k) and overall ATT.
 
-The "plain" estimand is the reparameterised DiD contrast used throughout the
-paper: for a treated unit ``i`` of cohort ``g``,
+The "plain" estimand is the treatment forest itself, evaluated on the treated
+post-treatment rows:
 
-    CATT_i(t) = tau_hat(i, t) - tau_hat(i, g-1)              (draw by draw)
+    CATT_i(t) = tau_hat(i, t)                                (draw by draw)
 
-i.e. the treatment-effect forest evaluated at calendar time ``t`` minus its
-value at the last pre-treatment period ``g-1``.  Under conditional parallel
-trends the subtracted term is ~0, so this both (a) implements the
-reparameterisation's differencing and (b) leaves ``tau_hat(i, k)`` for ``k<0``
-available as a pre-trends diagnostic.  Set ``pretrend_recenter=False`` to report
-the raw forest instead.
+An earlier version of this module defaulted to a "pre-trend recentring" that
+reported ``tau_hat(i, t) - tau_hat(i, g-1)`` instead, on the reasoning that
+under conditional parallel trends the subtracted term is ~0.  That reasoning
+does not apply to this parameterisation.  The model is ``y = mu(X) +
+tau(X) Z`` with ``Z = D_it``, so ``Z`` is zero on every pre-treatment row and
+those rows carry **no likelihood information about tau at all**: the forest has
+no gradient with which to split on time before adoption, so ``tau_hat(i, g-1)``
+is not an estimate of a pre-treatment effect, it is the post-treatment estimate
+re-evaluated at a different time value.  Subtracting it annihilates the
+estimate (measured: 3.655 post against 3.669 at ``g-1``, true ATT 3.849).
+``pretrend_recenter`` is retained for reproducing the earlier runs but defaults
+to ``False`` and should stay there.
+
+A pre-trend diagnostic requires the *unconstrained* specification, in which
+``Z = 1[G_i != inf]`` so that ``tau(X, k)`` is estimable for ``k < 0``; it
+cannot be recovered by subtraction inside the constrained fit.
 
 ``stochtree`` is imported lazily so this module can be imported on a machine
 without it (e.g. to run the metrics layer); only :func:`fit_did_bcf` needs it.
+
+--------------------------------------------------------------------------------
+Identification specifications (``spec=``)
+--------------------------------------------------------------------------------
+``Results/identification_note.tex`` shows that with an unrestricted prognostic
+forest over ``(D_i, t, X)`` the pair ``(mu + c tau D, (1-c) tau)`` has the same
+likelihood for every ``c``, so ``mu`` and ``tau`` are not separately identified
+and only the priors break the tie.  :data:`SPECS` collects the repairs; every
+one of them is a different set of arguments to the *same* ``stochtree`` call, so
+they can be compared on one line of the runner.
+
+``published``
+    The submitted specification: the ever-treated indicator and calendar time
+    both inside ``mu``.  Kept as the reproduction target.
+
+    Note what this actually does in ``stochtree``.  ``BCFModel.sample`` defaults
+    to ``propensity_covariate="prognostic"``, and no ``pi_train`` is passed
+    here, so stochtree fits an *internal* BART model of ``Z = D_it`` on ``X``
+    -- which contains ``time`` and ``treatment_group``, of which ``D_it`` is a
+    deterministic function -- and appends the fitted ``pi_hat`` to ``mu``'s
+    split set with non-zero weight *regardless of* ``keep_vars``.  Measured on
+    ``B1_baseline``: ``corr(pi_hat, D_it) = 0.97`` at ``N = 200`` and ``0.98``
+    at ``N = 800``, with the two groups perfectly separated, so ``1{pi_hat >
+    0.5}`` reproduces ``D_it`` exactly.  The flat direction of the note needs
+    two splits (group, then time); this needs one, on a covariate purpose-built
+    to be a perfect proxy for the treatment.  This channel is *not* in the
+    original notebooks, which passed the constant ``pi_train = 0.5``.
+
+``published_constant_pi``
+    The original notebooks' call: identical to ``published`` but with the
+    uninformative ``pi_train = 0.5``.  Isolates how much of the leak is the
+    internal propensity and how much is the group-by-time flat direction.
+
+``rfx`` (route 1 of the note, Section 3)
+    Drop the group indicators from ``mu``'s split set and carry the static
+    group difference as an additive group-level random intercept, giving
+    ``mu(X, t) + a_G``: the forest sees time but not the group, the random
+    effect sees the group but not time.  The propensity is switched off.
+
+``rfx_unit``
+    Same, but the random intercept is at the *unit* level.  Time-invariant, so
+    it still cannot represent ``D_it``, and it additionally absorbs the
+    unobserved ``alpha_i`` that the canonical DGP puts in the residual.  With
+    ``N`` groups instead of two, its variance component is far better
+    identified than the group-level version.
+
+``propensity`` (route 2 of the note)
+    The Hahn et al. (2020) prescription: drop the group indicators from ``mu``
+    and pass ``pi_hat(X_i) = P(G_i != inf | X_i)`` in their place.  Estimated
+    at the *unit* level from the covariates alone, so -- unlike stochtree's
+    internal model -- it is a propensity for *ever* being treated and is
+    constant within unit, which is what makes it a summary of selection rather
+    than a copy of ``D_it``.  A mitigation, not a guarantee: a tree can still
+    split on ``pi_hat > c`` and then on ``time``.
+
+``rfx_propensity``
+    Routes 1 and 2 together, which the note observes compose.
+
+The corrected DiD-BCF (impose the two-way restriction structurally) changes the
+*model*, not its arguments, and lives in :mod:`did_bcf_revision.structured`.
 """
 
 from __future__ import annotations
@@ -39,12 +109,63 @@ PROGNOSTIC_COLS = ["eventually_treated", "X1", "X2", "X3", "X4", "X5",
                    "time", "treatment_group"]
 TREATMENT_COLS = ["X1", "X2", "time", "treatment_group"]  # effect modifiers + axes
 
+# The group indicators appear twice in the published design matrix; both have to
+# go for a spec that removes the group from the prognostic forest.
+GROUP_COLS = ("eventually_treated", "treatment_group")
+COVARIATE_COLS = ("X1", "X2", "X3", "X4", "X5")
+
 DEFAULT_BCF_PARAMS = dict(
     num_gfr=50,
     num_mcmc=500,
     keep_every=5,
     num_chains=3,
 )
+
+
+@dataclass(frozen=True)
+class Spec:
+    """One identification specification: a set of arguments to ``BCFModel``."""
+    name: str
+    prognostic_cols: tuple      # split set of the mu forest
+    treatment_cols: tuple       # split set of the tau forest
+    propensity: str             # "internal" | "constant" | "unit" | "none"
+    rfx: str                    # "none" | "group" | "unit"
+    note: str = ""
+
+
+_ALL_PROG = tuple(PROGNOSTIC_COLS)
+_NO_GROUP_PROG = tuple(c for c in PROGNOSTIC_COLS if c not in GROUP_COLS)
+_TREAT = tuple(TREATMENT_COLS)
+
+SPECS: dict[str, Spec] = {
+    s.name: s for s in (
+        Spec("published", _ALL_PROG, _TREAT, "internal", "none",
+             "submitted specification; stochtree's internal propensity is a "
+             "perfect proxy for D_it and enters mu"),
+        Spec("published_constant_pi", _ALL_PROG, _TREAT, "constant", "none",
+             "original notebooks: pi_train = 0.5, so the only leak channel is "
+             "the group-by-time flat direction"),
+        Spec("rfx", _NO_GROUP_PROG, _TREAT, "none", "group",
+             "route 1: group out of mu, additive group random intercept"),
+        Spec("rfx_unit", _NO_GROUP_PROG, _TREAT, "none", "unit",
+             "route 1 with unit-level random intercepts, which also absorb "
+             "the unobserved alpha_i"),
+        Spec("propensity", _NO_GROUP_PROG, _TREAT, "unit", "none",
+             "route 2: group out of mu, unit-level P(ever treated | X) in"),
+        Spec("rfx_propensity", _NO_GROUP_PROG, _TREAT, "unit", "group",
+             "routes 1 and 2 together"),
+    )
+}
+DEFAULT_SPEC = "published"
+
+
+def get_spec(spec: "str | Spec") -> Spec:
+    if isinstance(spec, Spec):
+        return spec
+    try:
+        return SPECS[spec]
+    except KeyError:
+        raise KeyError(f"Unknown spec {spec!r}. Available: {sorted(SPECS)}") from None
 
 
 @dataclass
@@ -56,20 +177,28 @@ class FitResult:
     row_of: dict                    # (unit_id, time) -> row index in df
     design_cols: list = field(default_factory=lambda: list(PROGNOSTIC_COLS))
     bcf_params: dict = field(default_factory=dict)
+    spec: str = DEFAULT_SPEC
 
     @property
     def n_draws(self) -> int:
         return self.tau_draws.shape[1]
 
 
-def _build_design(df: pd.DataFrame):
-    """Return (X, Z, y, prognostic_keep_idx, treatment_keep_idx)."""
-    X = df[PROGNOSTIC_COLS].to_numpy(dtype=float)
+def _build_design(df: pd.DataFrame, spec: Spec):
+    """Return (X, Z, y, design_cols, prognostic_keep_idx, treatment_keep_idx).
+
+    The design matrix is the ordered union of the two split sets, in
+    :data:`PROGNOSTIC_COLS` order; ``keep_vars`` then zeroes the split weight of
+    every column a given forest may not use.
+    """
+    design_cols = [c for c in PROGNOSTIC_COLS
+                   if c in spec.prognostic_cols or c in spec.treatment_cols]
+    X = df[design_cols].to_numpy(dtype=float)
     Z = df["D"].to_numpy(dtype=float)
     y = df["Y"].to_numpy(dtype=float)
-    prog_idx = np.arange(len(PROGNOSTIC_COLS))
-    treat_idx = np.array([PROGNOSTIC_COLS.index(c) for c in TREATMENT_COLS])
-    return X, Z, y, prog_idx, treat_idx
+    prog_idx = np.array([design_cols.index(c) for c in spec.prognostic_cols])
+    treat_idx = np.array([design_cols.index(c) for c in spec.treatment_cols])
+    return X, Z, y, design_cols, prog_idx, treat_idx
 
 
 def _row_index_map(df: pd.DataFrame) -> dict:
@@ -77,8 +206,46 @@ def _row_index_map(df: pd.DataFrame) -> dict:
             for i, (u, t) in enumerate(zip(df["unit_id"], df["time"]))}
 
 
+def unit_propensity(df: pd.DataFrame, seed: int | None = None) -> np.ndarray:
+    """``pi_hat(X_i) = P(G_i != inf | X_i)``, broadcast to every panel row.
+
+    Fitted at the *unit* level (one row per unit) from the observed covariates
+    only.  Neither ``time`` nor any group indicator is an input, so the result
+    is a genuine summary of selection into ever-treated status and is constant
+    within unit -- in contrast to stochtree's internal model, which regresses
+    ``D_it`` on a design matrix that determines it.
+
+    Uses BART so the estimate survives the Kang--Schafer covariate transforms at
+    ``linearity_degree >= 2``; falls back to a logistic regression if
+    ``stochtree`` is unavailable.
+    """
+    units = df.drop_duplicates("unit_id").sort_values("unit_id")
+    Xu = units[list(COVARIATE_COLS)].to_numpy(dtype=float)
+    du = units["eventually_treated"].to_numpy(dtype=float)
+
+    if du.min() == du.max():                       # degenerate draw
+        pi_unit = np.full(len(du), float(du.mean()))
+    else:
+        try:
+            from stochtree import BARTModel
+            m = BARTModel()
+            m.sample(X_train=Xu, y_train=du, num_gfr=10, num_burnin=0,
+                     num_mcmc=10,
+                     general_params={"random_seed": int(seed)} if seed is not None else {})
+            pi_unit = np.asarray(m.predict(X=Xu, terms="y_hat", type="mean"),
+                                 dtype=float)
+        except ImportError:
+            from sklearn.linear_model import LogisticRegression
+            pi_unit = LogisticRegression(max_iter=1000).fit(Xu, du).predict_proba(Xu)[:, 1]
+    pi_unit = np.clip(pi_unit, 1e-3, 1 - 1e-3)
+
+    lookup = dict(zip(units["unit_id"].astype(int), pi_unit))
+    return df["unit_id"].astype(int).map(lookup).to_numpy(dtype=float)
+
+
 def fit_did_bcf(df: pd.DataFrame, bcf_params: dict | None = None,
-                seed: int | None = None) -> FitResult:
+                seed: int | None = None,
+                spec: "str | Spec" = DEFAULT_SPEC) -> FitResult:
     """Fit DiD-BCF on a single replication's panel.
 
     Parameters
@@ -87,16 +254,36 @@ def fit_did_bcf(df: pd.DataFrame, bcf_params: dict | None = None,
         columns in :data:`PROGNOSTIC_COLS` plus ``D`` and ``Y``).
     bcf_params : overrides for :data:`DEFAULT_BCF_PARAMS`.
     seed : optional ``random_seed`` forwarded to ``general_params``.
+    spec : identification specification, a key of :data:`SPECS` (see the module
+        docstring).  Defaults to the published one.
     """
     from stochtree import BCFModel  # lazy: only needed when actually fitting
 
+    spec = get_spec(spec)
     p = {**DEFAULT_BCF_PARAMS, **(bcf_params or {})}
     df = df.sort_values(["unit_id", "time"]).reset_index(drop=True)
-    X, Z, y, prog_idx, treat_idx = _build_design(df)
+    X, Z, y, design_cols, prog_idx, treat_idx = _build_design(df, spec)
 
     general_params = {"keep_every": p["keep_every"], "num_chains": p["num_chains"]}
     if seed is not None:
         general_params["random_seed"] = int(seed)
+
+    kwargs: dict = {}
+    if spec.propensity == "constant":
+        kwargs["propensity_train"] = np.full(len(df), 0.5)
+    elif spec.propensity == "unit":
+        kwargs["propensity_train"] = unit_propensity(df, seed=seed)
+    elif spec.propensity == "none":
+        general_params["propensity_covariate"] = "none"
+    # "internal": leave stochtree's default in place (see the module docstring).
+
+    rfx_ids = rfx_basis = None
+    if spec.rfx != "none":
+        key = "treatment_group" if spec.rfx == "group" else "unit_id"
+        rfx_ids = df[key].to_numpy(dtype=np.int32)
+        rfx_basis = np.ones((len(df), 1))
+        kwargs["rfx_group_ids_train"] = rfx_ids
+        kwargs["rfx_basis_train"] = rfx_basis
 
     model = BCFModel()
     model.sample(
@@ -105,6 +292,7 @@ def fit_did_bcf(df: pd.DataFrame, bcf_params: dict | None = None,
         general_params=general_params,
         prognostic_forest_params={"keep_vars": prog_idx},
         treatment_effect_forest_params={"keep_vars": treat_idx},
+        **kwargs,
     )
 
     mu_draws = np.asarray(model.mu_hat_train, dtype=float)
@@ -115,8 +303,17 @@ def fit_did_bcf(df: pd.DataFrame, bcf_params: dict | None = None,
     if tau_draws.ndim == 1:
         tau_draws = tau_draws[:, None]
 
+    if spec.rfx != "none":
+        # stochtree adds the random effect into y_hat but not into mu_hat.  The
+        # correction's nuisance m^s is a *difference* over time, in which a
+        # time-invariant intercept cancels, so this only affects readability of
+        # mu_draws -- but the control-arm surface should be the whole of it.
+        mu_draws = mu_draws + np.asarray(
+            model.rfx_container.predict(rfx_ids, rfx_basis), dtype=float) * model.y_std
+
     return FitResult(df=df, mu_draws=mu_draws, tau_draws=tau_draws,
-                     row_of=_row_index_map(df), bcf_params=p)
+                     row_of=_row_index_map(df), design_cols=design_cols,
+                     bcf_params=p, spec=spec.name)
 
 
 # --------------------------------------------------------------------------- #
@@ -166,7 +363,7 @@ def _summarise(draws: np.ndarray) -> dict:
     }
 
 
-def plain_estimands(fit: FitResult, pretrend_recenter: bool = True) -> pd.DataFrame:
+def plain_estimands(fit: FitResult, pretrend_recenter: bool = False) -> pd.DataFrame:
     """Tidy posterior summaries of the uncorrected DiD-BCF estimands.
 
     One row per estimand with ``method='plain'`` and the columns produced by
