@@ -45,7 +45,15 @@ STRUCTURED_SPECS = {
     "structured_rfx_unit": "unit",
 }
 
-__all__ = ["STRUCTURED_SPECS", "is_structured", "fit_structured"]
+# The two the revision actually uses.  `structured` is what the whole simulation
+# grid ran under; `structured_rfx_unit` adds unit-level random intercepts and is
+# the specification for panel applications with unobserved unit heterogeneity.
+# `structured_rfx` (group-level intercepts) is a middle case kept only because
+# the routes table reports it; it is not a production choice.
+PRODUCTION_SPECS = ("structured", "structured_rfx_unit")
+
+__all__ = ["STRUCTURED_SPECS", "PRODUCTION_SPECS", "is_structured",
+           "fit_structured"]
 
 
 def is_structured(spec: str) -> bool:

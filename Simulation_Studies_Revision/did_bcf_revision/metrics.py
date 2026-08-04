@@ -58,6 +58,7 @@ SURFACE_TYPE = "CATT"
 SURFACE_COLS = ["surf_rmse", "surf_mae", "surf_mape",
                 "surf_cover90", "surf_cover95", "surf_len90", "surf_len95"]
 _ZERO_TOL = 1e-8
+DECISION_ESTIMANDS = frozenset(("any", "any_bonf"))
 
 
 # --------------------------------------------------------------------------- #
@@ -99,7 +100,85 @@ def surface_summary(true, est, lo90=None, hi90=None, lo95=None, hi95=None) -> di
 # --------------------------------------------------------------------------- #
 # Decomposed metrics for the scalar (averaged) estimands
 # --------------------------------------------------------------------------- #
+def _empty_metrics(n_attempted: int) -> dict:
+    """Return the common shape for a group with no usable replications."""
+    return {"n_reps": 0, "n_reps_attempted": n_attempted,
+            "retention": 0.0, "role": "undefined"}
+
+
+def _decision_metrics_for_group(g: pd.DataFrame) -> pd.Series:
+    """Aggregate an any-k decision rule using its posterior tail only.
+
+    ``any`` and ``any_bonf`` are per-replication tests, not point estimates.
+    Their emitters therefore leave the point-estimate and interval columns
+    missing by design.  They must not pass through the ordinary point-estimate
+    filter, which would drop every replication before computing rejection
+    rates.
+    """
+    n_attempted = len(g)
+    finite = (np.isfinite(g["p_bayes"].to_numpy(dtype=float)) &
+              np.isfinite(g["true"].to_numpy(dtype=float)))
+    g = g[finite]
+    if g.empty:
+        return pd.Series(_empty_metrics(n_attempted))
+
+    truth = g["true"].to_numpy(dtype=float)
+    p_bayes = g["p_bayes"].to_numpy(dtype=float)
+    m = len(g)
+    reject05 = float(np.mean(p_bayes < 0.025))
+    reject10 = float(np.mean(p_bayes < 0.05))
+    nz = np.abs(truth) > _ZERO_TOL
+    return pd.Series({
+        "n_reps": m,
+        "n_reps_attempted": n_attempted,
+        "retention": m / n_attempted if n_attempted else np.nan,
+        "mean_true": float(np.mean(truth)),
+        # Decision rules have no point estimate, interval, or calibration
+        # statistic.  Keep the columns present, but do not invent values.
+        "bias": np.nan,
+        "abs_bias": np.nan,
+        "emp_sd": np.nan,
+        "variance": np.nan,
+        "rmse": np.nan,
+        "mae": np.nan,
+        "mape": np.nan,
+        "avg_post_sd": np.nan,
+        "sd_ratio": np.nan,
+        "cover90": np.nan,
+        "cover95": np.nan,
+        "len90": np.nan,
+        "len95": np.nan,
+        "reject05": reject05,
+        "reject10": reject10,
+        "mcse_bias": np.nan,
+        "mcse_cover90": np.nan,
+        "mcse_cover95": np.nan,
+        "mcse_reject05": float(np.sqrt(reject05 * (1 - reject05) / m)),
+        "mcse_reject10": float(np.sqrt(reject10 * (1 - reject10) / m)),
+        "role": "size" if not nz.any() else "power",
+    })
+
+
 def _metrics_for_group(g: pd.DataFrame) -> pd.Series:
+    estimand_id = str(g["estimand_id"].iloc[0]) if "estimand_id" in g else ""
+    if estimand_id in DECISION_ESTIMANDS:
+        return _decision_metrics_for_group(g)
+
+    # An estimator can fail on a replication and still emit a row: Callaway--
+    # Sant'Anna does this at the far end of the ramp, where a 5% never-treated
+    # share leaves it almost no clean comparison group. Those rows must be
+    # dropped *before* anything is computed, and dropped from every statistic
+    # alike. Left in, they corrupt the table two different ways at once: the
+    # mean-based columns (bias, rmse, mae, emp_sd) propagate the NaN and go
+    # blank, while the coverage columns compare `NaN <= true`, get False, and
+    # silently score the failure as a miss -- biasing coverage downward.
+    n_attempted = len(g)
+    finite = (np.isfinite(g["post_mean"].to_numpy(dtype=float)) &
+              np.isfinite(g["true"].to_numpy(dtype=float)))
+    g = g[finite]
+    if g.empty:
+        return pd.Series(_empty_metrics(n_attempted))
+
     true = g["true"].to_numpy(dtype=float)
     est = g["post_mean"].to_numpy(dtype=float)
     err = est - true
@@ -115,6 +194,12 @@ def _metrics_for_group(g: pd.DataFrame) -> pd.Series:
     role = "size" if not nz.any() else "power"
     return pd.Series({
         "n_reps": m,
+        # Every metric above is computed on these m replications. When
+        # retention < 1 the row describes a *selected* subsample -- the runs in
+        # which the estimator returned an estimate -- and is not comparable with
+        # a row from an estimator that ran everywhere.
+        "n_reps_attempted": n_attempted,
+        "retention": m / n_attempted if n_attempted else np.nan,
         "mean_true": float(np.mean(true)),
         "bias": float(np.mean(err)),
         "abs_bias": float(np.abs(np.mean(err))),

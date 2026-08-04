@@ -42,6 +42,20 @@ BASE_N = 200
 N_SWEEP = (200, 400, 800, 1600)
 LINEARITY_DEGREES = (1, 2, 3)
 
+# The Goodman-Bacon ramp (Workstream D, Reviewer 3.1.2).  ``dynamic_ramp`` moves
+# how *wrong* the already-treated comparisons are but leaves their **weight**
+# untouched -- that weight is a function of the adoption design alone.  Shrinking
+# the never-treated pool is the knob that actually moves it: measured mean weight
+# on "Later_vs_Earlier" comparisons runs 0.076 -> 0.249 across this grid while the
+# effect DGP is held fixed, so estimator error can be plotted against it.
+NEVER_TREATED_SHARES = (0.40, 0.30, 0.25, 0.20, 0.10, 0.05)
+
+# The pre-trend diagnostic (Workstream F4, Reviewer 3.2.3): violation magnitude
+# axes.  ``group_trend`` is a differential slope in outcome units per period;
+# ``alpha_trend`` routes the violation through the *unobserved* confounder.
+GROUP_TREND_GRID = (0.05, 0.10, 0.20, 0.40)
+ALPHA_TREND_GRID = (0.10, 0.20, 0.40)
+
 
 @dataclass
 class Experiment:
@@ -121,6 +135,53 @@ def all_experiments(reps: int = DEFAULT_REPS) -> list:
                    n_values=(BASE_N,), reps=reps,
                    note="stronger dynamics -> larger TWFE contamination"),
     ]
+
+    # ---- D-ramp: sweep the *weight* on already-treated comparisons -------- #
+    for share in NEVER_TREATED_SHARES:
+        per_cohort = (1.0 - share) / 3.0
+        exps.append(Experiment(
+            f"D_ramp_nt{int(round(share * 100)):02d}", "D", "staggered",
+            _stag(dynamic_ramp=0.4, cohort_multipliers=(1.0, 1.5, 2.0),
+                  cohort_shares=(per_cohort,) * 3),
+            # 200 to match the TWFE and R-benchmark runs on these designs: the
+            # ramp compares estimators point by point, so a rep-count mismatch
+            # across methods would confound the comparison with Monte-Carlo noise.
+            n_values=(BASE_N,), reps=max(reps, 200),
+            note=f"never-treated share {share:.2f}: Goodman-Bacon weight on "
+                 f"already-treated comparisons rises as the clean control pool "
+                 f"shrinks (effect DGP held fixed)"))
+
+    # ---- PT: the pre-trend / conditional-PTA diagnostic ------------------- #
+    exps += [
+        Experiment("PT_hold", "PT", "canonical",
+                   _canon(alpha_sd=1.0, conf_strength=1.0),
+                   n_values=(BASE_N,), reps=max(reps, 200),
+                   note="conditional PT holds: false-positive rate of the "
+                        "diagnostic (this is B1_baseline's DGP)"),
+        Experiment("PT_conditional", "PT", "canonical",
+                   _canon(alpha_sd=1.0, conf_strength=0.0,
+                          selection="observable", trend_heterogeneity=0.6),
+                   n_values=(BASE_N,), reps=max(reps, 200),
+                   note="conditional PT holds but UNconditional PT fails: the "
+                        "covariate-driven trend differs across arms because "
+                        "assignment depends on X. A marginal event study should "
+                        "flag it; the covariate-conditional diagnostic should not"),
+    ]
+    for d in GROUP_TREND_GRID:
+        exps.append(Experiment(
+            f"PT_violation_g{int(round(d * 100)):02d}", "PT", "canonical",
+            _canon(alpha_sd=1.0, conf_strength=1.0, group_trend=d),
+            n_values=(BASE_N,), reps=max(reps, 200),
+            note=f"treated group on a differential path, slope {d:g} per period: "
+                 f"detection power against violation magnitude"))
+    for lam in ALPHA_TREND_GRID:
+        exps.append(Experiment(
+            f"PT_violation_a{int(round(lam * 100)):02d}", "PT", "canonical",
+            _canon(alpha_sd=1.0, conf_strength=1.0, alpha_trend=lam),
+            n_values=(BASE_N,), reps=max(reps, 200),
+            note=f"the unobserved confounder also drives the slope "
+                 f"(lambda={lam:g}): violation of conditional PT that no "
+                 f"adjustment on observables can remove"))
     return exps
 
 

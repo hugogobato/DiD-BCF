@@ -15,7 +15,7 @@ import pandas as pd
 from .dgps import generate_canonical_did, generate_staggered_did, true_estimands
 from .did_bcf import DEFAULT_SPEC, fit_did_bcf, plain_estimands
 from .posterior_correction import corrected_estimands
-from .structured import fit_structured, is_structured
+from .structured import PRODUCTION_SPECS, fit_structured, is_structured
 from . import config as cfg
 
 RESULTS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "Results")
@@ -23,16 +23,26 @@ _GENERATORS = {"canonical": generate_canonical_did, "staggered": generate_stagge
 
 
 def fit_any(df, bcf_params: dict | None = None, seed: int | None = None,
-            spec: str = DEFAULT_SPEC):
+            spec: str = DEFAULT_SPEC, allow_legacy: bool = False):
     """Fit whichever estimator ``spec`` names.
 
-    The stochtree-based specifications (``published``, ``rfx``, ``propensity``,
-    ...) differ only in the arguments handed to ``BCFModel``; the ``structured``
-    ones are a different model and go through :mod:`did_bcf_revision.structured`.
-    Both return the same ``FitResult``.
+    Only the structured specifications are estimators.  The stochtree-based ones
+    (``published``, ``rfx``, ``propensity``, ...) all leave the prognostic forest
+    unrestricted and so all carry the flat likelihood direction of
+    ``Results/identification_note.tex``; they exist only so the routes script can
+    demonstrate that, and reaching them requires ``allow_legacy=True``.  This
+    gate exists because the default used to be ``published``, and a template that
+    simply omitted ``spec=`` therefore ran the broken estimator silently.
     """
     if is_structured(spec):
         return fit_structured(df, bcf_params=bcf_params, seed=seed, spec=spec)
+    if not allow_legacy:
+        raise ValueError(
+            f"{spec!r} is a legacy specification with a known identification "
+            f"failure (see Results/identification_note.tex) and is not usable "
+            f"for results. Use one of {list(PRODUCTION_SPECS)}. Only "
+            f"scripts/run_identification_routes.py may run it, via "
+            f"allow_legacy=True.")
     return fit_did_bcf(df, bcf_params=bcf_params, seed=seed, spec=spec)
 
 
@@ -66,15 +76,21 @@ def run_experiment(exp: "cfg.Experiment", bcf_params: dict | None = None,
                    pretrend_recenter: bool = False, jobs: int = 1,
                    linearity_degree: int | None = None,
                    out_dir: str | None = None, save: bool = True,
-                   spec: str = DEFAULT_SPEC) -> pd.DataFrame:
-    """Run every (N, rep) of ``exp`` and (optionally) save the summaries.
+                   spec: str = DEFAULT_SPEC,
+                   rep_start: int = 0, rep_end: int | None = None) -> pd.DataFrame:
+    """Run ``(N, rep)`` for ``rep in [rep_start, rep_end)`` and save the summaries.
 
     Returns the concatenated summary DataFrame (plain + corrected DiD-BCF).
     When ``linearity_degree`` is given it overrides the scenario default and is
     appended to the output filename; writes
-    ``<out_dir>/summaries_<exp.name>[_lin_<d>][_<spec>].csv`` when ``save`` is
-    true.  A non-default ``spec`` is appended so route comparisons do not
-    overwrite the published-specification runs.
+    ``<out_dir>/summaries_<exp.name>[_lin_<d>][_<spec>][_reps<a>-<b>].csv`` when
+    ``save`` is true.  A non-default ``spec`` is appended so route comparisons do
+    not overwrite the published-specification runs.
+
+    ``rep_start``/``rep_end`` split a long run across Colab sessions (capped at
+    roughly 8 hours).  Replications are seeded by their index, so the parts
+    concatenate into exactly the whole; ``aggregate_all.py`` reads every matching
+    file and de-duplicates on ``rep``.
     """
     out_dir = out_dir or RESULTS_DIR
     params = dict(exp.dgp_params)
@@ -85,9 +101,14 @@ def run_experiment(exp: "cfg.Experiment", bcf_params: dict | None = None,
     if spec != DEFAULT_SPEC:
         suffix += f"_{spec}"
 
-    tasks = [(N, rep) for N in exp.n_values for rep in range(exp.reps)]
-    print(f"[{exp.name}{suffix}] {exp.dgp} DGP | N={exp.n_values} | reps={exp.reps} "
-          f"| spec={spec} | {len(tasks)} fits | jobs={jobs}")
+    rep_end = int(exp.reps if rep_end is None else rep_end)
+    rep_start = int(rep_start)
+    if (rep_start, rep_end) != (0, exp.reps):
+        suffix += f"_reps{rep_start}-{rep_end}"
+    tasks = [(N, rep) for N in exp.n_values for rep in range(rep_start, rep_end)]
+    print(f"[{exp.name}{suffix}] {exp.dgp} DGP | N={exp.n_values} | "
+          f"reps={rep_start}..{rep_end} | spec={spec} | {len(tasks)} fits "
+          f"| jobs={jobs}")
 
     def _one(N, rep):
         return process_rep(exp.dgp, params, N, rep, exp.name,

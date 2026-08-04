@@ -74,7 +74,10 @@ def one_rep(spec: str, dgp: str, params: dict, N: int, rep: int,
     att_true = float(truth.query("estimand_type == 'ATT'")["true"].iloc[0])
 
     t0 = time.time()
-    fit = fit_any(df, bcf_params=bcf_params, seed=int(rep), spec=spec)
+    # This script is the one place allowed to run the broken specifications:
+    # showing they are broken is its entire purpose.
+    fit = fit_any(df, bcf_params=bcf_params, seed=int(rep), spec=spec,
+                  allow_legacy=True)
     fit_seconds = time.time() - t0
 
     # Retention: the share of the true effect the treatment forest still holds,

@@ -15,8 +15,24 @@ Outputs (in ``Results/``):
   bias, and the **weight on already-treated comparisons**;
 * ``twfe_event_study_<setting>.csv`` -- TWFE event-study coefficients vs truth.
 
-A ``--ramp-sweep`` mode sweeps the dynamic-effect strength to trace TWFE bias and
-the already-treated weight as contamination increases.
+Two sweep modes, and the distinction matters:
+
+``--ramp-sweep``
+    Sweeps ``dynamic_ramp``, i.e. how *inconsistent* the already-treated
+    comparisons are with the target.  The Goodman-Bacon **weights are a function
+    of the adoption design alone** -- cohort sizes and how long each cohort
+    spends treated -- so this sweep leaves ``w_already_treated`` exactly
+    constant (0.116 in the D designs) and moves only the bias.  It answers "how
+    bad does the contamination get?", not "what happens as there is more of it".
+
+``--design-sweep``
+    Shrinks the never-treated pool over :data:`config.NEVER_TREATED_SHARES` with
+    the effect DGP held fixed, which is the knob that actually moves the weight
+    on already-treated comparisons (measured 0.076 -> 0.338).  This is the
+    x-axis against which every estimator's error is plotted by
+    ``scripts/aggregate_ramp.py``; the matching ``D_ramp_nt*`` experiments in
+    ``config.py`` are the same designs, so the DiD-BCF / TWFE / R-benchmark runs
+    line up with these weights scenario by scenario.
 """
 
 from __future__ import annotations
@@ -96,7 +112,11 @@ def main():
     ap.add_argument("--jobs", type=int, default=1)
     ap.add_argument("--out", default=RESULTS_DIR)
     ap.add_argument("--ramp-sweep", action="store_true",
-                    help="sweep dynamic_ramp to trace TWFE bias vs contamination")
+                    help="sweep dynamic_ramp: how WRONG the bad comparisons are "
+                         "(their weight is unchanged by this -- see the docstring)")
+    ap.add_argument("--design-sweep", action="store_true",
+                    help="shrink the never-treated pool: how MUCH WEIGHT the bad "
+                         "comparisons carry, the x-axis of the ramp analysis")
     args = ap.parse_args()
     os.makedirs(args.out, exist_ok=True)
 
@@ -115,7 +135,27 @@ def main():
             rows.append({"dynamic_ramp": ramp, **s.to_dict()})
             print(f"ramp={ramp:.1f}: TWFE bias={s['twfe_bias']:+.3f}, "
                   f"already-treated weight={s['w_already_treated']:.3f}")
-        path = os.path.join(args.out, "goodman_bacon_ramp_sweep.csv")
+        path = os.path.join(args.out, f"goodman_bacon_ramp_sweep_{exp.name}.csv")
+        pd.DataFrame(rows).to_csv(path, index=False)
+        print(f"Wrote {path}")
+        return
+
+    if args.design_sweep:
+        rows = []
+        for share in cfg.NEVER_TREATED_SHARES:
+            per_cohort = (1.0 - share) / 3.0
+            params = {**exp.dgp_params, "cohort_shares": (per_cohort,) * 3}
+            out = _run(params, N, args.reps, args.jobs)
+            s = out["scalars"][["twfe", "att_true", "twfe_bias",
+                                "w_treated_vs_untreated", "w_earlier_vs_later",
+                                "w_already_treated"]].mean()
+            rows.append({"setting": f"D_ramp_nt{int(round(share * 100)):02d}",
+                         "never_treated_share": share, "N": N,
+                         "reps": args.reps, **s.to_dict()})
+            print(f"never-treated share={share:.2f}: "
+                  f"already-treated weight={s['w_already_treated']:.3f}, "
+                  f"TWFE bias={s['twfe_bias']:+.3f}")
+        path = os.path.join(args.out, f"goodman_bacon_design_sweep_{exp.name}.csv")
         pd.DataFrame(rows).to_csv(path, index=False)
         print(f"Wrote {path}")
         return

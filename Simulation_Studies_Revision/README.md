@@ -1,4 +1,4 @@
-# DiD-BCF revision simulations (Workstreams B1, B2, D)
+# DiD-BCF revision simulations (Workstreams B1, B2, D, PT)
 
 New simulation suite for the JBES revision, built on top of
 `../Simulation_Studies/` but redesigned to address the reviewer comments in
@@ -16,9 +16,24 @@ New simulation suite for the JBES revision, built on top of
   *pointwise* CATT coverage, and an `N ∈ {200, 400, 800, 1600}` sweep (anchored
   at the base size 200) exhibiting bias→0, variance→0 and √N stabilisation.
 * **D — staggered adoption** with treatment effects that vary by **both
-  event-time and cohort**, the **Goodman-Bacon decomposition** of TWFE, and a
-  contamination sweep tracing how TWFE degrades as the weight on
-  already-treated comparisons grows.
+  event-time and cohort**, the **Goodman-Bacon decomposition** of TWFE, and two
+  distinct sweeps: `--ramp-sweep` over the *strength* of the dynamics, and
+  `--design-sweep` over the **weight** already-treated comparisons carry. The
+  distinction matters — the Goodman-Bacon weights depend on the adoption design
+  alone, so `dynamic_ramp` leaves them exactly constant. The `D_ramp_nt*`
+  scenarios move that weight from 0.077 to 0.250 by shrinking the never-treated
+  pool with the effect DGP held fixed, and **every estimator in the suite** is
+  plotted against it.
+* **PT — the pre-trend / conditional-parallel-trends diagnostic** (Reviewer
+  3.2.3): the unconstrained specification fitted as a *separate diagnostic
+  model* so that `tau(X, k)` exists before adoption, with size, power against
+  two families of violation, and the discrimination case where conditional PT
+  holds but unconditional PT fails. Demonstrated on simulation and on the
+  `mpdta` empirical application.
+
+> Running both of these is documented step by step, with the Colab notebook
+> assignment and wall-time budget, in
+> [`RUN_PLAN_pretrend_and_ramp.md`](RUN_PLAN_pretrend_and_ramp.md).
 
 The panel matches the original study: **N = 200 units, 4 pre + 4 post periods**
 (the staggered DGP has 3 treated cohorts adopting at the first three post
@@ -49,13 +64,17 @@ original `../Simulation_Studies/`, adapted to the revision DGPs:
 
 ```
 1. (Colab, slow)   DiD_BCF/DiD_BCF_<scen>_lin_<d>.ipynb -> Results/summaries_<scen>_lin_<d>.csv
+1b.(Colab, slow)   Pretrend/Pretrend_<PT>_lin_<d>.ipynb -> Results/summaries_pretrend_<PT>_lin_<d>.csv
 2. (PC, fast)      TWFE/OLS_<scen>_lin_<d>.ipynb        -> Results/summaries_twfe_<scen>_lin_<d>.csv
 3. (PC, fast)      DGPs/data_creation_<scen>.py         -> R_code/<scen>_datasets/.../iteration_*.csv
-4. (R, fast)       R_code/<scen>_datasets/*.R           -> *_GATE_and_PValues_*.xlsx
+4. (R, fast)       R_code/<scen>_datasets/*.R           -> summaries_<method>_<scen>_lin_<d>.csv
+                   (or scripts/run_r_benchmarks.py, which does 3+4 in a temp dir)
 5. (PC, fast)      scripts/aggregate_metrics.py         -> Results/metrics_*.csv / .xlsx
 5b.(PC, fast)      scripts/aggregate_r_metrics.py       -> Results/metrics_r_*.csv
 6. (PC, parallel)  scripts/run_goodman_bacon.py         -> Results/goodman_bacon_*.csv
 7. (PC, fast)      scripts/make_figures.py              -> Results/B2_sweep_*.png
+8. (PC, fast)      Results/analysis/aggregate_all.py    -> Results/aggregated/*.csv
+9. (PC, fast)      Results/analysis/make_*_analysis.py  -> Results/{tables,figures}/
 ```
 
 Step 1 (the BCF MCMC fits) is the only expensive part. **There is one notebook
@@ -90,10 +109,21 @@ python scripts/aggregate_r_metrics.py
 
 # 5. Goodman-Bacon + TWFE vs truth (Workstream D)
 python scripts/run_goodman_bacon.py --experiment D_staggered --reps 500 --jobs 8
-python scripts/run_goodman_bacon.py --experiment D_contamination --ramp-sweep --jobs 8
+#    --ramp-sweep varies how WRONG the already-treated comparisons are;
+#    --design-sweep varies how much WEIGHT they carry (the one that moves it):
+python scripts/run_goodman_bacon.py --experiment D_staggered --design-sweep --reps 200 --jobs 3
+
+# 5b. the pre-trend / conditional-PTA diagnostic (Workstream PT)
+python scripts/run_pretrend.py --experiment PT_hold --reps 200 --jobs 2 --with-att
+python scripts/run_pretrend.py --all --linearity-degree 1 --with-att --jobs 2
+python scripts/run_pretrend_empirical.py --with-att     # on mpdta
 
 # 6. sample-size-sweep figures
 python scripts/make_figures.py --setting B2_sweep
+
+# 7. the two new analyses (after Results/analysis/aggregate_all.py)
+python Results/analysis/make_ramp_analysis.py       # error vs already-treated weight
+python Results/analysis/make_pretrend_analysis.py   # size / power / discrimination
 ```
 
 The notebooks are thin and **self-bootstrapping**: upload a single one to Colab
@@ -114,16 +144,25 @@ Mirrors `../Simulation_Studies/`: per-scenario data-creation scripts under
 `DiD_BCF/` and `TWFE/`, per-scenario R benchmarks under `R_code/`, and a
 `Results/` sink — with a shared engine package so nothing is duplicated.
 
-The **9 scenarios** are `B1_baseline`, `B1_strong_confounder`, `B1_serial_corr`,
-`B1_selection_obs`, `B1_null`, `B2_sweep`, `B2_sweep_serial`, `D_staggered`,
-`D_contamination`. Each becomes 1 data script, 3 DiD-BCF notebooks, 3 OLS
-notebooks, and one `R_code/<scenario>_datasets/` folder of 4 R estimators.
+The **estimation scenarios** are `B1_baseline`, `B1_strong_confounder`,
+`B1_serial_corr`, `B1_selection_obs`, `B1_selection_both`, `B1_null`,
+`B2_sweep`, `B2_sweep_serial`, `D_staggered`, `D_contamination` and the six
+`D_ramp_nt{40,30,25,20,10,05}` designs. Each becomes 1 data script, 3 DiD-BCF
+notebooks, 3 OLS notebooks, and one `R_code/<scenario>_datasets/` folder of 4 R
+estimators.
+
+The **9 diagnostic scenarios** (workstream `PT`) are `PT_hold`,
+`PT_conditional`, `PT_violation_g{05,10,20,40}` and `PT_violation_a{10,20,40}`.
+They have their own driver and no benchmark comparison, so each becomes 3
+notebooks under `Pretrend/` and nothing else.
 
 ```
 Simulation_Studies_Revision/
 ├── README.md
 ├── did_bcf_revision/              # importable engine (the source of truth)
 │   ├── dgps.py                    # canonical (B1) + staggered (D) DGPs, true_estimands()
+│   ├── pretrend.py                # PT: unconstrained diagnostic fit + Delta(k)
+│   ├── pretrend_runner.py         # PT Monte-Carlo driver (Pretrend/ notebooks + CLI)
 │   ├── did_bcf.py                 # stochtree BCF fit + PLAIN estimand summaries; SPECS (routes 1-2)
 │   ├── structured.py              # corrected DiD-BCF adapter -> ../../didbcf_structured/
 │   ├── posterior_correction.py    # Algorithm 1 (DR post-processing) -> CORRECTED summaries
@@ -140,18 +179,36 @@ Simulation_Studies_Revision/
 │   ├── DiD_BCF_B1_baseline_lin_1.ipynb ... DiD_BCF_D_contamination_lin_3.ipynb
 ├── TWFE/                          # OLS benchmark: one notebook per scenario × linearity (27; PC)
 │   ├── OLS_B1_baseline_lin_1.ipynb ... OLS_D_contamination_lin_3.ipynb
+├── Pretrend/                      # PT diagnostic: one notebook per PT scenario × linearity (27)
+│   ├── Pretrend_PT_hold_lin_1.ipynb ... Pretrend_PT_violation_a40_lin_3.ipynb
 ├── R_code/                        # R benchmarks, one folder per scenario (9 × 4 scripts)
 │   └── <scenario>_datasets/{did_dr_new.R, did2s.R, DoubleML_did.R, synthdid.R}
 ├── scripts/                       # the cheap / parallel local steps
 │   ├── run_did_bcf.py             # headless equivalent of the DiD_BCF/ notebooks (--spec)
+│   ├── run_pretrend.py            # headless equivalent of the Pretrend/ notebooks (PT)
+│   ├── run_pretrend_empirical.py  # the diagnostic on the mpdta application
 │   ├── run_identification_routes.py  # the identification acceptance test, all routes
 │   ├── run_twfe.py                # headless equivalent of the TWFE/ notebooks
+│   ├── run_r_benchmarks.py        # all four R estimators, data generated on the fly
 │   ├── aggregate_metrics.py       # decomposed metrics, all methods (B2)
-│   ├── run_goodman_bacon.py       # Goodman-Bacon + TWFE-vs-truth (D)
+│   ├── run_goodman_bacon.py       # Goodman-Bacon; --ramp-sweep and --design-sweep (D)
 │   ├── make_figures.py            # sample-size-sweep figures
-│   └── scaffold_suite.py          # regenerates DGPs/, DiD_BCF/, TWFE/, R_code/ from templates
+│   ├── scaffold_suite.py          # regenerates DGPs/, DiD_BCF/, TWFE/, Pretrend/, R_code/
+│   └── scaffold_colab_benchmarks.py  # regenerates DoubleML_Colab/, CFFE_Wang_Colab/
 └── Results/                       # all outputs land here
+    ├── analysis/style.py                    # the shared figure design system
+    ├── analysis/make_ramp_analysis.py       # D: every estimator vs already-treated weight
+    ├── analysis/make_pretrend_analysis.py   # PT: size, power, discrimination
+    └── empirical/                           # the mpdta diagnostic output
 ```
+
+> **`scaffold_suite.py` does not template the R scripts.** It used to, and its
+> copies had gone stale: a scaffold run silently replaced 3222 lines of the
+> current schema-emitting R scripts with older versions. They are now copied
+> from the checked-in reference scenario for the matching DGP (`B1_baseline` for
+> canonical, `D_staggered` for staggered) with only the scenario name
+> substituted, and the reference scenario is skipped so it can never overwrite
+> itself.
 
 ### Estimand schema (shared everywhere)
 
@@ -353,10 +410,20 @@ parameterised. The canonical-DiD knobs (and their reviewer target):
 | `trend_heterogeneity` | covariate-dependent trend → conditional PTA | R1.4 |
 | `effect_type` | `homogeneous` / `heterogeneous` CATT | — |
 | `base_effect=0` | sharp null for size/coverage | R1.3 / R2.2 |
+| `group_trend` | `delta · 1[ever treated] · t`: **violates** conditional PTA | R3.2.3 |
+| `alpha_trend` | `lambda · a_i · t`: violation routed through the *unobserved* confounder | R3.2.3 |
 
 Staggered adds `cohort_offsets`, `cohort_shares`, `cohort_multipliers` and
 `dynamic_ramp` (effect grows with exposure) — the cohort × event-time
 heterogeneity that breaks TWFE (R3.1.2).
+
+> `group_trend` and `alpha_trend` default to `0.0`, so every scenario that
+> predates them is bit-identical. Unlike `trend_heterogeneity`, which is a
+> function of the observed covariates and is therefore *removable* by
+> conditioning, these two are genuine violations of conditional parallel trends
+> — which is what makes them the right axis for the diagnostic's power curve.
+> The per-unit violation slope is stored as `pt_slope`, alongside `alpha`, for
+> diagnostics only, and is never passed to an estimator.
 
 > The unobserved `alpha` column is included in the data frame **for diagnostics
 > only** and is never placed in the estimator's design matrix.
@@ -519,6 +586,48 @@ Below is the complete mathematical description for each of the 9 scenarios.
     \text{CATT}_{it} = m_{G_i} \cdot (1 + 0.8 \cdot k) \cdot \tau(X_i)
     $$
   - All other formulas are identical to `D_staggered`.
+
+### 10. `D_ramp_nt40` … `D_ramp_nt05` — the already-treated-weight ramp
+* **Type**: Staggered adoption (D)
+* **Objective**: Move the **Goodman-Bacon weight on already-treated
+  comparisons** while holding the effect DGP fixed, so every estimator's error
+  can be plotted against it (Reviewer 3.1.2).
+* **Mathematical Formulations**: identical to `D_staggered` ($m = (1, 1.5, 2)$,
+  $r = 0.4$) except for the cohort shares. With never-treated share
+  $\pi_\infty \in \{0.40, 0.30, 0.25, 0.20, 0.10, 0.05\}$, each treated cohort
+  receives $\pi_j = (1 - \pi_\infty)/3$.
+* **Why this knob and not `dynamic_ramp`.** The Goodman-Bacon weights are
+  determined by the adoption design alone — group sizes $n_g$ and the fraction
+  of the panel $\bar D_g$ each group spends treated. `dynamic_ramp` changes the
+  2×2 comparison *estimates*, never their weights, so the earlier sweep reported
+  $w_{\text{already-treated}} = 0.1158$ at every point. Shrinking the clean
+  control pool moves it, measured over 200 replications:
+
+  | $\pi_\infty$ | 0.40 | 0.30 | 0.25 | 0.20 | 0.10 | 0.05 |
+  |---|---|---|---|---|---|---|
+  | $w_{\text{already-treated}}$ | 0.077 | 0.100 | 0.116 | 0.136 | 0.196 | 0.250 |
+  | TWFE bias | −0.26 | −0.39 | −0.47 | −0.57 | −0.89 | −1.18 |
+
+  `D_ramp_nt25` has exactly `D_staggered`'s design and reproduces its 0.116 /
+  −0.468, which is the consistency check on the family.
+
+### 11. `PT_hold`, `PT_conditional`, `PT_violation_g*`, `PT_violation_a*`
+* **Type**: Canonical DiD (workstream PT)
+* **Objective**: Operating characteristics of the pre-trend diagnostic — size,
+  power, and discrimination between conditional and unconditional PT.
+* **Mathematical Formulations**: all are `B1_baseline` with one change.
+
+  | scenario | change | conditional PTA |
+  |---|---|---|
+  | `PT_hold` | none | holds |
+  | `PT_conditional` | `selection="observable"`, $c = 0$, $\rho_{\text{tr}} = 0.6$ | holds (but *unconditional* PT fails: $X_4$ drives both assignment and slope) |
+  | `PT_violation_g{05,10,20,40}` | $Y_{it}(0) \mathrel{+}= \delta \cdot \mathbb{1}[G_i \ne \infty] \cdot t$, $\delta \in \{0.05, 0.1, 0.2, 0.4\}$ | **violated** |
+  | `PT_violation_a{10,20,40}` | $Y_{it}(0) \mathrel{+}= \lambda \cdot a_i \cdot t$, $\lambda \in \{0.1, 0.2, 0.4\}$ | **violated**, and unremovably so — $a_i$ is unobserved |
+
+  `PT_conditional` is the discriminating case: the estimator's assumption is
+  satisfied, so a covariate-conditional diagnostic should stay quiet, while a
+  marginal event study (which does not condition) should flag. Reported
+  detection rates for both make that a measurement rather than a claim.
 
 ---
 

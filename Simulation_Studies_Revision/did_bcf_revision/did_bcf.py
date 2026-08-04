@@ -156,7 +156,23 @@ SPECS: dict[str, Spec] = {
              "routes 1 and 2 together"),
     )
 }
-DEFAULT_SPEC = "published"
+# Every specification in SPECS above is a *stochtree* fit with an unrestricted
+# prognostic forest, so every one of them carries the flat likelihood direction
+# that `Results/identification_note.tex` documents.  None is a usable estimator.
+# They are kept for one reason only: the note's central claim is that the
+# published specification is inconsistent, and its evidence is the route
+# comparison in `scripts/run_identification_routes.py`, which has to be able to
+# *run* the broken specifications to show they are broken.  A reviewer who asks
+# "show me" needs that to still work.
+#
+# Nothing in the production path may use them.  `runner.fit_any` refuses unless
+# the caller passes `allow_legacy=True`, which only the routes script does.
+LEGACY_SPECS = tuple(SPECS)
+
+# The estimator.  `structured` is the two-way-restricted model of
+# `didbcf_structured`; `structured_rfx_unit` adds unit-level random intercepts.
+# The whole simulation grid is run under `structured`.
+DEFAULT_SPEC = "structured"
 
 
 def get_spec(spec: "str | Spec") -> Spec:
@@ -410,9 +426,17 @@ def _surface_record(df: pd.DataFrame, catt: np.ndarray, method: str) -> dict | N
     ``catt`` is the ``(n_obs, S)`` per-observation posterior draw array (NaN off
     the treated-post rows).  Compares the per-observation posterior mean and
     pointwise credible bounds to the true individual ``CATT``.
+
+    Returns ``None`` when the frame carries no true ``CATT`` column, which is
+    the case for a real panel: the surface metrics are error measurements
+    against a known truth and simply do not exist outside a simulation.  The
+    averaged estimands are unaffected, so :func:`plain_estimands` runs on the
+    empirical application as it does on the DGPs.
     """
     from .metrics import surface_summary
 
+    if "CATT" not in df.columns:
+        return None
     rows = df.index[(df["D"] == 1)].to_numpy()
     rows = rows[~np.isnan(catt[rows, 0])]
     if rows.size == 0:

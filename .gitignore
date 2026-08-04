@@ -65,3 +65,16 @@ Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/N=400/
 Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/N=1600/
 Simulation_Studies_Revision/Results/
 Simulation_Studies_Revision/CFFE_Wang_Colab/*.zip
+
+# Generated R-benchmark panels, for every scenario present or future.  The
+# per-scenario rules above predate the D_ramp_* family and would not have
+# covered it; these patterns are scenario-agnostic so a new scenario cannot
+# leak hundreds of MB of generated CSVs into the repository.
+Simulation_Studies_Revision/R_code/*_datasets/linearity_degree=*/
+Simulation_Studies_Revision/R_code/*_datasets/N=*/
+Simulation_Studies_Revision/R_code/*_datasets/*.csv
+Simulation_Studies_Revision/R_code/*_datasets/*.txt
+Simulation_Studies_Revision/R_code/*_datasets/*.xlsx
+
+Old_Simulation_Studies/
+

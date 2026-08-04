@@ -21,8 +21,10 @@ re-run to propagate a change across the whole suite.
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
+import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -210,8 +212,14 @@ from did_bcf_revision.runner import run_named
 from did_bcf_revision.metrics import (compute_metrics, plain_vs_corrected,
                                       surface_metrics)"""
 
-BCF_RUN = """REPS = 100      # replications (lower for a quick smoke test)
+BCF_RUN = """REPS = __REPS__      # this scenario's configured count (config.py)
 JOBS = 1        # parallel reps (keep 1 on a single-core/GPU Colab)
+
+# A Colab session is capped at roughly 8 hours and one fit is ~2 min. To split a
+# long run, set these to (0, 100) here and (100, 200) in a second copy of this
+# notebook: replications are seeded by index, so the parts concatenate into
+# exactly the undivided run and are written to separate files.
+REP_START, REP_END = 0, REPS
 
 bcf_params = dict(num_gfr=50, num_mcmc=500, keep_every=5, num_chains=3)
 
@@ -223,8 +231,24 @@ summaries = run_named(
     bcf_params=bcf_params,
     prop_method="logit",   # pilot propensity for the posterior correction
     n_splits=2,            # cross-fitting folds for the correction
+    spec="structured",     # the whole grid runs the corrected estimator; the
+                           # engine default is "published", so this is required
+    rep_start=REP_START, rep_end=REP_END,
+    save=False,
 )
-summaries.head()"""
+summaries.head()
+
+out_csv = "summaries___SCEN___lin___LIN__.csv"
+summaries.to_csv(out_csv, index=False)
+print("wrote", out_csv, "| rows:", len(summaries))
+
+output_file = out_csv
+try:
+    from google.colab import files
+    files.download(output_file)
+    print("Downloaded:", output_file)
+except Exception as e:
+    print("(Not on Colab / download skipped):", e)"""
 
 BCF_METRICS = """# Decomposed metrics: bias, MC SD/variance, RMSE, MAE, MAPE, coverage 90/95,
 # interval length, calibration ratio (avg_post_sd/emp_sd), size/power and their
@@ -283,297 +307,209 @@ display(compute_metrics(summaries))
 surface_metrics(summaries)"""
 
 
+# ---- Pre-trend diagnostic notebook cell sources (workstream PT) ---------- #
+PT_MD = """# Pre-trend diagnostic — __SCEN__ (linearity_degree=__LIN__)
+
+**Workstream PT · conditional-parallel-trends diagnostic (Reviewer 3.2.3)**
+
+__NOTE__
+
+The estimation model sets `Z = D_it`, which is zero on every pre-treatment row,
+so those rows carry **no information about tau** and no post-processing of that
+fit can produce a placebo coefficient. This notebook therefore fits the
+*unconstrained* specification (`Z = 1[G_i != inf]`, on in every period) as a
+**separate diagnostic model**, and reports
+
+$$\\\\Delta(k) = E\\\\big[\\\\tau(X, k) - \\\\tau(X, -1)\\\\;\\\\big|\\\\;\\\\text{treated}\\\\big],
+\\\\qquad k < -1,$$
+
+which is exactly zero under conditional parallel trends. The TWFE event-study
+placebo is run on the same replications, for free, as the standard-practice
+comparator.
+
+> **Colab:** upload just this notebook and *Run all*."""
+
+PT_PIP = BCF_PIP
+
+PT_SETUP = BOOTSTRAP + """
+from did_bcf_revision.pretrend_runner import run_named
+from did_bcf_revision.metrics import compute_metrics"""
+
+PT_RUN = """REPS = __REPS__      # detection rates need replications; 200 gives MCSE <= 0.035
+JOBS = 2        # ~1 GB RAM per worker; drop to 1 if the VM is memory-starved
+
+# WITH_ATT also fits the constrained estimation model on the same replications,
+# so the ATT bias the violation causes is measured alongside its detection.
+# It doubles the MCMC cost -- worth it at degree 1, skip it at 2 and 3.
+WITH_ATT = __WITHATT__
+
+# A Colab session is capped at roughly 8 hours. One fit is ~2 min, so a full
+# 200-replication WITH_ATT run is ~7 h at JOBS=2 -- close enough to the cap that
+# it is worth splitting. Set these to (0, 100) here and (100, 200) in a second
+# copy of this notebook; replications are seeded by index, so the two parts
+# concatenate into exactly the undivided run and land in separate files.
+REP_START, REP_END = 0, REPS
+
+summaries = run_named(
+    "__SCEN__",
+    linearity_degree=__LIN__,
+    reps=REPS,
+    jobs=JOBS,
+    with_att=WITH_ATT,
+    rfx="unit",     # unit intercepts absorb the level gap conditional PT allows
+    bcf_params=dict(num_gfr=50, num_mcmc=500, keep_every=5, num_chains=3),
+    rep_start=REP_START, rep_end=REP_END,
+)
+summaries.head()"""
+
+PT_METRICS = """# `reject05` on the PRE rows is the diagnostic's **size** when the true
+# differential slope is 0 and its **detection rate** otherwise; `any_bonf` is the
+# per-replication decision rule (any pre-period significant, Bonferroni-scaled).
+metrics = compute_metrics(summaries)
+pre = metrics[metrics.estimand_type == "PRE"]
+pre[["method", "estimand_id", "mean_true", "bias", "cover95",
+     "reject05", "mcse_reject05", "role"]].sort_values(["estimand_id", "method"])"""
+
+PT_SUB_MD = """## Conditional check
+
+`Delta(k)` within covariate subgroups. A marginal event study cannot produce
+this without pre-specifying the interactions; here it comes out of the same fit,
+and it is the version that matches what the estimator actually assumes."""
+
+PT_SUB = """sub = metrics[metrics.estimand_type == "PRE_SUB"]
+sub[["estimand_id", "mean_true", "bias", "emp_sd", "cover95", "reject05"]]"""
+
+
 # ---- R benchmark templates (token: @@SCEN@@) ----------------------------- #
-R_HEADER = r'''# %s benchmark for scenario "@@SCEN@@".
-# Run from inside R_code/@@SCEN@@_datasets/  (the folder holding the
-# linearity_degree=1/2/3 sub-folders written by DGPs/data_creation_@@SCEN@@.py).
-# Estimands are detected from the data, so this works for both the single-cohort
-# (canonical) and 3-cohort (staggered) scenarios.
-'''
+# ---- R benchmark scripts ------------------------------------------------- #
+# NOT templated here.  These scripts emit the DiD-BCF summary schema and have
+# been revised since this scaffold was written; embedding a second copy meant a
+# scaffold run silently reverted them (measured once: 3222 lines of the
+# schema-emitting versions replaced by the older templates).  They are instead
+# copied from the checked-in reference scenario for the matching DGP, with only
+# the two scenario-identifying lines substituted -- which is an exact
+# transformation, since the per-scenario scripts differ in nothing else.
+R_FILES = ["did_dr_new.R", "did2s.R", "DoubleML_did.R", "synthdid.R"]
+R_REFERENCE = {"canonical": "B1_baseline", "staggered": "D_staggered"}
 
-R_DID_DR = R_HEADER % "Callaway & Sant'Anna doubly-robust (R `did`)" + r'''
-library(did)
-library(progress)
-sink("output_did_dr.txt")
 
-lin_folders <- c("linearity_degree=1", "linearity_degree=2", "linearity_degree=3")
-options(warn = -1)
+def r_script(script: str, scen: str, dgp: str) -> str:
+    """The reference scenario's script, retargeted at ``scen``.
 
-for (lin in lin_folders) {
-  files <- list.files(lin, pattern = "^iteration_.*\\.csv$", full.names = TRUE)
-  if (length(files) == 0) { cat("No files in", lin, "- skipping\n"); next }
-  niter <- length(files)
-  RMSE <- numeric(niter); MAE <- numeric(niter); MAPE <- rep(NA_real_, niter)
-  est_rows <- list()
-  pb <- progress_bar$new(total = niter, format = paste0(lin, " [:bar] :current/:total"))
-  for (ii in seq_along(files)) {
-    pb$tick()
-    d <- read.csv(files[ii])
-    d$first_treat_period[!is.finite(d$first_treat_period)] <- 0
-    out <- tryCatch(
-      att_gt(yname = "Y", tname = "time", idname = "unit_id",
-             gname = "first_treat_period", xformla = ~ X_1+X_2+X_3+X_4+X_5,
-             data = d, est_method = "dr", control_group = "nevertreated",
-             print_details = FALSE, pl = FALSE, cores = 1),
-      error = function(e) NULL)
-    if (is.null(out)) next
-    groups <- sort(unique(out$group[out$group > 0]))
-    errs <- c(); aerr <- c(); ape <- c()
-    for (g in groups) {
-      post_t <- sort(unique(out$t[out$group == g & out$t >= g]))
-      for (t in post_t) {
-        sel <- which(out$group == g & out$t == t)
-        if (length(sel) == 0) next
-        est <- out$att[sel]; se <- out$se[sel]
-        truth <- mean(d$CATE[d$first_treat_period == g & d$time == t], na.rm = TRUE)
-        sig <- as.integer(abs(est / se) > 1.96)
-        errs <- c(errs, est - truth); aerr <- c(aerr, abs(est - truth))
-        if (truth != 0) ape <- c(ape, abs((est - truth) / truth))
-        est_rows[[length(est_rows) + 1]] <- data.frame(
-          iteration = ii - 1, group = g, t = t, k = t - g,
-          estimate = est, se = se, true = truth, sig = sig)
-      }
-    }
-    if (length(errs)) { RMSE[ii] <- sqrt(mean(errs^2)); MAE[ii] <- mean(aerr) }
-    if (length(ape)) MAPE[ii] <- mean(ape)
-  }
-  cat(sprintf("\n%s : mean RMSE=%.4f (sd %.4f)  MAE=%.4f  MAPE=%.4f\n",
-              lin, mean(RMSE), sd(RMSE), mean(MAE), mean(MAPE, na.rm = TRUE)))
-  metrics_df <- data.frame(iteration = 0:(niter - 1), RMSE = RMSE, MAE = MAE, MAPE = MAPE)
-  est_df <- if (length(est_rows)) do.call(rbind, est_rows) else data.frame()
-  fn <- paste0("did_dr_GATE_and_PValues_", lin, ".xlsx")
-  if (requireNamespace("openxlsx", quietly = TRUE)) {
-    wb <- openxlsx::createWorkbook()
-    openxlsx::addWorksheet(wb, "Metrics");  openxlsx::writeData(wb, "Metrics", metrics_df)
-    openxlsx::addWorksheet(wb, "Estimates"); openxlsx::writeData(wb, "Estimates", est_df)
-    openxlsx::saveWorkbook(wb, fn, overwrite = TRUE); cat("wrote", fn, "\n")
-  } else {
-    write.csv(metrics_df, paste0("did_dr_Metrics_", lin, ".csv"), row.names = FALSE)
-    write.csv(est_df,     paste0("did_dr_Estimates_", lin, ".csv"), row.names = FALSE)
-  }
-}
-sink()
-'''
+    The reference is picked by DGP, so ``DGP <- "..."`` never needs changing and
+    the scenario name is the only variable.  It appears only as a quoted string
+    (the header comment and the ``SETTING <- "..."`` assignment), and the two
+    use different phrasings across the four scripts, so every quoted occurrence
+    is replaced rather than a fixed pair of sentences.
+    """
+    ref = R_REFERENCE[dgp]
+    path = os.path.join(ROOT, "R_code", f"{ref}_datasets", script)
+    with open(path) as fh:
+        src = fh.read()
+    if f'SETTING <- "{ref}"' not in src:
+        raise RuntimeError(f"{ref}/{script} has no SETTING <- \"{ref}\" line; "
+                           "the reference script changed shape.")
+    return src.replace(f'"{ref}"', f'"{scen}"')
 
-R_DID2S = R_HEADER % "Gardner two-stage (R `did2s`) event study" + r'''
-library(did2s)
-library(progress)
-sink("output_did2s.txt")
 
-lin_folders <- c("linearity_degree=1", "linearity_degree=2", "linearity_degree=3")
-options(warn = -1)
 
-for (lin in lin_folders) {
-  files <- list.files(lin, pattern = "^iteration_.*\\.csv$", full.names = TRUE)
-  if (length(files) == 0) { cat("No files in", lin, "- skipping\n"); next }
-  niter <- length(files)
-  RMSE <- numeric(niter); MAE <- numeric(niter); MAPE <- rep(NA_real_, niter)
-  est_rows <- list()
-  pb <- progress_bar$new(total = niter, format = paste0(lin, " [:bar] :current/:total"))
-  for (ii in seq_along(files)) {
-    pb$tick()
-    d <- read.csv(files[ii])
-    d$first_treat_period[!is.finite(d$first_treat_period)] <- 0
-    out <- tryCatch(
-      event_study(yname = "Y", tname = "time", idname = "unit_id",
-                  gname = "first_treat_period", xformla = ~ X_1+X_2+X_3+X_4+X_5,
-                  data = d, estimator = "did2s"),
-      error = function(e) NULL)
-    if (is.null(out)) next
-    sub <- out[out$estimator == "did2s", ]
-    sub$k <- suppressWarnings(as.integer(as.character(sub$term)))
-    errs <- c(); aerr <- c(); ape <- c()
-    for (kk in sort(unique(sub$k[is.finite(sub$k) & sub$k >= 0]))) {
-      row <- sub[sub$k == kk, ]
-      est <- row$estimate[1]; se <- row$std.error[1]
-      truth <- mean(d$CATE[d$D == 1 & d$event_time == kk], na.rm = TRUE)
-      sig <- as.integer(abs(est / se) > 1.96)
-      errs <- c(errs, est - truth); aerr <- c(aerr, abs(est - truth))
-      if (truth != 0) ape <- c(ape, abs((est - truth) / truth))
-      est_rows[[length(est_rows) + 1]] <- data.frame(
-        iteration = ii - 1, k = kk, estimate = est, se = se, true = truth, sig = sig)
-    }
-    if (length(errs)) { RMSE[ii] <- sqrt(mean(errs^2)); MAE[ii] <- mean(aerr) }
-    if (length(ape)) MAPE[ii] <- mean(ape)
-  }
-  cat(sprintf("\n%s : mean RMSE=%.4f (sd %.4f)  MAE=%.4f  MAPE=%.4f\n",
-              lin, mean(RMSE), sd(RMSE), mean(MAE), mean(MAPE, na.rm = TRUE)))
-  metrics_df <- data.frame(iteration = 0:(niter - 1), RMSE = RMSE, MAE = MAE, MAPE = MAPE)
-  est_df <- if (length(est_rows)) do.call(rbind, est_rows) else data.frame()
-  fn <- paste0("did2s_GATE_and_PValues_", lin, ".xlsx")
-  if (requireNamespace("openxlsx", quietly = TRUE)) {
-    wb <- openxlsx::createWorkbook()
-    openxlsx::addWorksheet(wb, "Metrics");  openxlsx::writeData(wb, "Metrics", metrics_df)
-    openxlsx::addWorksheet(wb, "Estimates"); openxlsx::writeData(wb, "Estimates", est_df)
-    openxlsx::saveWorkbook(wb, fn, overwrite = TRUE); cat("wrote", fn, "\n")
-  } else {
-    write.csv(metrics_df, paste0("did2s_Metrics_", lin, ".csv"), row.names = FALSE)
-    write.csv(est_df,     paste0("did2s_Estimates_", lin, ".csv"), row.names = FALSE)
-  }
-}
-sink()
-'''
+def _is_tracked(path):
+    """True if git tracks `path`.
 
-R_DOUBLEML = R_HEADER % "DoubleML doubly-robust DiD (random-forest nuisances)" + r'''
-library(did)
-library(progress)
-library(DoubleML)
-library(mlr3)
-library(mlr3learners)
-library(lgr)
-lgr::get_logger("mlr3")$set_threshold("fatal")
+    A tracked notebook is one the user committed, which for this repo means it
+    was run and its result kept.  Regenerating it silently replaces the
+    specification that produced the committed results -- this is exactly how the
+    `spec="structured"` argument got dropped from the whole B1/D grid -- so the
+    scaffold refuses to touch tracked files without `--force`.
+    """
+    try:
+        r = subprocess.run(["git", "ls-files", "--error-unmatch", path],
+                           cwd=ROOT, capture_output=True)
+        return r.returncode == 0
+    except Exception:
+        return True          # no git, or git failed: assume precious
 
-# Plug DoubleML's ATTE estimator into att_gt as a custom est_method (as Chang 2020).
-doubleml_did_rf <- function(y1, y0, D, covariates,
-                            ml_g = lrn("regr.ranger", num.trees = 500),
-                            ml_m = lrn("classif.ranger", num.trees = 500),
-                            n_folds = 5, n_rep = 1, ...) {
-  delta_y <- y1 - y0
-  dml_data <- DoubleML::double_ml_data_from_matrix(X = covariates, y = delta_y, d = D)
-  dml_obj <- DoubleML::DoubleMLIRM$new(dml_data, ml_g = ml_g, ml_m = ml_m,
-                                       score = "ATTE", n_folds = n_folds)
-  dml_obj$fit()
-  list(ATT = dml_obj$coef[1], att.inf.func = dml_obj$psi[, 1, 1])
-}
 
-sink("output_DoubleML_did.txt")
-lin_folders <- c("linearity_degree=1", "linearity_degree=2", "linearity_degree=3")
-options(warn = -1)
+def _has_been_run(path):
+    """True if `path` is a notebook carrying evidence of execution.
 
-for (lin in lin_folders) {
-  files <- list.files(lin, pattern = "^iteration_.*\\.csv$", full.names = TRUE)
-  if (length(files) == 0) { cat("No files in", lin, "- skipping\n"); next }
-  niter <- length(files)
-  RMSE <- numeric(niter); MAE <- numeric(niter); MAPE <- rep(NA_real_, niter)
-  est_rows <- list()
-  pb <- progress_bar$new(total = niter, format = paste0(lin, " [:bar] :current/:total"))
-  for (ii in seq_along(files)) {
-    pb$tick()
-    d <- read.csv(files[ii])
-    d$first_treat_period[!is.finite(d$first_treat_period)] <- 0
-    out <- tryCatch(
-      att_gt(yname = "Y", tname = "time", idname = "unit_id",
-             gname = "first_treat_period", xformla = ~ X_1+X_2+X_3+X_4+X_5,
-             data = d, est_method = doubleml_did_rf),
-      error = function(e) NULL)
-    if (is.null(out)) next
-    groups <- sort(unique(out$group[out$group > 0]))
-    errs <- c(); aerr <- c(); ape <- c()
-    for (g in groups) {
-      post_t <- sort(unique(out$t[out$group == g & out$t >= g]))
-      for (t in post_t) {
-        sel <- which(out$group == g & out$t == t)
-        if (length(sel) == 0) next
-        est <- out$att[sel]; se <- out$se[sel]
-        truth <- mean(d$CATE[d$first_treat_period == g & d$time == t], na.rm = TRUE)
-        sig <- as.integer(abs(est / se) > 1.96)
-        errs <- c(errs, est - truth); aerr <- c(aerr, abs(est - truth))
-        if (truth != 0) ape <- c(ape, abs((est - truth) / truth))
-        est_rows[[length(est_rows) + 1]] <- data.frame(
-          iteration = ii - 1, group = g, t = t, k = t - g,
-          estimate = est, se = se, true = truth, sig = sig)
-      }
-    }
-    if (length(errs)) { RMSE[ii] <- sqrt(mean(errs^2)); MAE[ii] <- mean(aerr) }
-    if (length(ape)) MAPE[ii] <- mean(ape)
-  }
-  cat(sprintf("\n%s : mean RMSE=%.4f (sd %.4f)  MAE=%.4f  MAPE=%.4f\n",
-              lin, mean(RMSE), sd(RMSE), mean(MAE), mean(MAPE, na.rm = TRUE)))
-  metrics_df <- data.frame(iteration = 0:(niter - 1), RMSE = RMSE, MAE = MAE, MAPE = MAPE)
-  est_df <- if (length(est_rows)) do.call(rbind, est_rows) else data.frame()
-  fn <- paste0("DoubleML_did_GATE_and_PValues_", lin, ".xlsx")
-  if (requireNamespace("openxlsx", quietly = TRUE)) {
-    wb <- openxlsx::createWorkbook()
-    openxlsx::addWorksheet(wb, "Metrics");  openxlsx::writeData(wb, "Metrics", metrics_df)
-    openxlsx::addWorksheet(wb, "Estimates"); openxlsx::writeData(wb, "Estimates", est_df)
-    openxlsx::saveWorkbook(wb, fn, overwrite = TRUE); cat("wrote", fn, "\n")
-  } else {
-    write.csv(metrics_df, paste0("DoubleML_did_Metrics_", lin, ".csv"), row.names = FALSE)
-    write.csv(est_df,     paste0("DoubleML_did_Estimates_", lin, ".csv"), row.names = FALSE)
-  }
-}
-sink()
-'''
+    Belt and braces for files git does not track. Executed notebooks keep
+    `outputs` and a non-null `execution_count`; a notebook whose outputs were
+    stripped before committing still carries Colab's per-cell `id`/`outputId`
+    metadata, so check that too.
+    """
+    if not os.path.exists(path):
+        return False
+    try:
+        with open(path) as fh:
+            nb = json.load(fh)
+    except Exception:
+        return True          # unreadable: refuse to touch it
+    for cell in nb.get("cells", []):
+        if cell.get("outputs") or cell.get("execution_count") is not None:
+            return True
+        meta = cell.get("metadata", {})
+        if "outputId" in meta or "colab" in meta:
+            return True
+    return False
 
-R_SYNTHDID = R_HEADER % "Synthetic DiD (overall ATT; covariate-residualised)" + r'''
-library(synthdid)
-library(progress)
-sink("output_synthdid.txt")
 
-# synthdid requires a single (block) adoption time, so -- as in the original
-# study -- eventually-treated units are treated as switching on at the earliest
-# post period; the estimand is the overall ATT.
-lin_folders <- c("linearity_degree=1", "linearity_degree=2", "linearity_degree=3")
-options(warn = -1)
-
-for (lin in lin_folders) {
-  files <- list.files(lin, pattern = "^iteration_.*\\.csv$", full.names = TRUE)
-  if (length(files) == 0) { cat("No files in", lin, "- skipping\n"); next }
-  niter <- length(files)
-  RMSE <- numeric(niter); MAE <- numeric(niter); MAPE <- rep(NA_real_, niter)
-  est_rows <- list()
-  pb <- progress_bar$new(total = niter, format = paste0(lin, " [:bar] :current/:total"))
-  for (ii in seq_along(files)) {
-    pb$tick()
-    d <- read.csv(files[ii])
-    d$first_treat_period[!is.finite(d$first_treat_period)] <- 0
-    ols <- lm(Y ~ X_1+X_2+X_3+X_4+X_5, data = d)
-    d$res_Y <- d$Y - predict(ols, newdata = d)
-    d$treated <- d$eventually_treated * d$post_treatment
-    panel <- data.frame(unit_id = d$unit_id, time = d$time,
-                        res_Y = d$res_Y, treated = d$treated)
-    est <- NA_real_; se <- NA_real_
-    try({
-      setup <- panel.matrices(panel)
-      tau <- synthdid_estimate(setup$Y, setup$N0, setup$T0)
-      est <- as.numeric(tau)
-      se <- tryCatch(sqrt(vcov(tau, method = "placebo")[1, 1]), error = function(e) NA_real_)
-    }, silent = TRUE)
-    truth <- mean(d$CATE[d$D == 1], na.rm = TRUE)
-    sig <- as.integer(is.finite(se) & abs(est / se) > 1.96)
-    if (is.finite(est)) {
-      RMSE[ii] <- abs(est - truth); MAE[ii] <- abs(est - truth)
-      if (truth != 0) MAPE[ii] <- abs((est - truth) / truth)
-    }
-    est_rows[[length(est_rows) + 1]] <- data.frame(
-      iteration = ii - 1, estimand = "ATT", estimate = est, se = se,
-      true = truth, sig = sig)
-  }
-  cat(sprintf("\n%s : mean |err|=%.4f (sd %.4f)  MAPE=%.4f\n",
-              lin, mean(RMSE), sd(RMSE), mean(MAPE, na.rm = TRUE)))
-  metrics_df <- data.frame(iteration = 0:(niter - 1), RMSE = RMSE, MAE = MAE, MAPE = MAPE)
-  est_df <- if (length(est_rows)) do.call(rbind, est_rows) else data.frame()
-  fn <- paste0("synthdid_GATE_and_PValues_", lin, ".xlsx")
-  if (requireNamespace("openxlsx", quietly = TRUE)) {
-    wb <- openxlsx::createWorkbook()
-    openxlsx::addWorksheet(wb, "Metrics");  openxlsx::writeData(wb, "Metrics", metrics_df)
-    openxlsx::addWorksheet(wb, "Estimates"); openxlsx::writeData(wb, "Estimates", est_df)
-    openxlsx::saveWorkbook(wb, fn, overwrite = TRUE); cat("wrote", fn, "\n")
-  } else {
-    write.csv(metrics_df, paste0("synthdid_Metrics_", lin, ".csv"), row.names = FALSE)
-    write.csv(est_df,     paste0("synthdid_Estimates_", lin, ".csv"), row.names = FALSE)
-  }
-}
-sink()
-'''
-
-R_FILES = {"did_dr_new.R": R_DID_DR, "did2s.R": R_DID2S,
-           "DoubleML_did.R": R_DOUBLEML, "synthdid.R": R_SYNTHDID}
+def write_notebook(path, cells, force=False):
+    """Write a notebook unless it is committed or holds a completed run."""
+    if not force:
+        if _is_tracked(path):
+            print(f"  SKIP (tracked by git): {os.path.relpath(path, ROOT)}")
+            return False
+        if _has_been_run(path):
+            print(f"  SKIP (already run): {os.path.relpath(path, ROOT)}")
+            return False
+    with open(path, "w") as f:
+        json.dump(_notebook(cells), f, indent=1)
+    return True
 
 
 def main():
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--force", action="store_true",
+                    help="regenerate notebooks even if they carry execution "
+                         "outputs (this DESTROYS the record of that run)")
+    args = ap.parse_args()
+    force = args.force
+
     exps = cfg.all_experiments()
     dgps_dir = os.path.join(ROOT, "DGPs")
     bcf_dir = os.path.join(ROOT, "DiD_BCF")
     ols_dir = os.path.join(ROOT, "TWFE")
     rcode_dir = os.path.join(ROOT, "R_code")
-    for dd in (dgps_dir, bcf_dir, ols_dir, rcode_dir):
+    pt_dir = os.path.join(ROOT, "Pretrend")
+    for dd in (dgps_dir, bcf_dir, ols_dir, rcode_dir, pt_dir):
         os.makedirs(dd, exist_ok=True)
 
-    n_data = n_bcf = n_ols = n_r = 0
+    n_data = n_bcf = n_ols = n_r = n_pt = 0
     for e in exps:
         ctx = dict(SCEN=e.name, WS=e.workstream, DGP=e.dgp,
-                   DGPHUMAN=DGP_HUMAN[e.dgp], NOTE=e.note)
+                   DGPHUMAN=DGP_HUMAN[e.dgp], NOTE=e.note, REPS=e.reps)
+
+        # Workstream PT has its own driver (the unconstrained diagnostic fit)
+        # and no benchmark comparison, so it gets one notebook family and none
+        # of the estimation-model scaffolding.
+        if e.workstream == "PT":
+            for d in LIN:
+                # The constrained refit that measures the violation's cost is
+                # only worth its doubled MCMC bill at the headline degree.
+                c = dict(ctx, LIN=d, WITHATT="True" if d == 1 else "False")
+                cells = [_cell("markdown", sub(PT_MD, **c)),
+                         _cell("code", sub(PT_PIP, **c)),
+                         _cell("code", sub(PT_SETUP, **c)),
+                         _cell("code", sub(PT_RUN, **c)),
+                         _cell("code", sub(PT_METRICS, **c)),
+                         _cell("markdown", sub(PT_SUB_MD, **c)),
+                         _cell("code", sub(PT_SUB, **c))]
+                n_pt += write_notebook(
+                    os.path.join(pt_dir, f"Pretrend_{e.name}_lin_{d}.ipynb"),
+                    cells, force)
+            continue
 
         # 1) data-creation script
         with open(os.path.join(dgps_dir, f"data_creation_{e.name}.py"), "w") as f:
@@ -595,9 +531,9 @@ def main():
             if e.dgp == "staggered":
                 bcf_cells += [_cell("markdown", sub(BCF_GB_MD, **c)),
                               _cell("code", sub(BCF_GB, **c))]
-            with open(os.path.join(bcf_dir, f"DiD_BCF_{e.name}_lin_{d}.ipynb"), "w") as f:
-                json.dump(_notebook(bcf_cells), f, indent=1)
-            n_bcf += 1
+            n_bcf += write_notebook(
+                os.path.join(bcf_dir, f"DiD_BCF_{e.name}_lin_{d}.ipynb"),
+                bcf_cells, force)
 
             ols_cells = [
                 _cell("markdown", sub(OLS_MD, **c)),
@@ -605,22 +541,27 @@ def main():
                 _cell("code", sub(OLS_RUN, **c)),
                 _cell("code", sub(OLS_METRICS, **c)),
             ]
-            with open(os.path.join(ols_dir, f"OLS_{e.name}_lin_{d}.ipynb"), "w") as f:
-                json.dump(_notebook(ols_cells), f, indent=1)
-            n_ols += 1
+            n_ols += write_notebook(
+                os.path.join(ols_dir, f"OLS_{e.name}_lin_{d}.ipynb"),
+                ols_cells, force)
 
-        # 3) R benchmark scripts
+        # 3) R benchmark scripts, retargeted from the reference scenario.
+        #    The reference scenario is its own source of truth and is skipped,
+        #    so re-running this can never rewrite the scripts it copies from.
         sdir = os.path.join(rcode_dir, f"{e.name}_datasets")
         os.makedirs(sdir, exist_ok=True)
-        for fname, tmpl in R_FILES.items():
+        if e.name in R_REFERENCE.values():
+            continue
+        for fname in R_FILES:
             with open(os.path.join(sdir, fname), "w") as f:
-                f.write(tmpl.replace("@@SCEN@@", e.name))
+                f.write(r_script(fname, e.name, e.dgp))
             n_r += 1
 
     print(f"scenarios: {len(exps)}")
     print(f"data_creation scripts: {n_data}")
     print(f"DiD_BCF notebooks:     {n_bcf}")
     print(f"OLS notebooks:         {n_ols}")
+    print(f"Pretrend notebooks:    {n_pt}")
     print(f"R scripts:             {n_r}")
 
 

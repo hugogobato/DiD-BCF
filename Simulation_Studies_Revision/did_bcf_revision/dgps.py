@@ -176,6 +176,35 @@ def _prognostic_levels(Xu: dict) -> np.ndarray:
     return -0.75 * X1 + 0.5 * X2 - 0.5 * X3 - 1.3 * X4 + 1.8 * X5
 
 
+def _violation_slope(alpha_raw: np.ndarray, treated_indicator: np.ndarray,
+                     alpha_trend: float, group_trend: float) -> np.ndarray:
+    """Extra trend slope that **violates conditional parallel trends**.
+
+    Everything in :func:`_trend_function` is a function of the observed
+    covariates, so conditioning on them restores parallel trends and the
+    identifying assumption of every estimator in the suite still holds.  This
+    term is the opposite: a differential slope that no adjustment on the
+    *observed* data can remove.  Two channels, both zero by default so every
+    pre-existing scenario is bit-identical:
+
+    ``alpha_trend`` (lambda)
+        ``lambda * a_i * t``.  The unobserved unit effect drives not only the
+        level of ``Y(0)`` but also its slope.  Since ``a_i`` also drives
+        selection (``conf_strength > 0``), treated units trend differently and
+        the difference is a function of an unobserved variable: this is a
+        genuine violation of *conditional* parallel trends, of the kind DiD is
+        usually assumed away.
+    ``group_trend`` (delta)
+        ``delta * 1[ever treated] * t``.  The textbook violation: the treated
+        group is simply on a different path.  Independent of the selection
+        mechanism, so it also violates conditional PT under
+        ``selection="observable"``, and its magnitude is directly readable in
+        outcome units per period, which makes it the natural axis for a
+        detection-power curve.
+    """
+    return alpha_trend * alpha_raw + group_trend * treated_indicator
+
+
 def _trend_function(Xu: dict, rho: float) -> np.ndarray:
     """Covariate-dependent trend slope s(X_i): E[Y(0)] moves as s(X_i) t.
 
@@ -237,6 +266,9 @@ DEFAULT_CANONICAL_PARAMS = dict(
     ar1_rho=0.0,                   # within-unit serial correlation of errors
     epsilon_scale=1.0,
     treated_share_target=0.5,
+    # --- conditional-PTA violation (0 = assumption holds; see _violation_slope)
+    alpha_trend=0.0,               # lambda: unobserved a_i also drives the slope
+    group_trend=0.0,               # delta: treated group on a different path
 )
 
 
@@ -308,7 +340,9 @@ def generate_canonical_did(seed: int = 0, **overrides) -> pd.DataFrame:
     tau_i = _effect_function(Xu, float(p["base_effect"]), p["effect_type"],
                              int(p["linearity_degree"]))
     f_levels = _prognostic_levels(Xu)
-    slope_i = _trend_function(Xu, float(p["trend_heterogeneity"]))
+    viol_i = _violation_slope(alpha_raw, treated.astype(float),
+                              float(p["alpha_trend"]), float(p["group_trend"]))
+    slope_i = _trend_function(Xu, float(p["trend_heterogeneity"])) + viol_i
     Xobs = _observed_covariates(Xu, int(p["linearity_degree"]))
 
     eps = _ar1_errors(n, n_periods, float(p["ar1_rho"]),
@@ -332,6 +366,7 @@ def generate_canonical_did(seed: int = 0, **overrides) -> pd.DataFrame:
             "event_time": np.where(cohort == np.inf, np.nan, t - cohort),
             **{k: Xobs[k] for k in Xobs},
             "alpha": alpha,                 # UNOBSERVED -- diagnostics only
+            "pt_slope": viol_i,             # UNOBSERVED -- conditional-PTA violation
             "tau_true": tau_i,
             "CATT": catt,
             "Y": y,
@@ -370,6 +405,9 @@ DEFAULT_STAGGERED_PARAMS = dict(
     trend_heterogeneity=0.3,
     ar1_rho=0.0,
     epsilon_scale=1.0,
+    # --- conditional-PTA violation (0 = assumption holds; see _violation_slope)
+    alpha_trend=0.0,
+    group_trend=0.0,
 )
 
 def generate_staggered_did(seed: int = 0, **overrides) -> pd.DataFrame:
@@ -448,7 +486,9 @@ def generate_staggered_did(seed: int = 0, **overrides) -> pd.DataFrame:
     tau_i = _effect_function(Xu, float(p["base_effect"]), p["effect_type"],
                              int(p["linearity_degree"]))
     f_levels = _prognostic_levels(Xu)
-    slope_i = _trend_function(Xu, float(p["trend_heterogeneity"]))
+    viol_i = _violation_slope(alpha_raw, (cohort_idx > 0).astype(float),
+                              float(p["alpha_trend"]), float(p["group_trend"]))
+    slope_i = _trend_function(Xu, float(p["trend_heterogeneity"])) + viol_i
     Xobs = _observed_covariates(Xu, int(p["linearity_degree"]))
     eps = _ar1_errors(n, n_periods, float(p["ar1_rho"]),
                       float(p["epsilon_scale"]), rng)
@@ -481,6 +521,7 @@ def generate_staggered_did(seed: int = 0, **overrides) -> pd.DataFrame:
             "event_time": k,
             **{c: Xobs[c] for c in Xobs},
             "alpha": alpha,                 # UNOBSERVED -- diagnostics only
+            "pt_slope": viol_i,             # UNOBSERVED -- conditional-PTA violation
             "tau_true": tau_i,
             "CATT": catt,
             "Y": y,
