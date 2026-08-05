@@ -73,7 +73,7 @@ def _ols_cluster(Xd: np.ndarray, y: np.ndarray, clusters: np.ndarray):
     corr = (G / max(G - 1, 1)) * ((n - 1) / dof)
     V = corr * (XtX_inv @ meat @ XtX_inv)
     se = np.sqrt(np.clip(np.diag(V), 0.0, None))
-    return beta, se
+    return beta, se, V
 
 
 def twfe_att_se(df: pd.DataFrame, outcome="Y", treat="D",
@@ -85,7 +85,7 @@ def twfe_att_se(df: pd.DataFrame, outcome="Y", treat="D",
     dm = _two_way_demean(df, [outcome, treat], unit, time)
     y = dm[outcome]
     Xd = dm[treat][:, None]
-    beta, se = _ols_cluster(Xd, y, df[unit].to_numpy())
+    beta, se, _ = _ols_cluster(Xd, y, df[unit].to_numpy())
     return float(beta[0]), float(se[0])
 
 
@@ -118,11 +118,20 @@ def twfe_event_study_se(df: pd.DataFrame, outcome="Y", unit="unit_id",
     dm = _two_way_demean(d, [outcome] + dummy_cols, unit, time)
     y = dm[outcome]
     Xd = np.column_stack([dm[c] for c in dummy_cols])
-    beta, se = _ols_cluster(Xd, y, d[unit].to_numpy())
+    beta, se, V = _ols_cluster(Xd, y, d[unit].to_numpy())
     rows = [{"k": ref, "coef": 0.0, "se": np.nan}]
     rows += [{"k": kk, "coef": float(b), "se": float(s)}
              for kk, b, s in zip(ks, beta, se)]
-    return pd.DataFrame(rows).sort_values("k").reset_index(drop=True)
+    out = pd.DataFrame(rows).sort_values("k").reset_index(drop=True)
+    # The cluster-robust covariance of the event-study coefficients, carried on
+    # the frame so callers can form linear combinations (e.g. the pre-trend
+    # slope) and joint tests with the correct variance.  Event-study
+    # coefficients share the omitted reference period and are strongly
+    # positively correlated, so treating them as independent understates the
+    # variance of any weighted sum and makes such a test anti-conservative.
+    out.attrs["vcov"] = V
+    out.attrs["vcov_k"] = list(ks)
+    return out
 
 
 def twfe_event_study(df: pd.DataFrame, outcome="Y", unit="unit_id",

@@ -42,6 +42,25 @@ BASE_N = 200
 N_SWEEP = (200, 400, 800, 1600)
 LINEARITY_DEGREES = (1, 2, 3)
 
+# Workstream PT drops degree 2, and *only* workstream PT.  Its comparator is a
+# TWFE event study, which adjusts for no covariates at all, so the transforms of
+# X never enter its design and it is EXACTLY invariant to the degree (measured
+# difference 4e-14 across d = 1, 2, 3); the DiD-BCF diagnostic's rejection rates
+# moved by less than one Monte-Carlo standard error between d = 2 and d = 3.
+# The degree therefore buys nothing there and costs a third of the compute.
+#
+# This does NOT generalise to B1/B2/D, whose estimators do adjust for the
+# covariates: degree 2 is precisely the cell where linear adjustment leaves a
+# residual violation of conditional PT, and it moves *bias* in B1_selection_obs
+# and B1_selection_both (see the module docstring).  Those workstreams keep all
+# three degrees.
+PT_LINEARITY_DEGREES = (1, 3)
+
+
+def degrees_for(workstream: str) -> tuple:
+    """Linearity degrees to run for a workstream."""
+    return PT_LINEARITY_DEGREES if workstream == "PT" else LINEARITY_DEGREES
+
 # The Goodman-Bacon ramp (Workstream D, Reviewer 3.1.2).  ``dynamic_ramp`` moves
 # how *wrong* the already-treated comparisons are but leaves their **weight**
 # untouched -- that weight is a function of the adoption design alone.  Shrinking
@@ -52,9 +71,21 @@ NEVER_TREATED_SHARES = (0.40, 0.30, 0.25, 0.20, 0.10, 0.05)
 
 # The pre-trend diagnostic (Workstream F4, Reviewer 3.2.3): violation magnitude
 # axes.  ``group_trend`` is a differential slope in outcome units per period;
-# ``alpha_trend`` routes the violation through the *unobserved* confounder.
+# ``het_trend`` is a differential slope that is heterogeneous in X1 and cancels
+# in the aggregate, which no marginal event study can see.
 GROUP_TREND_GRID = (0.05, 0.10, 0.20, 0.40)
-ALPHA_TREND_GRID = (0.10, 0.20, 0.40)
+HET_TREND_GRID = (0.10, 0.20, 0.40)
+# ``alpha_trend`` routes the violation through the *unobserved* confounder.  It
+# is kept as a single mechanism check rather than a magnitude grid: at
+# ``conf_strength = 1`` the treated-minus-control gap in ``a_i`` is close to 1,
+# so ``lambda`` and ``delta`` are numerically the same knob.  Measured on the
+# first 50 replications, ``PT_violation_a{10,20,40}`` and the matching
+# ``PT_violation_g*`` produced pre-trend slopes of 0.110/0.108, 0.202/0.199 and
+# 0.397/0.391, per-replication correlations of 0.97-0.99, and ATT biases of
+# 0.269/0.267 -- one curve, run twice.  The remaining setting exists to show
+# that the unobserved-confounder channel behaves like the group-trend channel,
+# not to trace a second power curve.
+ALPHA_TREND_CHECK = 0.20
 
 
 @dataclass
@@ -174,14 +205,24 @@ def all_experiments(reps: int = DEFAULT_REPS) -> list:
             n_values=(BASE_N,), reps=max(reps, 200),
             note=f"treated group on a differential path, slope {d:g} per period: "
                  f"detection power against violation magnitude"))
-    for lam in ALPHA_TREND_GRID:
+    for kap in HET_TREND_GRID:
         exps.append(Experiment(
-            f"PT_violation_a{int(round(lam * 100)):02d}", "PT", "canonical",
-            _canon(alpha_sd=1.0, conf_strength=1.0, alpha_trend=lam),
+            f"PT_violation_het{int(round(kap * 100)):02d}", "PT", "canonical",
+            _canon(alpha_sd=1.0, conf_strength=1.0, het_trend=kap),
             n_values=(BASE_N,), reps=max(reps, 200),
-            note=f"the unobserved confounder also drives the slope "
-                 f"(lambda={lam:g}): violation of conditional PT that no "
-                 f"adjustment on observables can remove"))
+            note=f"heterogeneous violation, slope +/-{kap:g} per period by X1, "
+                 f"zero on average: the marginal event study is powerless by "
+                 f"construction and only the subgroup contrast (PRE_SUBC) can "
+                 f"detect it"))
+    lam = ALPHA_TREND_CHECK
+    exps.append(Experiment(
+        f"PT_violation_a{int(round(lam * 100)):02d}", "PT", "canonical",
+        _canon(alpha_sd=1.0, conf_strength=1.0, alpha_trend=lam),
+        n_values=(BASE_N,), reps=max(reps, 200),
+        note=f"the unobserved confounder also drives the slope (lambda={lam:g}): "
+             f"violation of conditional PT that no adjustment on observables can "
+             f"remove.  Single mechanism check -- see ALPHA_TREND_CHECK for why "
+             f"this is not a magnitude grid"))
     return exps
 
 

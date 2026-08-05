@@ -151,10 +151,11 @@ The **estimation scenarios** are `B1_baseline`, `B1_strong_confounder`,
 notebooks, 3 OLS notebooks, and one `R_code/<scenario>_datasets/` folder of 4 R
 estimators.
 
-The **9 diagnostic scenarios** (workstream `PT`) are `PT_hold`,
-`PT_conditional`, `PT_violation_g{05,10,20,40}` and `PT_violation_a{10,20,40}`.
-They have their own driver and no benchmark comparison, so each becomes 3
-notebooks under `Pretrend/` and nothing else.
+The **10 diagnostic scenarios** (workstream `PT`) are `PT_hold`,
+`PT_conditional`, `PT_violation_g{05,10,20,40}`, `PT_violation_het{10,20,40}`
+and `PT_violation_a20`. They have their own driver and no benchmark comparison,
+so each becomes 2 notebooks under `Pretrend/` (one per retained linearity
+degree) and nothing else.
 
 ```
 Simulation_Studies_Revision/
@@ -172,20 +173,24 @@ Simulation_Studies_Revision/
 │   ├── metrics.py                 # bias/var/RMSE/coverage/length/size-power (B2)
 │   ├── goodman_bacon.py           # Goodman-Bacon (2021) decomposition
 │   ├── exports.py                 # tidy frame -> R-benchmark CSV column layout
-│   └── config.py                  # the scenario grid (N=200, linearity 1/2/3)
+│   └── config.py                  # the scenario grid (N=200, linearity 1/3)
 ├── DGPs/                          # one data-creation script per scenario (-> R CSV panels)
 │   ├── data_creation_B1_baseline.py ... data_creation_D_contamination.py   (9)
-├── DiD_BCF/                       # DiD-BCF: one notebook per scenario × linearity (27; Colab)
+├── DiD_BCF/                       # DiD-BCF: one notebook per scenario × linearity (32; Colab)
 │   ├── DiD_BCF_B1_baseline_lin_1.ipynb ... DiD_BCF_D_contamination_lin_3.ipynb
-├── TWFE/                          # OLS benchmark: one notebook per scenario × linearity (27; PC)
+├── TWFE/                          # OLS benchmark: one notebook per scenario × linearity (32; PC)
 │   ├── OLS_B1_baseline_lin_1.ipynb ... OLS_D_contamination_lin_3.ipynb
-├── Pretrend/                      # PT diagnostic: one notebook per PT scenario × linearity (27)
-│   ├── Pretrend_PT_hold_lin_1.ipynb ... Pretrend_PT_violation_a40_lin_3.ipynb
+├── Pretrend/                      # PT diagnostic: one notebook per PT scenario × linearity (20)
+│   ├── Pretrend_PT_hold_lin_1.ipynb ... Pretrend_PT_violation_a20_lin_3.ipynb
+│   ├── *_reps{0-50,...}.ipynb     # Colab-sized blocks (split_pretrend_notebooks.py)
+│   └── _retired/                  # cells dropped in revision: lin_2, a10, a40
 ├── R_code/                        # R benchmarks, one folder per scenario (9 × 4 scripts)
 │   └── <scenario>_datasets/{did_dr_new.R, did2s.R, DoubleML_did.R, synthdid.R}
 ├── scripts/                       # the cheap / parallel local steps
 │   ├── run_did_bcf.py             # headless equivalent of the DiD_BCF/ notebooks (--spec)
 │   ├── run_pretrend.py            # headless equivalent of the Pretrend/ notebooks (PT)
+│   ├── check_pretrend_dgps.py     # numerical checks on the PT grid (no MCMC)
+│   ├── split_pretrend_notebooks.py   # Pretrend/*.ipynb -> Colab-sized rep blocks
 │   ├── run_pretrend_empirical.py  # the diagnostic on the mpdta application
 │   ├── run_identification_routes.py  # the identification acceptance test, all routes
 │   ├── run_twfe.py                # headless equivalent of the TWFE/ notebooks
@@ -622,12 +627,31 @@ Below is the complete mathematical description for each of the 9 scenarios.
   | `PT_hold` | none | holds |
   | `PT_conditional` | `selection="observable"`, $c = 0$, $\rho_{\text{tr}} = 0.6$ | holds (but *unconditional* PT fails: $X_4$ drives both assignment and slope) |
   | `PT_violation_g{05,10,20,40}` | $Y_{it}(0) \mathrel{+}= \delta \cdot \mathbb{1}[G_i \ne \infty] \cdot t$, $\delta \in \{0.05, 0.1, 0.2, 0.4\}$ | **violated** |
-  | `PT_violation_a{10,20,40}` | $Y_{it}(0) \mathrel{+}= \lambda \cdot a_i \cdot t$, $\lambda \in \{0.1, 0.2, 0.4\}$ | **violated**, and unremovably so — $a_i$ is unobserved |
+  | `PT_violation_het{10,20,40}` | $Y_{it}(0) \mathrel{+}= \kappa (2 X_{1i} - 1) \mathbb{1}[G_i \ne \infty] \cdot t$, $\kappa \in \{0.1, 0.2, 0.4\}$ | **violated**, but *zero on average* |
+  | `PT_violation_a20` | $Y_{it}(0) \mathrel{+}= \lambda \cdot a_i \cdot t$, $\lambda = 0.2$ | **violated**, and unremovably so — $a_i$ is unobserved |
 
-  `PT_conditional` is the discriminating case: the estimator's assumption is
-  satisfied, so a covariate-conditional diagnostic should stay quiet, while a
+  `PT_conditional` is the first discriminating case: the estimator's assumption
+  is satisfied, so a covariate-conditional diagnostic should stay quiet, while a
   marginal event study (which does not condition) should flag. Reported
   detection rates for both make that a measurement rather than a claim.
+
+  `PT_violation_het*` is the second, and runs the other way. $X_1$ is
+  Bernoulli(0.5) and, under selection on unobservables, balanced across arms, so
+  the treated-minus-control *average* differential slope is zero: the marginal
+  event study is powerless here by construction, at every $\kappa$, and so is
+  the aggregate $\Delta(k)$. Only the contrast between subgroup pre-trends
+  (`PRE_SUBC`: $X_1 = 1$ minus $X_1 = 0$, true value $2\kappa$) can see it, and
+  that contrast is an object no group-level placebo regression can form. Because
+  the contrast is identically zero whenever the violation is constant in $X$,
+  its rejection rate under `PT_hold` *and* under the whole `PT_violation_g*`
+  grid is a size, which is what makes its rejection rate here a power.
+
+  `PT_violation_a20` is a single mechanism check rather than a magnitude grid.
+  At $c = 1$ the treated-minus-control gap in $a_i$ is close to 1, so $\lambda$
+  and $\delta$ are numerically the same knob: measured over 50 replications the
+  $a$ and $g$ families produced pre-trend slopes of 0.110/0.108, 0.202/0.199 and
+  0.397/0.391, per-replication correlations of 0.97–0.99, and ATT biases of
+  0.269/0.267. Running both as full grids traced one curve twice.
 
 ---
 

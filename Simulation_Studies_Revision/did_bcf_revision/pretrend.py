@@ -92,6 +92,42 @@ _SUBGROUPS = {
     "X2=high": lambda d: d["X2"] >= d["X2"].quantile(2 / 3),
 }
 
+# Contrasts between subgroups: ``(label, high, low)``.  These carry the test.
+# A subgroup's own Delta(k) is not a decision rule on its own -- under a
+# homogeneous violation every subgroup moves together and reporting four of them
+# is four looks at one fact.  The *difference* is zero under any violation that
+# is constant in X, so it isolates exactly the heterogeneous part, which is the
+# part a marginal event study cannot represent.  See ``PT_violation_het*``.
+_SUB_CONTRASTS = (
+    ("X1", "X1=1", "X1=0"),
+    ("X2", "X2=high", "X2=low"),
+)
+# Labels that pair into a contrast, in ``(high, low)`` order.
+_CONTRAST_SUFFIXES = (("1", "0"), ("high", "low"))
+
+
+def _derive_contrasts(labels) -> tuple:
+    """``(label, high, low)`` triples implied by a set of subgroup names.
+
+    Subgroup labels are ``"<col>=<level>"``.  Any column with both halves of a
+    recognised pair present yields a contrast, so a caller that supplies its own
+    subgroups (the empirical application uses :func:`quantile_subgroups` on its
+    own covariate) gets the test without having to declare it separately.
+    """
+    by_col: dict = {}
+    for lab in labels:
+        if "=" not in lab:
+            continue
+        col, level = lab.split("=", 1)
+        by_col.setdefault(col, {})[level] = lab
+    out = []
+    for col, levels in by_col.items():
+        for hi, lo in _CONTRAST_SUFFIXES:
+            if hi in levels and lo in levels:
+                out.append((col, levels[hi], levels[lo]))
+                break
+    return tuple(out)
+
 
 @dataclass
 class PretrendFit:
@@ -241,6 +277,17 @@ def pretrend_estimands(fit: PretrendFit,
     ``estimand_type='PRE_SUB'`` the same ``Delta(k)`` within covariate
                                 subgroups -- the *conditional* version, which a
                                 marginal event study cannot produce.
+    ``estimand_type='PRE_SUBC'`` contrasts *between* those subgroups
+                                (``X1 = 1`` minus ``X1 = 0``, and the outer X2
+                                terciles), per ``k``, as a slope, and as
+                                ``{label}_any`` / ``{label}_any_bonf`` decision
+                                rules.  Zero under any violation that is
+                                constant in X -- including the homogeneous ones
+                                the ``PT_violation_g*`` grid generates -- so
+                                this is the row that carries the test for
+                                heterogeneous violations and whose rejection
+                                rate under ``PT_hold`` and ``PT_violation_g*``
+                                is its size.
     """
     pre, ref_rows = _pre_rows(fit)
     if pre.empty:
@@ -283,6 +330,7 @@ def pretrend_estimands(fit: PretrendFit,
 
     if subgroups is not False:
         groups = _SUBGROUPS if subgroups is True else subgroups
+        sub_draws: dict = {}                       # (group, k) -> draws
         for name, sel in groups.items():
             m_sub = sel(pre).to_numpy()
             for k in ks:
@@ -290,10 +338,44 @@ def pretrend_estimands(fit: PretrendFit,
                 if m.sum() < 5:
                     continue
                 draws = _delta_draws(fit, pre.index.to_numpy()[m], ref_rows[m])
+                sub_draws[(name, k)] = draws
                 rec = {"estimand_type": "PRE_SUB", "estimand_id": f"{name}_k={k}",
                        "g": np.nan, "t": np.nan, "k": k, "method": "pretrend"}
                 rec.update(_summarise(draws))
                 records.append(rec)
+
+        # --- the conditional test: contrasts between subgroup pre-trends ---- #
+        contrasts = _derive_contrasts(groups)
+        for label, hi, lo in contrasts:
+            per_k_c = {k: sub_draws[(hi, k)] - sub_draws[(lo, k)] for k in ks
+                       if (hi, k) in sub_draws and (lo, k) in sub_draws}
+            if not per_k_c:
+                continue
+            cks = sorted(per_k_c)
+            for k in cks:
+                rec = {"estimand_type": "PRE_SUBC",
+                       "estimand_id": f"{label}_k={k}",
+                       "g": np.nan, "t": np.nan, "k": k, "method": "pretrend"}
+                rec.update(_summarise(per_k_c[k]))
+                records.append(rec)
+
+            w = np.array([k - fit.ref_k for k in cks], dtype=float)
+            stack = np.vstack([per_k_c[k] for k in cks])
+            rec = {"estimand_type": "PRE_SUBC", "estimand_id": f"{label}_slope",
+                   "g": np.nan, "t": np.nan, "k": np.nan, "method": "pretrend"}
+            rec.update(_summarise((w @ stack) / float(w @ w)))
+            records.append(rec)
+
+            tails = [min(float(np.mean(d > 0)), float(np.mean(d < 0)))
+                     for d in stack]
+            p_min = float(min(tails))
+            for eid, p in ((f"{label}_any", p_min),
+                           (f"{label}_any_bonf", min(1.0, len(cks) * p_min))):
+                records.append({"estimand_type": "PRE_SUBC", "estimand_id": eid,
+                                "g": np.nan, "t": np.nan, "k": np.nan,
+                                "method": "pretrend", "post_mean": np.nan,
+                                "sd": np.nan, "q025": np.nan, "q05": np.nan,
+                                "q95": np.nan, "q975": np.nan, "p_bayes": p})
 
     return pd.DataFrame.from_records(records)
 
@@ -328,11 +410,59 @@ def true_pretrend(df: pd.DataFrame, ref_k: int = -1) -> pd.DataFrame:
     # assumption holds (diff == 0), which is what makes reject05 a size when
     # diff == 0 and a detection rate otherwise.
     rows += [{"estimand_type": "PRE", "estimand_id": eid, "true": diff}
-             for eid in ("any", "any_bonf")]
-    for name in _SUBGROUPS:
+             for eid in ("any", "any_bonf", "joint")]
+
+    # Subgroup truths.  The differential slope *within* a subgroup is the same
+    # treated-minus-control contrast, restricted to that subgroup.  The
+    # predicates are evaluated on the treated units (matching how
+    # ``pretrend_estimands`` cuts X2 at treated-sample quantiles) and the
+    # resulting boundary is then applied to the controls too, so the two arms
+    # are compared over the same region of covariate space.
+    treated_units = units.loc[ever]
+    sub_diff: dict = {}
+    for name, sel in _SUBGROUPS.items():
+        try:
+            m_t = sel(treated_units).to_numpy()
+            m_c = _sel_on(units.loc[~ever], name, treated_units).to_numpy()
+        except Exception:                       # predicate not applicable here
+            continue
+        if m_t.sum() < 5 or m_c.sum() < 5:
+            continue
+        sub_diff[name] = float(treated_units.loc[m_t, "pt_slope"].mean()
+                               - units.loc[~ever].loc[m_c, "pt_slope"].mean())
         rows += [{"estimand_type": "PRE_SUB", "estimand_id": f"{name}_k={k}",
-                  "true": np.nan} for k in ks]
+                  "true": sub_diff[name] * (k - ref_k)} for k in ks]
+
+    for label, hi, lo in _SUB_CONTRASTS:
+        if hi not in sub_diff or lo not in sub_diff:
+            continue
+        c = sub_diff[hi] - sub_diff[lo]
+        rows += [{"estimand_type": "PRE_SUBC", "estimand_id": f"{label}_k={k}",
+                  "true": c * (k - ref_k)} for k in ks]
+        rows += [{"estimand_type": "PRE_SUBC", "estimand_id": eid, "true": c}
+                 for eid in (f"{label}_slope", f"{label}_any",
+                             f"{label}_any_bonf")]
     return pd.DataFrame.from_records(rows)
+
+
+def _sel_on(frame: pd.DataFrame, name: str, ref_frame: pd.DataFrame):
+    """Apply subgroup ``name``'s boundary, computed on ``ref_frame``, to ``frame``.
+
+    ``_SUBGROUPS`` defines the X2 cuts as quantiles of whatever frame it is
+    handed.  For the *truth* the treated and control arms must be split at the
+    same covariate value, otherwise the two means being differenced describe
+    different subpopulations and the "true" subgroup pre-trend is not the
+    estimand the diagnostic targets.
+    """
+    if name == "X1=0":
+        return frame["X1"] <= 0.5
+    if name == "X1=1":
+        return frame["X1"] > 0.5
+    if name == "X2=low":
+        return frame["X2"] <= ref_frame["X2"].quantile(1 / 3)
+    if name == "X2=high":
+        return frame["X2"] >= ref_frame["X2"].quantile(2 / 3)
+    raise KeyError(name)
 
 
 def twfe_pretrend(df: pd.DataFrame, ref_k: int = -1) -> pd.DataFrame:
@@ -369,9 +499,17 @@ def twfe_pretrend(df: pd.DataFrame, ref_k: int = -1) -> pd.DataFrame:
     coefs = pre["coef"].to_numpy(dtype=float)
     ses = pre["se"].to_numpy(dtype=float)
     slope = float(w @ coefs / (w @ w))
-    # Conservative slope SE: treats the pre-period coefficients as independent,
-    # which is why it is reported as a comparator and not as the test itself.
-    slope_se = float(np.sqrt(np.sum((w * ses) ** 2)) / (w @ w))
+    # Slope SE from the full cluster-robust covariance of the pre-period
+    # coefficients.  Ignoring the off-diagonal terms is not conservative: the
+    # coefficients share the omitted reference period, so their covariances are
+    # positive and dropping them *understates* Var(w'beta) and inflates the
+    # test's size.  Fall back to the diagonal-only formula only if the
+    # covariance did not survive (e.g. a caller-supplied event-study frame).
+    V = _pre_vcov(es, pre["k"].to_numpy(dtype=int))
+    if V is not None:
+        slope_se = float(np.sqrt(max(w @ V @ w, 0.0)) / (w @ w))
+    else:
+        slope_se = float(np.sqrt(np.sum((w * ses) ** 2)) / (w @ w))
     records.append({"estimand_type": "PRE", "estimand_id": "slope",
                     "g": np.nan, "t": np.nan, "k": np.nan, "method": "twfe_es",
                     "post_mean": slope, "sd": slope_se,
@@ -385,4 +523,35 @@ def twfe_pretrend(df: pd.DataFrame, ref_k: int = -1) -> pd.DataFrame:
                         "g": np.nan, "t": np.nan, "k": np.nan, "method": "twfe_es",
                         "post_mean": np.nan, "sd": np.nan, "q025": np.nan,
                         "q05": np.nan, "q95": np.nan, "q975": np.nan, "p_bayes": p})
+
+    # The joint (Wald) pre-trends test -- the strongest form of the standard
+    # comparator, and the one applied work reports alongside the coefficient
+    # plot.  Reported as a HALF chi-square tail so it sits on the same
+    # ``0.025 = two-sided 5%`` scale the metrics layer applies to every other
+    # row; the statistic is one-sided, the hypothesis it tests is not.
+    if V is not None and len(coefs) > 0:
+        from scipy.stats import chi2
+        try:
+            stat = float(coefs @ np.linalg.pinv(V) @ coefs)
+            tail = 0.5 * float(chi2.sf(stat, df=len(coefs)))
+        except np.linalg.LinAlgError:
+            tail = np.nan
+        records.append({"estimand_type": "PRE", "estimand_id": "joint",
+                        "g": np.nan, "t": np.nan, "k": np.nan,
+                        "method": "twfe_es", "post_mean": np.nan, "sd": np.nan,
+                        "q025": np.nan, "q05": np.nan, "q95": np.nan,
+                        "q975": np.nan, "p_bayes": tail})
     return pd.DataFrame.from_records(records)
+
+
+def _pre_vcov(es: pd.DataFrame, want_k: np.ndarray):
+    """Sub-block of the event-study covariance for the pre-period coefficients."""
+    V = es.attrs.get("vcov")
+    all_k = es.attrs.get("vcov_k")
+    if V is None or all_k is None:
+        return None
+    try:
+        idx = [all_k.index(int(k)) for k in want_k]
+    except ValueError:
+        return None
+    return np.asarray(V, dtype=float)[np.ix_(idx, idx)]

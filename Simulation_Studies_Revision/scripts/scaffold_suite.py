@@ -360,7 +360,24 @@ summaries = run_named(
     bcf_params=dict(num_gfr=50, num_mcmc=500, keep_every=5, num_chains=3),
     rep_start=REP_START, rep_end=REP_END,
 )
-summaries.head()"""
+summaries.head()
+
+# Save the completed replication block before displaying the metrics. This is
+# the file downloaded automatically when the notebook is run on Colab.
+output_file = (
+    f"summaries_pretrend_{summaries['setting'].iloc[0]}"
+    f"_lin_{int(summaries['linearity_degree'].iloc[0])}"
+    f"_reps{REP_START}-{REP_END}.csv"
+)
+summaries.to_csv(output_file, index=False)
+print("wrote", output_file, "| rows:", len(summaries))
+
+try:
+    from google.colab import files
+    files.download(output_file)
+    print("Downloaded:", output_file)
+except Exception as e:
+    print("(Not on Colab / download skipped):", e)"""
 
 PT_METRICS = """# `reject05` on the PRE rows is the diagnostic's **size** when the true
 # differential slope is 0 and its **detection rate** otherwise; `any_bonf` is the
@@ -378,6 +395,25 @@ and it is the version that matches what the estimator actually assumes."""
 
 PT_SUB = """sub = metrics[metrics.estimand_type == "PRE_SUB"]
 sub[["estimand_id", "mean_true", "bias", "emp_sd", "cover95", "reject05"]]"""
+
+PT_SUBC_MD = """## The conditional *test*
+
+The subgroup levels above are four looks at one fact whenever the violation is
+homogeneous: every subgroup moves together, so reporting each one separately
+adds nothing. The **contrast** between subgroups is the object that carries a
+test. It is exactly zero under any violation that is constant in `X` — including
+the whole `PT_violation_g*` grid — so its rejection rate there and under
+`PT_hold` is a *size*, and its rejection rate under `PT_violation_het*` is the
+power of something no marginal event study can compute at all.
+
+Read this table against the `PRE` table above. Under `PT_violation_het*` the
+aggregate rows (both `pretrend` and `twfe_es`) should be at their size while
+`X1_any` climbs: the violation is engineered to cancel in the average, so an
+event study is powerless there by construction, not by bad luck."""
+
+PT_SUBC = """subc = metrics[metrics.estimand_type == "PRE_SUBC"]
+subc[["estimand_id", "mean_true", "bias", "emp_sd", "cover95",
+      "reject05", "mcse_reject05"]].sort_values("estimand_id")"""
 
 
 # ---- R benchmark templates (token: @@SCEN@@) ----------------------------- #
@@ -495,7 +531,7 @@ def main():
         # and no benchmark comparison, so it gets one notebook family and none
         # of the estimation-model scaffolding.
         if e.workstream == "PT":
-            for d in LIN:
+            for d in cfg.degrees_for("PT"):
                 # The constrained refit that measures the violation's cost is
                 # only worth its doubled MCMC bill at the headline degree.
                 c = dict(ctx, LIN=d, WITHATT="True" if d == 1 else "False")
@@ -505,7 +541,9 @@ def main():
                          _cell("code", sub(PT_RUN, **c)),
                          _cell("code", sub(PT_METRICS, **c)),
                          _cell("markdown", sub(PT_SUB_MD, **c)),
-                         _cell("code", sub(PT_SUB, **c))]
+                         _cell("code", sub(PT_SUB, **c)),
+                         _cell("markdown", sub(PT_SUBC_MD, **c)),
+                         _cell("code", sub(PT_SUBC, **c))]
                 n_pt += write_notebook(
                     os.path.join(pt_dir, f"Pretrend_{e.name}_lin_{d}.ipynb"),
                     cells, force)
@@ -517,7 +555,7 @@ def main():
         n_data += 1
 
         # 2) notebooks (one per linearity degree)
-        for d in LIN:
+        for d in cfg.degrees_for(e.workstream):
             c = dict(ctx, LIN=d)
             bcf_cells = [
                 _cell("markdown", sub(BCF_MD, **c)),

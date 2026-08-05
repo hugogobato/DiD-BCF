@@ -42,11 +42,39 @@ is bit-identical — verified by hashing `B1_baseline`, `B1_selection_obs`,
 |---|---|
 | `group_trend` (delta) | `delta * 1[ever treated] * t` — the textbook differential path; readable directly in outcome units per period |
 | `alpha_trend` (lambda) | `lambda * a_i * t` — the unobserved confounder drives the *slope* too, so no adjustment on observables can remove it |
+| `het_trend` (kappa) | `kappa * (2 X1 - 1) * 1[ever treated] * t` — heterogeneous in an observed covariate and **zero on average**, so the aggregate contrast every event study reports is null by construction |
 
-**New scenarios** (`config.py`, workstream `PT`): `PT_hold` (size),
-`PT_conditional` (conditional PT holds, *unconditional* PT fails — the
-discrimination case), `PT_violation_g05/g10/g20/g40` (power curve) and
-`PT_violation_a10/a20/a40`.
+**Scenarios** (`config.py`, workstream `PT`): `PT_hold` (size),
+`PT_conditional` (conditional PT holds, *unconditional* PT fails — the first
+discrimination case), `PT_violation_g05/g10/g20/g40` (power curve),
+`PT_violation_het10/het20/het40` (the second discrimination case, running the
+other way: only the subgroup contrast can see it) and `PT_violation_a20` (a
+single mechanism check).
+
+Revised after the first 50 replications. Three cells were dropped because they
+were measured to carry no information: the `alpha_trend` grid duplicated the
+`group_trend` grid point for point (slopes 0.110/0.108, 0.202/0.199, 0.397/0.391;
+per-replication correlation 0.97–0.99; ATT bias 0.269/0.267), and
+`linearity_degree = 2` moved the diagnostic by less than one MCSE while leaving
+the TWFE comparator *exactly* invariant — it adjusts for no covariates, so the
+transforms of X never enter its design. The freed compute goes to
+`PT_violation_het*` and to finishing `PT_hold`/`PT_conditional` at 200. The
+retired notebooks and their partial results are in `Pretrend/_retired/`.
+
+Two fixes landed with the revision and **supersede the first 50 replications**,
+so the kept cells need re-running from rep 0:
+
+1. `PRE_SUBC` — the contrast between subgroup pre-trends — is new. The `PRE_SUB`
+   rows the old runs produced are levels with no test attached, and under a
+   homogeneous violation they are four looks at one fact.
+2. The TWFE pre-trend slope SE previously summed only the diagonal of the
+   coefficient covariance. Event-study coefficients share the omitted reference
+   period, so their covariances are positive and dropping them understates
+   `Var(w'beta)`: measured size at nominal 5% was **0.145**, against 0.045 with
+   the full covariance (`scripts/check_pretrend_dgps.py`). The old `twfe_es`
+   `slope` rows overstate the comparator's power. A joint Wald pre-trends test
+   (`estimand_id='joint'`) is now reported too, so the comparator is at its
+   strongest rather than at its most convenient.
 
 Sanity check at production sampler settings, 3 replications per cell — the
 pattern the full runs should sharpen:
@@ -178,13 +206,17 @@ the first three replications and extrapolate before committing to a notebook.**
 | `PT_hold_lin_1` | True | 400 | 6.7 h |
 | `PT_conditional_lin_1` | True | 400 | 6.7 h |
 | `PT_violation_g05/g10/g20/g40_lin_1` | True | 400 each | 6.7 h each |
-| `PT_violation_a10/a20/a40_lin_1` | False | 200 each | 3.3 h each |
-| `PT_hold/PT_conditional/PT_violation_g20/PT_violation_a20_lin_2` | False | 200 each | 3.3 h each |
+| `PT_violation_het10/het20/het40_lin_1` | True | 400 each | 6.7 h each |
+| `PT_violation_a20_lin_1` | False | 200 | 3.3 h |
+| any `_lin_3` cell | False | 200 each | 3.3 h each |
 
 `WITH_ATT` is preset per degree in the generated notebooks. If a session looks
-like it will not finish, set `REP_START, REP_END = 0, 100` in one copy and
-`100, 200` in another — replications are seeded by index, so the two parts
-concatenate into exactly the undivided run and `aggregate_all.py` de-duplicates.
+like it will not finish, use the pre-split block notebooks: run
+`python scripts/split_pretrend_notebooks.py` to write
+`*_reps{0-50,50-100,100-150,150-200}.ipynb` from each base notebook.
+Replications are seeded by index, so the blocks concatenate into exactly the
+undivided run and `aggregate_all.py` de-duplicates. Blocks that already carry
+execution outputs are skipped rather than overwritten.
 
 **Item 4 — `DiD_BCF/DiD_BCF_D_ramp_nt<xx>_lin_<d>.ipynb` (10 notebooks)**
 
@@ -200,11 +232,11 @@ template still defaults to `JOBS = 1`, which doubles the times below.
 | notebooks | ~wall time at `JOBS=2` |
 |---|---|
 | `nt40, nt30, nt25, nt20, nt10, nt05` at `lin_1` | 3.3 h each |
-| `nt40, nt05` at `lin_2` and `lin_3` (the anchors) | 3.3 h each |
+| `nt40, nt05` at `lin_3` (the anchors) | 3.3 h each |
 
-If budget allows, the remaining `lin_2` / `lin_3` cells (8 more notebooks) fill
-in the degree axis; the contamination result is a property of the design, so
-degree 1 carries the argument.
+If budget allows, the remaining `lin_3` cells fill in the degree axis; the
+contamination result is a property of the design, so degree 1 carries the
+argument.
 
 ### Empirical application (local, ~25 min; already run)
 

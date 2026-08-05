@@ -16,7 +16,9 @@ characteristics:
                        covariate-conditional diagnostic should stay quiet while
                        the marginal TWFE event study flags.
 ``PT_violation_g*``    differential group slope 0.05 ... 0.40 -> power curve.
-``PT_violation_a*``    the violation runs through the unobserved confounder.
+``PT_violation_het*``  the violation is heterogeneous in X1 and zero on average,
+                       so only the subgroup contrast (``PRE_SUBC``) can see it.
+``PT_violation_a20``   the violation runs through the unobserved confounder.
 
 Each replication also runs the TWFE event-study placebo (free) as the
 standard-practice comparator; ``--with-att`` adds the ordinary constrained
