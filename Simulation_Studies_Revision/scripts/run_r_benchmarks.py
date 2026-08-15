@@ -52,6 +52,9 @@ PT_SCRIPTS = [
     "did2s_pretrend.R",
     "synthdid_pretrend.R",
     "DoubleML_pretrend.R",
+    # grf-DiD. Set GRF_THREADS=1 in the environment when several of these run
+    # concurrently, otherwise each one grabs every core.
+    "wang_pretrend.R",
 ]
 ALL_SCRIPTS = ATT_SCRIPTS + PT_SCRIPTS
 R_SCRIPTS = ATT_SCRIPTS

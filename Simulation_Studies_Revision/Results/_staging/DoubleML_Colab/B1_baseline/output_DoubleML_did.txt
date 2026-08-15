@@ -1,0 +1,6 @@
+
+wrote summaries_doubleml_B1_baseline_lin_1.csv ( 500 rows )
+
+wrote summaries_doubleml_B1_baseline_lin_2.csv ( 500 rows )
+
+wrote summaries_doubleml_B1_baseline_lin_3.csv ( 500 rows )

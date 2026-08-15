@@ -233,6 +233,19 @@ pre-specified. That is a narrower claim than "an object no group-level placebo
 regression can form at all", which the earlier draft of this README made and
 which the measurements do not support.
 
+The full run (200 replications, both degrees) settles it, and not in DiD-BCF's
+favour on this row. `wang` is the best-behaved contrast in the suite at both
+degrees — size 0.030–0.065, bias −0.002 to +0.001, coverage 0.950–0.970,
+detection 0.275 at `het10` and 0.700 at `het20`. The Bayesian contrast runs at
+size ≈0.005 against a nominal 5%, detects `het10` at 0.020, and carries −0.11 to
+−0.16 bias with 0.77–0.81 coverage; it only draws level at `het20` and above.
+`did_dr`'s sample split matches `wang` at degree 1 but turns anti-conservative
+at degree 3 (size 0.077, and 0.138 under `PT_conditional`), where `wang` holds.
+The honest division of the results is therefore that **DiD-BCF owns the
+aggregate test** — most power at every violation magnitude, correct size, and it
+discriminates conditional from unconditional violations — while **grf owns the
+subgroup contrast**.
+
 ---
 
 ## Running these
@@ -249,7 +262,35 @@ does not (50 fits/block, ~50 min). Degree 2 was dropped: the TWFE comparator is
 transforms of `X` never enter its design) and the diagnostic moved by less than
 one MCSE.
 
-To regenerate: `python scripts/scaffold_suite.py --force` writes the base
+### The benchmarks
+
+Four of the five run locally, on the same seeded panels, through the same
+runner:
+
+```bash
+GRF_THREADS=1 python scripts/run_r_benchmarks.py \
+  --scenarios PT_hold PT_conditional PT_violation_g05 PT_violation_g10 \
+              PT_violation_g20 PT_violation_g40 PT_violation_het10 \
+              PT_violation_het20 PT_violation_het40 PT_violation_a20 \
+  --scripts did_dr_pretrend did2s_pretrend synthdid_pretrend wang_pretrend \
+  --reps 200 --batch-size 10
+```
+
+`GRF_THREADS` caps grf at one core per process; without it each of the ten
+concurrent `wang` runs grabs every core and they thrash. `doubleml` is the one
+that stays on Colab (`DoubleML_Colab/DoubleML_PT_*.ipynb`) — it is by far the
+most expensive of the five. `CFFE_Wang_Colab/CFFE_Wang_PT_*.ipynb` is a Colab
+fallback for `wang`, not the primary path.
+
+Outputs land in `R_code/PT_<scenario>_datasets/summaries_<method>_<scenario>_lin_<d>.csv`.
+`python scripts/make_pretrend_benchmark_table.py` pools every one of them with
+the Bayesian diagnostic's own summaries, scores them through
+`compute_metrics`, and writes `Pretrend/BENCHMARK_TABLES.txt` plus
+`Pretrend/benchmark_metrics_all.csv`.
+
+### Regenerating the notebooks
+
+`python scripts/scaffold_suite.py --force` writes the base
 notebooks, then `python scripts/split_pretrend_notebooks.py` cuts them into
 blocks. Blocks carrying execution outputs are skipped rather than overwritten.
 `python scripts/check_pretrend_dgps.py` asserts the DGP properties above with no

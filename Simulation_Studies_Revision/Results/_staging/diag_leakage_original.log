@@ -1,0 +1,135 @@
+Starting data generation...
+Output directory: ./data/ATE_datasets
+Linearity Degrees: [1, 2, 3]
+Iterations per degree: 100
+Linearity Degrees:   0%|          | 0/3 [00:00<?, ?it/s]
+Processing linearity_degree=1...
+
+  Iterations (Degree 1):   0%|          | 0/100 [00:00<?, ?it/s][A
+  Iterations (Degree 1):   7%|▋         | 7/100 [00:00<00:01, 60.70it/s][A
+  Iterations (Degree 1):  14%|█▍        | 14/100 [00:00<00:01, 62.47it/s][A
+  Iterations (Degree 1):  21%|██        | 21/100 [00:00<00:01, 61.74it/s][A
+  Iterations (Degree 1):  28%|██▊       | 28/100 [00:00<00:01, 61.35it/s][A
+  Iterations (Degree 1):  35%|███▌      | 35/100 [00:00<00:01, 60.97it/s][A
+  Iterations (Degree 1):  42%|████▏     | 42/100 [00:00<00:00, 61.03it/s][A
+  Iterations (Degree 1):  49%|████▉     | 49/100 [00:00<00:00, 59.22it/s][A
+  Iterations (Degree 1):  55%|█████▌    | 55/100 [00:00<00:00, 59.30it/s][A
+  Iterations (Degree 1):  62%|██████▏   | 62/100 [00:01<00:00, 59.96it/s][A
+  Iterations (Degree 1):  69%|██████▉   | 69/100 [00:01<00:00, 57.83it/s][A
+  Iterations (Degree 1):  76%|███████▌  | 76/100 [00:01<00:00, 58.74it/s][A
+  Iterations (Degree 1):  83%|████████▎ | 83/100 [00:01<00:00, 59.46it/s][A
+  Iterations (Degree 1):  90%|█████████ | 90/100 [00:01<00:00, 60.16it/s][A
+  Iterations (Degree 1):  97%|█████████▋| 97/100 [00:01<00:00, 60.86it/s][A
+                                                                         [ALinearity Degrees:  33%|███▎      | 1/3 [00:01<00:03,  1.66s/it]
+Processing linearity_degree=2...
+
+  Iterations (Degree 2):   0%|          | 0/100 [00:00<?, ?it/s][A
+  Iterations (Degree 2):   7%|▋         | 7/100 [00:00<00:01, 64.78it/s][A
+  Iterations (Degree 2):  14%|█▍        | 14/100 [00:00<00:01, 64.71it/s][A
+  Iterations (Degree 2):  21%|██        | 21/100 [00:00<00:01, 63.50it/s][A
+  Iterations (Degree 2):  28%|██▊       | 28/100 [00:00<00:01, 62.82it/s][A
+  Iterations (Degree 2):  35%|███▌      | 35/100 [00:00<00:01, 63.19it/s][A
+  Iterations (Degree 2):  42%|████▏     | 42/100 [00:00<00:00, 60.31it/s][A
+  Iterations (Degree 2):  49%|████▉     | 49/100 [00:00<00:00, 60.03it/s][A
+  Iterations (Degree 2):  56%|█████▌    | 56/100 [00:00<00:00, 58.33it/s][A
+  Iterations (Degree 2):  62%|██████▏   | 62/100 [00:01<00:00, 58.69it/s][A
+  Iterations (Degree 2):  69%|██████▉   | 69/100 [00:01<00:00, 59.83it/s][A
+  Iterations (Degree 2):  76%|███████▌  | 76/100 [00:01<00:00, 61.30it/s][A
+  Iterations (Degree 2):  83%|████████▎ | 83/100 [00:19<00:14,  1.20it/s][A
+                                                                         [ALinearity Degrees:  67%|██████▋   | 2/3 [00:03<00:01,  1.65s/it]
+Processing linearity_degree=3...
+
+  Iterations (Degree 3):   0%|          | 0/100 [00:00<?, ?it/s][A
+  Iterations (Degree 3):   7%|▋         | 7/100 [00:00<00:01, 63.37it/s][A
+  Iterations (Degree 3):  14%|█▍        | 14/100 [00:00<00:01, 59.10it/s][A
+  Iterations (Degree 3):  21%|██        | 21/100 [00:00<00:01, 59.73it/s][A
+  Iterations (Degree 3):  28%|██▊       | 28/100 [00:00<00:01, 60.67it/s][A
+  Iterations (Degree 3):  35%|███▌      | 35/100 [00:00<00:01, 60.68it/s][A
+  Iterations (Degree 3):  42%|████▏     | 42/100 [00:00<00:00, 61.59it/s][A
+  Iterations (Degree 3):  49%|████▉     | 49/100 [00:00<00:00, 61.84it/s][A
+  Iterations (Degree 3):  56%|█████▌    | 56/100 [00:00<00:00, 61.61it/s][A
+  Iterations (Degree 3):  63%|██████▎   | 63/100 [00:01<00:00, 62.28it/s][A
+  Iterations (Degree 3):  70%|███████   | 70/100 [00:01<00:00, 62.44it/s][A
+  Iterations (Degree 3):  77%|███████▋  | 77/100 [00:01<00:00, 62.48it/s][A
+  Iterations (Degree 3):  84%|████████▍ | 84/100 [00:01<00:00, 61.88it/s][A
+  Iterations (Degree 3):  91%|█████████ | 91/100 [00:01<00:00, 62.02it/s][A
+  Iterations (Degree 3):  98%|█████████▊| 98/100 [00:01<00:00, 61.89it/s][A
+                                                       
+Data generation complete.
+Generated data saved in subfolders under: ./data/ATE_datasets
+{'N': 200, 'rep': 0, 'true_ATE': 3.0, 'tauhat_post': 3.0751485578267825, 'tauhat_pre_treated': 3.1528386910319712, 'share_recovered': 1.0250495192755942}
+{'N': 200, 'rep': 1, 'true_ATE': 3.0, 'tauhat_post': 3.1930887635102705, 'tauhat_pre_treated': 3.0842183637981355, 'share_recovered': 1.0643629211700902}
+{'N': 200, 'rep': 2, 'true_ATE': 3.0, 'tauhat_post': 2.9863960170388624, 'tauhat_pre_treated': 3.1411051212076146, 'share_recovered': 0.9954653390129541}
+are_recovered': 1.0681964257132468}
+{'N': 200, 'rep': 2, 'true_ATE': 3.0, 'tauhat_post': 2.9755841039971425, 'tauhat_pre_treated': 3.1943029350052528, 'share_recovered': 0.9918613679990474}
+Starting data generation...
+Output directory: ./data/ATE_datasets
+Linearity Degrees: [1, 2, 3]
+Iterations per degree: 100
+Linearity Degrees:   0%|          | 0/3 [00:00<?, ?it/s]
+Processing linearity_degree=1...
+
+  Iterations (Degree 1):   0%|          | 0/100 [00:00<?, ?it/s][A
+  Iterations (Degree 1):   7%|▋         | 7/100 [00:00<00:01, 61.80it/s][A
+  Iterations (Degree 1):  14%|█▍        | 14/100 [00:00<00:01, 65.84it/s][A
+  Iterations (Degree 1):  21%|██        | 21/100 [00:00<00:01, 67.05it/s][A
+  Iterations (Degree 1):  28%|██▊       | 28/100 [00:00<00:01, 66.84it/s][A
+  Iterations (Degree 1):  35%|███▌      | 35/100 [00:00<00:00, 66.61it/s][A
+  Iterations (Degree 1):  42%|████▏     | 42/100 [00:00<00:00, 66.01it/s][A
+  Iterations (Degree 1):  49%|████▉     | 49/100 [00:00<00:00, 65.99it/s][A
+  Iterations (Degree 1):  56%|█████▌    | 56/100 [00:00<00:00, 65.70it/s][A
+  Iterations (Degree 1):  64%|██████▍   | 64/100 [00:00<00:00, 67.09it/s][A
+  Iterations (Degree 1):  71%|███████   | 71/100 [00:01<00:00, 67.00it/s][A
+  Iterations (Degree 1):  78%|███████▊  | 78/100 [00:01<00:00, 66.70it/s][A
+  Iterations (Degree 1):  85%|████████▌ | 85/100 [00:01<00:00, 66.09it/s][A
+  Iterations (Degree 1):  92%|█████████▏| 92/100 [00:01<00:00, 64.54it/s][A
+  Iterations (Degree 1):  99%|█████████▉| 99/100 [00:01<00:00, 64.96it/s][A
+                                                                         [ALinearity Degrees:  33%|███▎      | 1/3 [00:01<00:03,  1.52s/it]
+Processing linearity_degree=2...
+
+  Iterations (Degree 2):   0%|          | 0/100 [00:00<?, ?it/s][A
+  Iterations (Degree 2):   7%|▋         | 7/100 [00:00<00:01, 64.25it/s][A
+  Iterations (Degree 2):  14%|█▍        | 14/100 [00:00<00:01, 65.16it/s][A
+  Iterations (Degree 2):  21%|██        | 21/100 [00:00<00:01, 66.55it/s][A
+  Iterations (Degree 2):  28%|██▊       | 28/100 [00:00<00:01, 65.37it/s][A
+  Iterations (Degree 2):  35%|███▌      | 35/100 [00:00<00:00, 66.61it/s][A
+  Iterations (Degree 2):  42%|████▏     | 42/100 [00:00<00:00, 66.79it/s][A
+  Iterations (Degree 2):  49%|████▉     | 49/100 [00:00<00:00, 67.28it/s][A
+  Iterations (Degree 2):  56%|█████▌    | 56/100 [00:00<00:00, 66.82it/s][A
+  Iterations (Degree 2):  63%|██████▎   | 63/100 [00:00<00:00, 67.52it/s][A
+  Iterations (Degree 2):  70%|███████   | 70/100 [00:01<00:00, 64.12it/s][A
+  Iterations (Degree 2):  77%|███████▋  | 77/100 [00:19<00:18,  1.21it/s][A
+                                                                         [ALinearity Degrees:  67%|██████▋   | 2/3 [00:03<00:01,  1.53s/it]
+Processing linearity_degree=3...
+
+  Iterations (Degree 3):   0%|          | 0/100 [00:00<?, ?it/s][A
+  Iterations (Degree 3):   7%|▋         | 7/100 [00:00<00:01, 68.86it/s][A
+  Iterations (Degree 3):  14%|█▍        | 14/100 [00:00<00:01, 68.69it/s][A
+  Iterations (Degree 3):  21%|██        | 21/100 [00:00<00:01, 68.56it/s][A
+  Iterations (Degree 3):  28%|██▊       | 28/100 [00:00<00:01, 68.36it/s][A
+  Iterations (Degree 3):  35%|███▌      | 35/100 [00:00<00:00, 68.50it/s][A
+  Iterations (Degree 3):  42%|████▏     | 42/100 [00:00<00:00, 68.43it/s][A
+  Iterations (Degree 3):  49%|████▉     | 49/100 [00:00<00:00, 68.28it/s][A
+  Iterations (Degree 3):  56%|█████▌    | 56/100 [00:00<00:00, 67.38it/s][A
+  Iterations (Degree 3):  63%|██████▎   | 63/100 [00:00<00:00, 65.39it/s][A
+  Iterations (Degree 3):  70%|███████   | 70/100 [00:01<00:00, 66.37it/s][A
+  Iterations (Degree 3):  77%|███████▋  | 77/100 [00:01<00:00, 67.31it/s][A
+  Iterations (Degree 3):  84%|████████▍ | 84/100 [00:01<00:00, 67.82it/s][A
+  Iterations (Degree 3):  91%|█████████ | 91/100 [00:01<00:00, 68.26it/s][A
+  Iterations (Degree 3):  99%|█████████▉| 99/100 [00:01<00:00, 69.20it/s][A
+                                                                         [ALinearity Degrees: 100%|██████████| 3/3 [00:04<00:00,  1.50s/it]Linearity Degrees: 100%|██████████| 3/3 [00:04<00:00,  1.51s/it]
+
+Data generation complete.
+Generated data saved in subfolders under: ./data/ATE_datasets
+skip (already done): 200 0
+skip (already done): 200 1
+skip (already done): 200 2
+{'N': 800, 'rep': 0, 'true_ATE': 3.0, 'tauhat_post': 3.0232160110078814, 'tauhat_pre_treated': 3.1493403280837127, 'share_recovered': 1.0077386703359605}
+{'N': 800, 'rep': 1, 'true_ATE': 3.0, 'tauhat_post': 3.03325300093975, 'tauhat_pre_treated': 3.1348654719829767, 'share_recovered': 1.0110843336465833}
+{'N': 1600, 'rep': 0, 'true_ATE': 3.0, 'tauhat_post': 2.9882169816794613, 'tauhat_pre_treated': 2.92136603394015, 'share_recovered': 0.9960723272264871}
+{'N': 1600, 'rep': 1, 'true_ATE': 3.0, 'tauhat_post': 3.060389630967904, 'tauhat_pre_treated': 2.9230675279976737, 'share_recovered': 1.0201298769893012}
+       mean  count
+N                 
+200   1.028      3
+800   1.009      2
+1600  1.008      2

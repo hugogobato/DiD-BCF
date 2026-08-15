@@ -1,0 +1,2 @@
+setting,N,reps,twfe,att_true,twfe_bias,weight_treated_vs_untreated,weight_earlier_vs_later,weight_already_treated
+D_contamination,200,500,7.447857315465088,8.43164146315178,-0.9837841476866921,0.6668561914439659,0.2171099975113943,0.11603381104463975

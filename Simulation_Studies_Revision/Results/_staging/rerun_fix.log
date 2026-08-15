@@ -1,0 +1,7 @@
+[Parallel(n_jobs=6)]: Using backend LokyBackend with 6 concurrent workers.
+[B1_baseline_lin_1] canonical DGP | N=(200,) | reps=100 | 100 fits | jobs=6
+[Parallel(n_jobs=6)]: Done   6 tasks      | elapsed:  9.4min
+/home/hugo_souto/Stuff/Research/DiD-BCF/.venv/lib/python3.12/site-packages/joblib/externals/loky/backend/resource_tracker.py:359: UserWarning: resource_tracker: There appear to be 12 leaked semlock objects to clean up at shutdown
+  warnings.warn(
+/home/hugo_souto/Stuff/Research/DiD-BCF/.venv/lib/python3.12/site-packages/joblib/externals/loky/backend/resource_tracker.py:359: UserWarning: resource_tracker: There appear to be 2 leaked folder objects to clean up at shutdown
+  warnings.warn(

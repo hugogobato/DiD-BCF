@@ -1,0 +1,2 @@
+setting,N,reps,twfe,att_true,twfe_bias,weight_treated_vs_untreated,weight_earlier_vs_later,weight_already_treated
+D_staggered,200,500,4.830126665579907,5.2993013312653074,-0.4691746656854015,0.6668561914439659,0.2171099975113943,0.11603381104463975

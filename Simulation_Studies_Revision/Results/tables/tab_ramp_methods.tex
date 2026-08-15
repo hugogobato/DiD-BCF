@@ -1,0 +1,18 @@
+\begin{tabular}{llrrrrrr}
+\toprule
+& & \multicolumn{6}{c}{Weight on already-treated comparisons} \\
+\cmidrule(lr){3-8}
+Estimand & Estimator & 0.077 & 0.100 & 0.116 & 0.136 & 0.196 & 0.250 \\
+\midrule
+ATT & TWFE & 0.261 & 0.386 & 0.468 & 0.573 & 0.889 & 1.181 \\
+ & Synthetic DiD & 1.247 & 1.269 & 1.280 & 1.290 & 1.300 & 1.314 \\
+\midrule
+GATT & Callaway--Sant'Anna & 0.013 & 0.014 & 0.012 & 0.017 & 0.017 & 0.033$^{\dagger}$ \\
+ & DoubleML DR-DiD & 0.023 & 0.023 & 0.017 & 0.021 & 0.086 & 0.200$^{\dagger}$ \\
+ & grf-DiD (Wang) & 0.021 & 0.021 & 0.022 & 0.028 & 0.012 & 0.016 \\
+\midrule
+ES & TWFE & 0.183 & 0.309 & 0.396 & 0.507 & 0.881 & 1.383 \\
+ & Gardner (did2s) & 0.010 & 0.013 & 0.012 & 0.009 & 0.006 & 0.008 \\
+\bottomrule
+\end{tabular}
+\par\smallskip\footnotesize $^{\dagger}$Computed on the replications in which the estimator returned an estimate: Callaway--Sant'Anna retains 92\% of replications at this design, so the figure is a selected subsample and is not comparable with estimators that ran everywhere.

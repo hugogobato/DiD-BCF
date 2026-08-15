@@ -1,71 +1,75 @@
-Simulation_Studies_Revision/Benchmark_Results/
-Simulation_Studies_Revision/DiD_BCF/*.csv
-Simulation_Studies_Revision/DoubleML_Colab/*.zip
 
-Simulation_Studies_Revision/R_code/B1_baseline_datasets/*.csv
-Simulation_Studies_Revision/R_code/B1_baseline_datasets/*.txt
 Simulation_Studies_Revision/R_code/B1_baseline_datasets/linearity_degree=1/
 Simulation_Studies_Revision/R_code/B1_baseline_datasets/linearity_degree=2/
 Simulation_Studies_Revision/R_code/B1_baseline_datasets/linearity_degree=3/
 
-Simulation_Studies_Revision/R_code/B1_null_datasets/*.csv
-Simulation_Studies_Revision/R_code/B1_null_datasets/*.txt
 Simulation_Studies_Revision/R_code/B1_null_datasets/linearity_degree=1/
 Simulation_Studies_Revision/R_code/B1_null_datasets/linearity_degree=2/
 Simulation_Studies_Revision/R_code/B1_null_datasets/linearity_degree=3/
 
-Simulation_Studies_Revision/R_code/B1_selection_obs_datasets/*.csv
-Simulation_Studies_Revision/R_code/B1_selection_obs_datasets/*.txt
 Simulation_Studies_Revision/R_code/B1_selection_obs_datasets/linearity_degree=1/
 Simulation_Studies_Revision/R_code/B1_selection_obs_datasets/linearity_degree=2/
 Simulation_Studies_Revision/R_code/B1_selection_obs_datasets/linearity_degree=3/
 
-Simulation_Studies_Revision/R_code/B1_serial_corr_datasets/*.csv
-Simulation_Studies_Revision/R_code/B1_serial_corr_datasets/*.txt
 Simulation_Studies_Revision/R_code/B1_serial_corr_datasets/linearity_degree=1/
 Simulation_Studies_Revision/R_code/B1_serial_corr_datasets/linearity_degree=2/
 Simulation_Studies_Revision/R_code/B1_serial_corr_datasets/linearity_degree=3/
 
-Simulation_Studies_Revision/R_code/B1_strong_confounder_datasets/*.csv
-Simulation_Studies_Revision/R_code/B1_strong_confounder_datasets/*.txt
 Simulation_Studies_Revision/R_code/B1_strong_confounder_datasets/linearity_degree=1/
 Simulation_Studies_Revision/R_code/B1_strong_confounder_datasets/linearity_degree=2/
 Simulation_Studies_Revision/R_code/B1_strong_confounder_datasets/linearity_degree=3/
 
-Simulation_Studies_Revision/R_code/D_contamination_datasets/*.csv
-Simulation_Studies_Revision/R_code/D_contamination_datasets/*.txt
 Simulation_Studies_Revision/R_code/D_contamination_datasets/linearity_degree=1/
 Simulation_Studies_Revision/R_code/D_contamination_datasets/linearity_degree=2/
 Simulation_Studies_Revision/R_code/D_contamination_datasets/linearity_degree=3/
 
-Simulation_Studies_Revision/R_code/D_staggered_datasets/*.csv
-Simulation_Studies_Revision/R_code/D_staggered_datasets/*.txt
 Simulation_Studies_Revision/R_code/D_staggered_datasets/linearity_degree=1/
 Simulation_Studies_Revision/R_code/D_staggered_datasets/linearity_degree=2/
 Simulation_Studies_Revision/R_code/D_staggered_datasets/linearity_degree=3/
 
-Simulation_Studies_Revision/R_code/B2_sweep_datasets/*.csv
-Simulation_Studies_Revision/R_code/B2_sweep_datasets/*.txt
+
 Simulation_Studies_Revision/R_code/B2_sweep_datasets/linearity_degree=1/
 Simulation_Studies_Revision/R_code/B2_sweep_datasets/linearity_degree=2/
 Simulation_Studies_Revision/R_code/B2_sweep_datasets/linearity_degree=3/
-Simulation_Studies_Revision/R_code/B2_sweep_datasets/N=200/
-Simulation_Studies_Revision/R_code/B2_sweep_datasets/N=800/
-Simulation_Studies_Revision/R_code/B2_sweep_datasets/N=400/
-Simulation_Studies_Revision/R_code/B2_sweep_datasets/N=1600/
+Simulation_Studies_Revision/R_code/B2_sweep_datasets/N=200/linearity_degree=1/
+Simulation_Studies_Revision/R_code/B2_sweep_datasets/N=800/linearity_degree=1/
+Simulation_Studies_Revision/R_code/B2_sweep_datasets/N=400/linearity_degree=1/
+Simulation_Studies_Revision/R_code/B2_sweep_datasets/N=1600/linearity_degree=1/
+Simulation_Studies_Revision/R_code/B2_sweep_datasets/N=200/linearity_degree=2/
+Simulation_Studies_Revision/R_code/B2_sweep_datasets/N=800/linearity_degree=2/
+Simulation_Studies_Revision/R_code/B2_sweep_datasets/N=400/linearity_degree=2/
+Simulation_Studies_Revision/R_code/B2_sweep_datasets/N=1600/linearity_degree=2/
+Simulation_Studies_Revision/R_code/B2_sweep_datasets/N=200/linearity_degree=3/
+Simulation_Studies_Revision/R_code/B2_sweep_datasets/N=800/linearity_degree=3/
+Simulation_Studies_Revision/R_code/B2_sweep_datasets/N=400/linearity_degree=3/
+Simulation_Studies_Revision/R_code/B2_sweep_datasets/N=1600/linearity_degree=3/
 
 
-Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/*.csv
-Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/*.txt
 Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/linearity_degree=1/
 Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/linearity_degree=2/
 Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/linearity_degree=3/
-Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/N=200/
-Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/N=800/
-Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/N=400/
-Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/N=1600/
-Simulation_Studies_Revision/Results/
-Simulation_Studies_Revision/CFFE_Wang_Colab/*.zip
+Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/N=200/linearity_degree=1/
+Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/N=800/linearity_degree=1/
+Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/N=400/linearity_degree=1/
+Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/N=1600/linearity_degree=1/
+Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/N=200/linearity_degree=2/
+Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/N=800/linearity_degree=2/
+Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/N=400/linearity_degree=2/
+Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/N=1600/linearity_degree=2/
+Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/N=200/linearity_degree=3/
+Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/N=800/linearity_degree=3/
+Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/N=400/linearity_degree=3/
+Simulation_Studies_Revision/R_code/B2_sweep_serial_datasets/N=1600/linearity_degree=3/
+
+Simulation_Studies_Revision/Results/identification/
+Simulation_Studies_Revision/Results/README.md
+Simulation_Studies_Revision/Results/identification_note.tex
+Simulation_Studies_Revision/Results/METRICS_NAN_FIX.md
+Simulation_Studies_Revision/Results/*.tex
+Simulation_Studies_Revision/Results/*.aux
+Simulation_Studies_Revision/Results/*.log
+Simulation_Studies_Revision/Results/*.toc
+Simulation_Studies_Revision/Results/*.out
 
 # Generated R-benchmark panels, for every scenario present or future.  The
 # per-scenario rules above predate the D_ramp_* family and would not have
@@ -80,4 +84,3 @@ Simulation_Studies_Revision/R_code/*_datasets/*.xlsx
 Old_Simulation_Studies/
 
 Simulation_Studies_Revision/Pretrend/_retired/
-Simulation_Studies_Revision/Pretrend/*.csv

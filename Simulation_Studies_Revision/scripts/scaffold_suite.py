@@ -434,7 +434,7 @@ R_REFERENCE = {"canonical": "B1_baseline", "staggered": "D_staggered"}
 # the benchmark counterparts of did_bcf_revision/pretrend.py and emit the same
 # PRE / PRE_SUBC estimands in the same schema.
 PT_R_FILES = ["did_dr_pretrend.R", "did2s_pretrend.R", "synthdid_pretrend.R",
-              "DoubleML_pretrend.R"]
+              "DoubleML_pretrend.R", "wang_pretrend.R"]
 PT_R_REFERENCE = {"canonical": "PT_hold"}
 
 
