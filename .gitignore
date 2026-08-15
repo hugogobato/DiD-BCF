@@ -1,6 +1,7 @@
 Simulation_Studies_Revision/Benchmark_Results/
 Simulation_Studies_Revision/DiD_BCF/*.csv
-Simulation_Studies_Revision/DoubleML_Colab/
+Simulation_Studies_Revision/DoubleML_Colab/*.zip
+
 Simulation_Studies_Revision/R_code/B1_baseline_datasets/*.csv
 Simulation_Studies_Revision/R_code/B1_baseline_datasets/*.txt
 Simulation_Studies_Revision/R_code/B1_baseline_datasets/linearity_degree=1/

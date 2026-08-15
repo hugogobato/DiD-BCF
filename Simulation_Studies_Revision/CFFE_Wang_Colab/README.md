@@ -32,6 +32,21 @@ post period *t*) with never-treated controls. Per-obs `tau_hat(X)` with grf's
 variance estimate → a genuine CATT surface + `average_treatment_effect`
 GATT(g,t). Fast (seconds/rep) and dynamics-aware.
 
+### The pre-trend variant (`wang_pretrend.R`, workstream PT)
+
+`CFFE_Wang_PT_*.ipynb` runs the **same recipe with a pre-treatment period
+substituted for the post period**, which makes it a placebo: no estimator logic
+changes, only which two periods are differenced. It estimates `Delta(k)` of
+`did_bcf_revision/pretrend.py` — the conditional differential pre-trend — so it
+lands in the shared schema next to the Bayesian diagnostic and the other four
+benchmarks. See `Pretrend/README.md` for the full comparison and for which parts
+of it are constructed rather than native (the `slope` forest and the subgroup
+contrast are; the placebo itself is not).
+
+These notebooks are **self-contained**: the R script is embedded and the seeded
+panels are generated inline, so only the `PT_*` scenarios in `config.py` need to
+be in the clone.
+
 ## Why CFFE is NOT used
 
 R1.5 / R3.1.1 named *both* CFFE and a grf-based causal-forest DiD as acceptable

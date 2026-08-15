@@ -26,7 +26,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from did_bcf_revision.config import get_experiment, LINEARITY_DEGREES
+from did_bcf_revision.config import get_experiment, degrees_for
 from did_bcf_revision.dgps import generate_canonical_did, generate_staggered_did
 from did_bcf_revision.exports import to_r_frame
 
@@ -56,8 +56,9 @@ def main():
     reps = args.reps if args.reps is not None else exp.reps
     base_N = exp.n_values[0]
 
+    # Workstream PT runs degrees (1, 3) only -- see config.PT_LINEARITY_DEGREES.
     tasks = []
-    for d in LINEARITY_DEGREES:
+    for d in degrees_for(exp.workstream):
         base_dir = os.path.join(OUT_ROOT, "linearity_degree=%d" % d)
         os.makedirs(base_dir, exist_ok=True)
         for rep in range(reps):

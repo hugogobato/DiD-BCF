@@ -27,7 +27,7 @@ from concurrent.futures import ThreadPoolExecutor
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
-from did_bcf_revision.config import get_experiment, LINEARITY_DEGREES, all_experiments
+from did_bcf_revision.config import get_experiment, degrees_for, all_experiments
 from did_bcf_revision.dgps import generate_canonical_did, generate_staggered_did
 from did_bcf_revision.exports import to_r_frame
 
@@ -35,16 +35,33 @@ R_CODE_DIR = os.path.join(ROOT, "R_code")
 
 # Derived from the experiment grid rather than hard-coded, so a scenario added to
 # config.py (the D_ramp_* family, for instance) is picked up automatically.
-# Workstream PT is excluded: its diagnostic has no R counterpart.
-FOLDERS = [f"{e.name}_datasets" for e in all_experiments()
-           if e.workstream != "PT"]
+FOLDERS = [f"{e.name}_datasets" for e in all_experiments()]
 
-R_SCRIPTS = [
+# Workstream PT estimates the pre-trend placebo rather than the ATT, so it has
+# its own four scripts.  They are the benchmark counterparts of
+# did_bcf_revision/pretrend.py and emit the same PRE / PRE_SUBC estimands, which
+# is why they cannot share a file with the ATT benchmarks.
+ATT_SCRIPTS = [
     "did_dr_new.R",
     "did2s.R",
     "DoubleML_did.R",
     "synthdid.R"
 ]
+PT_SCRIPTS = [
+    "did_dr_pretrend.R",
+    "did2s_pretrend.R",
+    "synthdid_pretrend.R",
+    "DoubleML_pretrend.R",
+]
+ALL_SCRIPTS = ATT_SCRIPTS + PT_SCRIPTS
+R_SCRIPTS = ATT_SCRIPTS
+
+
+def scripts_for(scenario):
+    """The estimator scripts that apply to ``scenario``, honouring --scripts."""
+    ws = get_experiment(scenario).workstream
+    family = PT_SCRIPTS if ws == "PT" else ATT_SCRIPTS
+    return [x for x in family if x in R_SCRIPTS]
 
 def generate_temp_data(scenario, reps, temp_dir):
     """Generate iteration CSV files on-the-fly directly in the temp directory."""
@@ -57,8 +74,8 @@ def generate_temp_data(scenario, reps, temp_dir):
     else:
         GEN = generate_staggered_did
 
-    # Sweep all linearity degrees
-    for d in LINEARITY_DEGREES:
+    # Sweep the workstream's linearity degrees (PT runs 1 and 3 only)
+    for d in degrees_for(exp.workstream):
         base_dir = os.path.join(temp_dir, f"linearity_degree={d}")
         os.makedirs(base_dir, exist_ok=True)
         
@@ -137,7 +154,7 @@ def process_scenario_batch(batch_folders, reps, max_workers=8):
             generate_temp_data(scenario_name, reps, td)
             
             # Copy R scripts into the temp directory
-            for script in R_SCRIPTS:
+            for script in scripts_for(scenario_name):
                 src_script = os.path.join(persistent_folder, script)
                 if os.path.exists(src_script):
                     shutil.copy2(src_script, os.path.join(td, script))
@@ -147,7 +164,7 @@ def process_scenario_batch(batch_folders, reps, max_workers=8):
         for folder in batch_folders:
             persistent_folder = os.path.join(R_CODE_DIR, folder)
             td = temp_dirs[folder]
-            for script in R_SCRIPTS:
+            for script in scripts_for(folder.replace("_datasets", "")):
                 tasks.append((folder, script, td, persistent_folder))
                 
         # Step 3: Run all 8 script tasks in parallel
@@ -177,7 +194,7 @@ def main():
                          "'D_ramp_nt05' or 'D_ramp_nt05_datasets'.")
     global R_SCRIPTS
     ap.add_argument("--scripts", nargs="+", default=None,
-                    choices=R_SCRIPTS + [x[:-2] for x in R_SCRIPTS],
+                    choices=ALL_SCRIPTS + [x[:-2] for x in ALL_SCRIPTS],
                     help="Which estimators to run (default: all four). Use this "
                          "to keep the slow ones off this machine, e.g. "
                          "--scripts did_dr_new did2s synthdid leaves DoubleML "
@@ -190,7 +207,9 @@ def main():
 
     if args.scripts:
         want = {x if x.endswith(".R") else x + ".R" for x in args.scripts}
-        R_SCRIPTS = [x for x in R_SCRIPTS if x in want]
+        R_SCRIPTS = [x for x in ALL_SCRIPTS if x in want]
+    else:
+        R_SCRIPTS = ALL_SCRIPTS
 
     folders = FOLDERS
     if args.scenarios:
@@ -205,6 +224,8 @@ def main():
     print("Comparing apples-to-apples using identical seeds as python notebooks.")
     print(f"Scenarios: {', '.join(f.replace('_datasets', '') for f in folders)}")
     print(f"Estimators: {', '.join(R_SCRIPTS)}")
+    print("  (per scenario: workstream PT runs the *_pretrend.R family, the "
+          "rest run the ATT family)")
 
     for i in range(0, len(folders), args.batch_size):
         batch_folders = folders[i:i + args.batch_size]

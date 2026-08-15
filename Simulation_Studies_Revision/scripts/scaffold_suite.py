@@ -100,7 +100,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from did_bcf_revision.config import get_experiment, LINEARITY_DEGREES
+from did_bcf_revision.config import get_experiment, degrees_for
 from did_bcf_revision.dgps import generate_canonical_did, generate_staggered_did
 from did_bcf_revision.exports import to_r_frame
 
@@ -130,8 +130,9 @@ def main():
     reps = args.reps if args.reps is not None else exp.reps
     base_N = exp.n_values[0]
 
+    # Workstream PT runs degrees (1, 3) only -- see config.PT_LINEARITY_DEGREES.
     tasks = []
-    for d in LINEARITY_DEGREES:
+    for d in degrees_for(exp.workstream):
         base_dir = os.path.join(OUT_ROOT, "linearity_degree=%d" % d)
         os.makedirs(base_dir, exist_ok=True)
         for rep in range(reps):
@@ -428,8 +429,16 @@ subc[["estimand_id", "mean_true", "bias", "emp_sd", "cover95",
 R_FILES = ["did_dr_new.R", "did2s.R", "DoubleML_did.R", "synthdid.R"]
 R_REFERENCE = {"canonical": "B1_baseline", "staggered": "D_staggered"}
 
+# Workstream PT estimates a different object (the pre-trend placebo, not the
+# ATT), so it has its own four scripts and its own reference scenario.  They are
+# the benchmark counterparts of did_bcf_revision/pretrend.py and emit the same
+# PRE / PRE_SUBC estimands in the same schema.
+PT_R_FILES = ["did_dr_pretrend.R", "did2s_pretrend.R", "synthdid_pretrend.R",
+              "DoubleML_pretrend.R"]
+PT_R_REFERENCE = {"canonical": "PT_hold"}
 
-def r_script(script: str, scen: str, dgp: str) -> str:
+
+def r_script(script: str, scen: str, dgp: str, reference: dict | None = None) -> str:
     """The reference scenario's script, retargeted at ``scen``.
 
     The reference is picked by DGP, so ``DGP <- "..."`` never needs changing and
@@ -438,7 +447,7 @@ def r_script(script: str, scen: str, dgp: str) -> str:
     use different phrasings across the four scripts, so every quoted occurrence
     is replaced rather than a fixed pair of sentences.
     """
-    ref = R_REFERENCE[dgp]
+    ref = (reference or R_REFERENCE)[dgp]
     path = os.path.join(ROOT, "R_code", f"{ref}_datasets", script)
     with open(path) as fh:
         src = fh.read()
@@ -527,10 +536,25 @@ def main():
         ctx = dict(SCEN=e.name, WS=e.workstream, DGP=e.dgp,
                    DGPHUMAN=DGP_HUMAN[e.dgp], NOTE=e.note, REPS=e.reps)
 
-        # Workstream PT has its own driver (the unconstrained diagnostic fit)
-        # and no benchmark comparison, so it gets one notebook family and none
-        # of the estimation-model scaffolding.
+        # Workstream PT has its own driver (the unconstrained diagnostic fit),
+        # so it gets its own notebook family and none of the DiD-BCF/OLS
+        # estimation-model scaffolding.  It DOES get the data-creation script
+        # and a benchmark R family: the Colab pre-trend notebooks regenerate the
+        # seeded panels through DGPs/data_creation_<scen>.py exactly as the
+        # B1/D ones do, and the five benchmark pre-trend tests read them.
         if e.workstream == "PT":
+            with open(os.path.join(dgps_dir, f"data_creation_{e.name}.py"), "w") as f:
+                f.write(sub(DATA_CREATION_TMPL, **ctx))
+            n_data += 1
+
+            sdir = os.path.join(rcode_dir, f"{e.name}_datasets")
+            os.makedirs(sdir, exist_ok=True)
+            if e.name not in PT_R_REFERENCE.values():
+                for fname in PT_R_FILES:
+                    with open(os.path.join(sdir, fname), "w") as f:
+                        f.write(r_script(fname, e.name, e.dgp, PT_R_REFERENCE))
+                    n_r += 1
+
             for d in cfg.degrees_for("PT"):
                 # The constrained refit that measures the violation's cost is
                 # only worth its doubled MCMC bill at the headline degree.

@@ -134,14 +134,104 @@ identically to the Bayesian and frequentist rows.
 | `ATT`, `ES`, `GATT`, `CATT` | | `WITH_ATT=True` only (degree 1): the violation's *cost*, measured on the same replications that flag it |
 
 `method` is `pretrend` (the diagnostic), `twfe_es` (the standard-practice
-comparator, free — no MCMC), and `plain` / `corrected` (the constrained DiD-BCF
-fit, when `WITH_ATT`).
+comparator, free — no MCMC), `plain` / `corrected` (the constrained DiD-BCF
+fit, when `WITH_ATT`), and the five benchmark pre-trend tests below.
 
 **Why `PRE_SUBC` and not `PRE_SUB`.** A subgroup's own `Delta(k)` is not a
 decision rule: under a homogeneous violation all four subgroups move together
 and reporting each separately is four looks at one fact. The *difference* is
 zero under any violation constant in `X`, so it isolates exactly the
 heterogeneous part — the part an event study cannot represent.
+
+---
+
+## The benchmark pre-trend tests
+
+Every estimator in the suite is given its **own** pre-trend test, run on the
+same seeded panels, reported in the same schema, against the same realised truth
+(`pt_slope`, which now travels with the exported R panels the way `CATE` does).
+So `compute_metrics` scores all seven methods on identical definitions, and the
+question "is the Bayesian diagnostic actually better at pre-testing?" gets an
+answer rather than an assertion.
+
+**All seven target the same estimand**, `Delta(k) = ` the differential
+treated-minus-control change from `k = -1` to `k`, so the per-`k` rows, the
+`slope`, and the decision rules are directly comparable.
+
+| `method` | its pre-trend test | native? |
+|---|---|---|
+| `did_dr` | `att_gt(base_period="universal")`: `ATT(g,t)` at `t < g-1` **is** `Delta(k)`, doubly-robust and conditional on `X` | **native** — `did` computes these already and reports its own `Wpval` |
+| `doubleml` | the same, with DoubleML's ATTE plugged in as `est_method` (random-forest nuisances) | **native** (it runs through `att_gt`) |
+| `did2s` | the pre-period coefficients of the documented event study, recentred on `k = -1` | **standard practice** — the package's own plot shows them |
+| `synthdid` | the gap `plot(tau.hat, overlay=1)` draws, referenced to `k = -1` | **package-documented picture**, inference constructed |
+| `wang` | the grf-DiD recipe with a pre-treatment period substituted for the post period | **constructed** (the recipe is not a package either) |
+
+Two of these deserve the detail, because a reviewer will ask.
+
+**`synthdid`.** The vignette's "Checking for pre-treatment parallel trends"
+section says to run `plot(tau.hat, overlay = 1)` and eyeball how parallel the
+trajectories are. Reading `synthdid:::synthdid_plot`, the gap it draws is
+`[treated average](t) - [omega-weighted control average](t)` up to a constant,
+and referencing that to `k = -1` cancels the overlay constant exactly — so these
+rows are the package's own object with its intercept choice differenced out, not
+an invention. What the package does **not** provide is inference: `se.method`
+sizes the error bar on the scalar effect estimate and there is no statistic on
+the pre-period gaps. The standard errors here are a delete-one-unit jackknife
+following the package's own convention (`synthdid:::jackknife_se`: `omega` and
+`lambda` held fixed, `omega` renormalised after the drop), applied to the whole
+`Delta` vector so `slope` and `joint` get the cross-`k` covariance instead of an
+independence assumption. Note `se.method='placebo'` **cannot run on this design
+at all** — the panels are ~54% treated and synthdid errors with "must have more
+controls than treated units".
+
+**`wang`.** grf has no DiD module and no pre-trend test; `wang_grf.R` is itself a
+recipe. The placebo is that identical recipe with an earlier period substituted,
+so no estimator logic changes — but the `slope` (one forest on the per-unit
+slope statistic, so grf returns the slope and its SE directly) and the subgroup
+contrast (two `average_treatment_effect(..., subset=)` calls) are constructed,
+and `wang_pretrend.R` says so in its header.
+
+For balance: **DiD-BCF's own diagnostic is no more native.** It needs a
+different model entirely (`Z` = ever-treated, an extra unconstrained fit); the
+grf and synthdid placebos need only a different period.
+
+### Two measured properties that belong in the write-up, not a footnote
+
+* **`did2s` is structurally attenuated.** It imputes `Y(0)` from the untreated
+  observations, which include the treated units' own pre-treatment rows, so the
+  periods under test are inside the first-stage estimation sample and their
+  residuals are in-sample. On `PT_violation_g40` seed 0 it returns
+  `Delta(k) = -0.469 / -0.309 / -0.071` against a truth of `-1.2 / -0.8 / -0.4`,
+  an implied slope of 0.150 against 0.400. Borusyak–Jaravel–Spiess prescribe
+  re-fitting the first stage with the tested periods excluded; that is **not
+  implementable on this design** — excluding `k = -4,-3,-2` leaves each treated
+  unit one first-stage row, fixest drops them as fixed-effect singletons and
+  `did2s` errors out (verified). The attenuated test is what the estimator
+  affords here, and it is reported as such.
+* **`synthdid` looks for a trend it has already fitted away.** `omega` is chosen
+  to match the treated group's pre-treatment path, so the diagnostic is
+  conservative by construction (`-0.676` against a truth of `-1.2`). Worse, the
+  fitted time weights on these panels are `lambda = 0, 0.128, 0.414, 0.458`: the
+  **earliest pre-period gets zero weight**, which is exactly where a linear
+  violation is largest. That is a property of the picture the vignette asks the
+  reader to inspect.
+
+### Who can form the subgroup contrast
+
+`PRE_SUBC` is the row that carries the `PT_violation_het*` argument, and the
+honest position is that **it is not unique to DiD-BCF**. A practitioner with a
+binary, pre-specified moderator can split the sample and difference the two
+event studies, so `did_dr`, `did2s` and `synthdid` all carry a sample-split
+contrast here (disjoint unit sets, so the variances add), and `wang` gets it from
+grf's own `subset=` on a single forest — its strongest form, since the forest
+learns the heterogeneity on the full sample. `doubleml` is the exception: the
+contrast needs four extra fits per replication and it is by far the most
+expensive estimator, so it reports the aggregate rows only.
+
+What remains genuinely DiD-BCF's is that the moderator does **not** have to be
+pre-specified. That is a narrower claim than "an object no group-level placebo
+regression can form at all", which the earlier draft of this README made and
+which the measurements do not support.
 
 ---
 

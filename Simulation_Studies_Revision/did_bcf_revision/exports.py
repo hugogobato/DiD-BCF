@@ -11,6 +11,15 @@ This module maps the revision's tidy frame (``cohort`` -> ``first_treat_period``
 onto that layout and drops the unobserved ``alpha`` (never exposed to estimators).
 ``first_treat_period`` keeps ``np.inf`` for never-treated; the R scripts convert
 it to 0, the convention ``did::att_gt`` uses for the never-treated group.
+
+``pt_slope`` travels with the panel for the same reason ``CATE`` does: it is a
+**truth** column, not an estimator input.  The pre-trend benchmarks
+(``R_code/PT_*_datasets/*_pretrend.R``) need the realised treated-minus-control
+differential slope to fill the ``true`` column, and it must be the *same*
+realisation ``did_bcf_revision.pretrend.true_pretrend`` uses, otherwise the
+Bayesian diagnostic and the benchmarks are scored against different targets.  It
+is zero on every scenario that does not set ``group_trend`` / ``alpha_trend`` /
+``het_trend``, so the column is constant 0 outside workstream PT.
 """
 
 from __future__ import annotations
@@ -19,7 +28,7 @@ import pandas as pd
 
 R_COLUMNS = ["unit_id", "time", "first_treat_period", "treatment_group",
              "eventually_treated", "D", "post_treatment", "event_time",
-             "X_1", "X_2", "X_3", "X_4", "X_5", "CATE", "Y"]
+             "X_1", "X_2", "X_3", "X_4", "X_5", "CATE", "pt_slope", "Y"]
 
 
 def to_r_frame(df: pd.DataFrame) -> pd.DataFrame:
@@ -39,6 +48,10 @@ def to_r_frame(df: pd.DataFrame) -> pd.DataFrame:
         "X_4": df["X4"].to_numpy(),
         "X_5": df["X5"].to_numpy(),
         "CATE": df["CATT"].to_numpy(),                      # true conditional effect
+        # Per-unit conditional-PTA violation slope (0 where the assumption
+        # holds).  Truth, like CATE -- no estimator reads it.
+        "pt_slope": (df["pt_slope"].to_numpy() if "pt_slope" in df
+                     else pd.Series(0.0, index=df.index).to_numpy()),
         "Y": df["Y"].to_numpy(),
     })
     return out[R_COLUMNS]

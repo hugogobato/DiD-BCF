@@ -52,6 +52,11 @@ FAMILIES = {
     },
 }
 
+# Workstream PT estimates the pre-trend placebo rather than the ATT, so its
+# notebooks are a separate family with their own reference.  Every PT scenario is
+# canonical, so one reference covers all ten.
+PT_REFERENCE = {"canonical": "PT_hold"}
+
 
 def _reps_line(src: str, reps: int) -> str:
     """Rewrite the ``REPS = <n>`` assignment, preserving the column alignment."""
@@ -90,8 +95,8 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--scenarios", nargs="+", default=None,
-                    help="scenario names (default: every non-PT scenario that "
-                         "has no notebook yet)")
+                    help="scenario names (default: every scenario that has no "
+                         "notebook yet, workstream PT included)")
     ap.add_argument("--workstream", default=None,
                     help="generate for a whole workstream, e.g. D")
     ap.add_argument("--families", nargs="+", default=list(FAMILIES),
@@ -100,7 +105,7 @@ def main() -> None:
                     help="overwrite notebooks that already exist")
     args = ap.parse_args()
 
-    exps = {e.name: e for e in cfg.all_experiments() if e.workstream != "PT"}
+    exps = {e.name: e for e in cfg.all_experiments()}
     if args.scenarios:
         unknown = set(args.scenarios) - set(exps)
         if unknown:
@@ -119,7 +124,8 @@ def main() -> None:
         cache: dict = {}
         for name in names:
             e = exps[name]
-            ref_name = spec["reference"][e.dgp]
+            refs = PT_REFERENCE if e.workstream == "PT" else spec["reference"]
+            ref_name = refs[e.dgp]
             if name == ref_name:
                 continue
             out_path = os.path.join(folder, f"{spec['prefix']}{name}.ipynb")

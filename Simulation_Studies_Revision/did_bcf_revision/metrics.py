@@ -58,7 +58,27 @@ SURFACE_TYPE = "CATT"
 SURFACE_COLS = ["surf_rmse", "surf_mae", "surf_mape",
                 "surf_cover90", "surf_cover95", "surf_len90", "surf_len95"]
 _ZERO_TOL = 1e-8
-DECISION_ESTIMANDS = frozenset(("any", "any_bonf"))
+# Per-replication *decision rules*: a test, not a point estimate.  Their emitters
+# leave the estimate and interval columns missing by design, so they must be
+# routed away from the point-estimate path (which would drop every replication
+# and report ``n_reps = 0``).
+#
+# This was an exact-match set of two names, which missed every rule the pre-trend
+# module actually emits under a prefix -- ``joint`` (the TWFE Wald pre-test) and
+# the subgroup contrasts ``X1_any`` / ``X1_any_bonf`` / ``X2_any`` /
+# ``X2_any_bonf``, the row that carries the whole heterogeneous-violation
+# argument.  All of them silently aggregated to ``n_reps = 0, role = undefined``.
+# Matching on the *suffix* covers those, and the benchmark pre-trend scripts that
+# emit the same family, without catching any other id in the suite (``ATT``,
+# ``g=4_t=4``, ``k=0``, ``slope``, ``X1_slope``, ``X1_k=-2``, ``surface``).
+DECISION_ESTIMANDS = frozenset(("any", "any_bonf", "joint"))
+_DECISION_SUFFIXES = tuple("_" + s for s in DECISION_ESTIMANDS)
+
+
+def is_decision_estimand(estimand_id: str) -> bool:
+    """True for the per-replication test rows (no point estimate, only a tail)."""
+    return (estimand_id in DECISION_ESTIMANDS
+            or estimand_id.endswith(_DECISION_SUFFIXES))
 
 
 # --------------------------------------------------------------------------- #
@@ -161,7 +181,7 @@ def _decision_metrics_for_group(g: pd.DataFrame) -> pd.Series:
 
 def _metrics_for_group(g: pd.DataFrame) -> pd.Series:
     estimand_id = str(g["estimand_id"].iloc[0]) if "estimand_id" in g else ""
-    if estimand_id in DECISION_ESTIMANDS:
+    if is_decision_estimand(estimand_id):
         return _decision_metrics_for_group(g)
 
     # An estimator can fail on a replication and still emit a row: Callaway--
