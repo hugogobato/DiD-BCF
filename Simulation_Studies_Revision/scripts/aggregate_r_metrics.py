@@ -113,7 +113,7 @@ def collect(rcode_dir: str = RCODE_DIR):
         scen = os.path.basename(scen_dir).replace("_datasets", "")
         try:
             exp = cfg.get_experiment(scen)
-            dgp, base_N = exp.dgp, int(exp.n_values[0])
+            dgp, base_N = exp.dgp, int(cfg.BASE_N)
         except Exception:
             dgp, base_N = "unknown", np.nan
         for prefix, method in _METHOD_OF.items():

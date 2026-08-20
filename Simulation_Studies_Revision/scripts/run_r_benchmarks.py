@@ -27,7 +27,7 @@ from concurrent.futures import ThreadPoolExecutor
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
-from did_bcf_revision.config import get_experiment, degrees_for, all_experiments
+from did_bcf_revision.config import BASE_N, get_experiment, degrees_for, all_experiments
 from did_bcf_revision.dgps import generate_canonical_did, generate_staggered_did
 from did_bcf_revision.exports import to_r_frame
 
@@ -69,7 +69,7 @@ def scripts_for(scenario):
 def generate_temp_data(scenario, reps, temp_dir):
     """Generate iteration CSV files on-the-fly directly in the temp directory."""
     exp = get_experiment(scenario)
-    base_N = exp.n_values[0]
+    base_N = BASE_N   # the base panel is always 200; n_values[0] is the smallest sweep N
     
     # Determine the correct data generator
     if exp.dgp == "canonical":

@@ -19,6 +19,10 @@ SETTING <- if (length(ARGS) >= 2) ARGS[2] else "B1_baseline"
 METHOD <- "wang"
 N_TREES <- if (length(ARGS) >= 3) as.integer(ARGS[3]) else 2000L
 REPS <- if (length(ARGS) >= 4) as.integer(ARGS[4]) else 100L
+# grf grabs every core by default, which thrashes when the runner has one
+# process per (scenario, N) in flight.  0 (the default) keeps grf's own behaviour.
+GRF_THREADS <- suppressWarnings(as.integer(Sys.getenv("GRF_THREADS", "0")))
+N_THREADS <- if (is.finite(GRF_THREADS) && GRF_THREADS > 0L) GRF_THREADS else NULL
 
 SCHEMA <- c("dgp","setting","linearity_degree","N","rep","estimand_type",
             "estimand_id","g","t","k","method","post_mean","sd","q025","q05",
@@ -91,7 +95,7 @@ run_rep <- function(d) {
       W <- as.numeric(cur$first_treat_period == g)
       cf <- tryCatch(causal_forest(X = as.matrix(cur[, XN]), Y = dY, W = W,
                                    num.trees = N_TREES, clusters = cur$unit_id,
-                                   seed = 1L),
+                                   seed = 1L, num.threads = N_THREADS),
                      error = function(e) NULL)
       if (is.null(cf)) next
       pr <- predict(cf, estimate.variance = TRUE)

@@ -123,7 +123,7 @@ def main():
     exp = cfg.get_experiment(args.experiment)
     if exp.dgp != "staggered":
         ap.error(f"{args.experiment} is not a staggered experiment")
-    N = exp.n_values[0]
+    N = cfg.BASE_N
 
     if args.ramp_sweep:
         rows = []

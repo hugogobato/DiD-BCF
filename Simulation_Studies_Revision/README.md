@@ -13,8 +13,9 @@ New simulation suite for the JBES revision, built on top of
   length, the **calibration ratio** `avg_post_sd / emp_sd`, size/power and their
   **Monte-Carlo standard errors** — plus the paper's **CATT-surface RMSE/MAE/MAPE**
   (over the individual treated observations, mean ± SD across runs) with a
-  *pointwise* CATT coverage, and an `N ∈ {200, 400, 800, 1600}` sweep (anchored
-  at the base size 200) exhibiting bias→0, variance→0 and √N stabilisation.
+  *pointwise* CATT coverage, and an `N ∈ {50, 100, 200, 400, 800}` sweep
+  (bracketing the base size 200 on both sides) exhibiting bias→0, variance→0 and
+  √N stabilisation.
 * **D — staggered adoption** with treatment effects that vary by **both
   event-time and cohort**, the **Goodman-Bacon decomposition** of TWFE, and two
   distinct sweeps: `--ramp-sweep` over the *strength* of the dynamics, and
@@ -531,13 +532,13 @@ Below is the complete mathematical description for each of the 9 scenarios.
 ### 6. `B2_sweep`
 * **Type**: Canonical DiD (B2)
 * **Objective**: Verify asymptotic behavior (consistency and $\sqrt{N}$-stabilization) by sweeping sample size $N$.
-* **Sample Size**: $N \in \{200, 400, 800, 1600\}$, $T = 8$.
+* **Sample Size**: $N \in \{50, 100, 200, 400, 800\}$, $T = 8$.
 * **Mathematical Formulations**: Identical to `B1_baseline` for each respective sample size $N$.
 
 ### 7. `B2_sweep_serial`
 * **Type**: Canonical DiD (B2)
 * **Objective**: Verify asymptotic behavior under serial correlation by sweeping sample size $N$.
-* **Sample Size**: $N \in \{200, 400, 800, 1600\}$, $T = 8$.
+* **Sample Size**: $N \in \{50, 100, 200, 400, 800\}$, $T = 8$.
 * **Mathematical Formulations**: Identical to `B1_serial_corr` for each respective sample size $N$.
 
 ### 8. `D_staggered`

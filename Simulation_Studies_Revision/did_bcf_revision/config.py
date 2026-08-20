@@ -12,9 +12,9 @@ Design summary
   structure (iid vs AR(1)), the selection mechanism, and a sharp-null setting
   for size/coverage -- all at a single moderate ``N``.
 * **B2** (decomposed metrics + sample-size sweep): the baseline canonical DGP
-  across ``N in {200, 400, 800, 1600}`` (anchored at the base size 200) to
-  exhibit bias -> 0, variance -> 0 and the sqrt(N) behaviour, separately for
-  plain and corrected DiD-BCF.
+  across ``N in {50, 100, 200, 400, 800}`` (bracketing the base size 200 on both
+  sides) to exhibit bias -> 0, variance -> 0 and the sqrt(N) behaviour, separately
+  for plain and corrected DiD-BCF.
 
 Every scenario is run at each ``linearity_degree in {1, 2, 3}`` -- one notebook
 per model (DiD-BCF, OLS/TWFE), per scenario, per linearity degree, mirroring the
@@ -36,10 +36,13 @@ from dataclasses import dataclass, field
 from .dgps import DEFAULT_CANONICAL_PARAMS, DEFAULT_STAGGERED_PARAMS
 
 DEFAULT_REPS = 100
-# The base panel size matches the original study (200 units); the B2 sample-size
-# sweep is *anchored* at 200 and grows from there to exhibit the asymptotics.
+# The base panel size matches the original study (200 units); every non-sweep
+# scenario runs at exactly this N.  The B2 sample-size sweep brackets it on both
+# sides -- 50 and 100 below, 400 and 800 above -- so the sqrt(N) plots show the
+# small-sample regime as well as the asymptotics.  N_SWEEP[0] is therefore the
+# *smallest* sweep size, NOT the base panel: read BASE_N when you mean the base.
 BASE_N = 200
-N_SWEEP = (200, 400, 800, 1600)
+N_SWEEP = (50, 100, 200, 400, 800)
 LINEARITY_DEGREES = (1, 2, 3)
 
 # Workstream PT drops degree 2, and *only* workstream PT.  Its comparator is a
