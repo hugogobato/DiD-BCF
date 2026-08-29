@@ -6,6 +6,9 @@ the Workstream B, C and D analysis.
 Sources
 -------
 DiD_BCF/summaries_*.csv                     plain + corrected DiD-BCF
+Pretrend/summaries_pretrend_*.csv           DiD-BCF pre-trend diagnostic + TWFE
+                                            event-study placebo, 200 reps, at
+                                            linearity degrees 1 and 3
 Results/summaries_twfe_*.csv                TWFE / OLS
 R_code/*_datasets/**/summaries_*.csv        did_dr, did2s, synthdid
 Results/_staging/**/summaries_*.csv         wang (grf-DiD), doubleml  [unzipped Colab runs]
@@ -29,6 +32,12 @@ PATTERNS = [
     os.path.join(ROOT, "DiD_BCF", "summaries_*.csv"),
     os.path.join(ROOT, "Results", "summaries_twfe_*.csv"),
     os.path.join(ROOT, "Results", "summaries_pretrend_*.csv"),
+    # The PT_* diagnostic runs were split into rep blocks and land in Pretrend/;
+    # the three files in Results/ are an early 24-rep subset of the same seeds
+    # (verified identical where they overlap), so the drop_duplicates below
+    # keeps whichever is read first without changing any value.  _retired/ holds
+    # superseded blocks and is deliberately not globbed.
+    os.path.join(ROOT, "Pretrend", "summaries_pretrend_*.csv"),
     os.path.join(ROOT, "R_code", "*_datasets", "**", "summaries_*.csv"),
     os.path.join(ROOT, "Results", "_staging", "**", "summaries_*.csv"),
 ]

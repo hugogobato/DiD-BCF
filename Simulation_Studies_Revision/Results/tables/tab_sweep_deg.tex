@@ -17,27 +17,43 @@ Estimator & $N$ & $d$ & Bias & SD(err) & RMSE & Cov.95 & Len.95 & $\overline{\ma
 \bottomrule
 \endlastfoot
 \multicolumn{9}{l}{\textit{B2\_sweep}} \\
+\quad DiD-BCF (plain) & 50 & 2 & -0.024 & 0.262 & 0.263 & 0.960 & 1.095 & 0.796 \\
+\quad DiD-BCF (plain) & 50 & 3 & -0.032 & 0.275 & 0.277 & 0.950 & 1.109 & 0.922 \\
+\quad DiD-BCF (plain) & 100 & 2 & 0.010 & 0.182 & 0.182 & 0.980 & 0.794 & 0.978 \\
+\quad DiD-BCF (plain) & 100 & 3 & 0.000 & 0.185 & 0.185 & 0.970 & 0.806 & 1.066 \\
 \quad DiD-BCF (plain) & 200 & 2 & -0.024 & 0.119 & 0.122 & 0.980 & 0.572 & 0.985 \\
 \quad DiD-BCF (plain) & 200 & 3 & -0.031 & 0.120 & 0.124 & 0.980 & 0.577 & 0.890 \\
 \quad DiD-BCF (plain) & 400 & 2 & 0.012 & 0.091 & 0.092 & 0.960 & 0.415 & 0.947 \\
 \quad DiD-BCF (plain) & 400 & 3 & 0.010 & 0.090 & 0.091 & 0.960 & 0.414 & 1.029 \\
 \quad DiD-BCF (plain) & 800 & 2 & -0.001 & 0.072 & 0.072 & 0.960 & 0.302 & 0.821 \\
 \quad DiD-BCF (plain) & 800 & 3 & -0.003 & 0.071 & 0.071 & 0.950 & 0.299 & 0.731 \\
-\quad DiD-BCF (plain) & 1600 & 2 & 0.008 & 0.045 & 0.046 & 1.000 & 0.218 & 0.850 \\
-\quad DiD-BCF (plain) & 1600 & 3 & 0.007 & 0.043 & 0.044 & 1.000 & 0.216 & 0.973 \\
 \addlinespace[2pt]
+\quad DiD-BCF (corrected) & 50 & 2 & 0.186 & 2.510 & 2.517 & 0.970 & 4.778 & 0.477 \\
+\quad DiD-BCF (corrected) & 50 & 3 & 0.179 & 2.449 & 2.455 & 0.970 & 4.810 & 0.505 \\
+\quad DiD-BCF (corrected) & 100 & 2 & 0.081 & 1.252 & 1.255 & 0.940 & 2.963 & 0.604 \\
+\quad DiD-BCF (corrected) & 100 & 3 & 0.058 & 1.145 & 1.147 & 0.960 & 2.985 & 0.671 \\
 \quad DiD-BCF (corrected) & 200 & 2 & 0.109 & 1.034 & 1.040 & 0.960 & 1.676 & 0.411 \\
 \quad DiD-BCF (corrected) & 200 & 3 & 0.094 & 1.025 & 1.029 & 0.970 & 1.659 & 0.414 \\
 \quad DiD-BCF (corrected) & 400 & 2 & -0.200 & 1.303 & 1.319 & 0.960 & 1.482 & 0.297 \\
 \quad DiD-BCF (corrected) & 400 & 3 & -0.194 & 1.242 & 1.257 & 0.960 & 1.455 & 0.305 \\
 \quad DiD-BCF (corrected) & 800 & 2 & -0.046 & 0.315 & 0.318 & 0.990 & 0.624 & 0.509 \\
 \quad DiD-BCF (corrected) & 800 & 3 & -0.049 & 0.335 & 0.339 & 0.980 & 0.643 & 0.484 \\
-\quad DiD-BCF (corrected) & 1600 & 2 & 0.010 & 0.066 & 0.067 & 1.000 & 0.316 & 0.988 \\
-\quad DiD-BCF (corrected) & 1600 & 3 & 0.010 & 0.066 & 0.067 & 1.000 & 0.317 & 0.992 \\
 \addlinespace[2pt]
+\quad Callaway--Sant'Anna & 50 & 2 & 0.042 & 0.460 & 0.462 & 0.948 & 2.040 & 0.958 \\
+\quad Callaway--Sant'Anna & 50 & 3 & 0.042 & 0.460 & 0.462 & 0.969 & 2.044 & 1.002 \\
+\quad Callaway--Sant'Anna & 100 & 2 & 0.027 & 0.309 & 0.311 & 0.960 & 1.307 & 1.056 \\
+\quad Callaway--Sant'Anna & 100 & 3 & 0.027 & 0.309 & 0.311 & 0.949 & 1.310 & 1.087 \\
 \quad Callaway--Sant'Anna & 200 & 2 & -0.034 & 0.223 & 0.225 & 0.950 & 0.904 & 1.008 \\
 \quad Callaway--Sant'Anna & 200 & 3 & -0.034 & 0.223 & 0.225 & 0.960 & 0.901 & 0.929 \\
+\quad Callaway--Sant'Anna & 400 & 2 & 0.007 & 0.150 & 0.150 & 0.950 & 0.635 & 0.995 \\
+\quad Callaway--Sant'Anna & 400 & 3 & 0.007 & 0.150 & 0.150 & 0.950 & 0.634 & 1.048 \\
+\quad Callaway--Sant'Anna & 800 & 2 & 0.001 & 0.108 & 0.108 & 0.980 & 0.449 & 0.902 \\
+\quad Callaway--Sant'Anna & 800 & 3 & 0.001 & 0.108 & 0.108 & 0.980 & 0.445 & 0.819 \\
 \addlinespace[2pt]
+\quad DoubleML DR-DiD & 50 & 2 & 0.073 & 0.669 & 0.673 & 0.980 & 3.201 & 1.100 \\
+\quad DoubleML DR-DiD & 50 & 3 & -0.024 & 0.737 & 0.737 & 0.990 & 3.556 & 1.172 \\
+\quad DoubleML DR-DiD & 100 & 2 & 0.077 & 0.441 & 0.448 & 1.000 & 1.976 & 1.137 \\
+\quad DoubleML DR-DiD & 100 & 3 & -0.011 & 0.437 & 0.437 & 0.990 & 1.887 & 1.099 \\
 \quad DoubleML DR-DiD & 200 & 2 & -0.045 & 0.265 & 0.269 & 0.960 & 1.172 & 1.102 \\
 \quad DoubleML DR-DiD & 200 & 3 & -0.031 & 0.284 & 0.286 & 0.960 & 1.160 & 0.984 \\
 \quad DoubleML DR-DiD & 400 & 2 & 0.001 & 0.171 & 0.171 & 0.980 & 0.782 & 1.113 \\
@@ -47,6 +63,10 @@ Estimator & $N$ & $d$ & Bias & SD(err) & RMSE & Cov.95 & Len.95 & $\overline{\ma
 \quad DoubleML DR-DiD & 1600 & 2 & 0.012 & 0.071 & 0.072 & 0.980 & 0.349 & 1.046 \\
 \quad DoubleML DR-DiD & 1600 & 3 & 0.008 & 0.072 & 0.073 & 1.000 & 0.353 & 1.021 \\
 \addlinespace[2pt]
+\quad grf-DiD (Wang) & 50 & 2 & 0.007 & 0.412 & 0.412 & 0.920 & 1.427 & 0.751 \\
+\quad grf-DiD (Wang) & 50 & 3 & 0.023 & 0.409 & 0.410 & 0.900 & 1.443 & 0.860 \\
+\quad grf-DiD (Wang) & 100 & 2 & 0.009 & 0.304 & 0.304 & 0.850 & 0.970 & 0.792 \\
+\quad grf-DiD (Wang) & 100 & 3 & 0.007 & 0.302 & 0.302 & 0.860 & 0.997 & 0.847 \\
 \quad grf-DiD (Wang) & 200 & 2 & -0.037 & 0.220 & 0.223 & 0.810 & 0.630 & 0.730 \\
 \quad grf-DiD (Wang) & 200 & 3 & -0.037 & 0.220 & 0.223 & 0.810 & 0.630 & 0.729 \\
 \quad grf-DiD (Wang) & 400 & 2 & 0.005 & 0.148 & 0.148 & 0.890 & 0.444 & 0.734 \\
@@ -58,27 +78,43 @@ Estimator & $N$ & $d$ & Bias & SD(err) & RMSE & Cov.95 & Len.95 & $\overline{\ma
 \addlinespace[2pt]
 \addlinespace
 \multicolumn{9}{l}{\textit{B2\_sweep\_serial}} \\
+\quad DiD-BCF (plain) & 50 & 2 & -0.028 & 0.278 & 0.280 & 0.910 & 0.935 & 0.676 \\
+\quad DiD-BCF (plain) & 50 & 3 & -0.042 & 0.302 & 0.305 & 0.880 & 0.961 & 0.792 \\
+\quad DiD-BCF (plain) & 100 & 2 & 0.001 & 0.186 & 0.186 & 0.930 & 0.668 & 0.794 \\
+\quad DiD-BCF (plain) & 100 & 3 & -0.010 & 0.188 & 0.188 & 0.940 & 0.679 & 0.809 \\
 \quad DiD-BCF (plain) & 200 & 2 & -0.013 & 0.127 & 0.128 & 0.960 & 0.478 & 0.763 \\
 \quad DiD-BCF (plain) & 200 & 3 & -0.025 & 0.120 & 0.122 & 0.960 & 0.481 & 0.754 \\
 \quad DiD-BCF (plain) & 400 & 2 & 0.016 & 0.098 & 0.099 & 0.910 & 0.344 & 0.745 \\
 \quad DiD-BCF (plain) & 400 & 3 & 0.011 & 0.096 & 0.097 & 0.920 & 0.348 & 0.772 \\
 \quad DiD-BCF (plain) & 800 & 2 & 0.000 & 0.071 & 0.071 & 0.910 & 0.249 & 0.689 \\
 \quad DiD-BCF (plain) & 800 & 3 & -0.005 & 0.070 & 0.070 & 0.920 & 0.249 & 0.634 \\
-\quad DiD-BCF (plain) & 1600 & 2 & 0.009 & 0.047 & 0.047 & 0.950 & 0.188 & 0.723 \\
-\quad DiD-BCF (plain) & 1600 & 3 & 0.006 & 0.047 & 0.048 & 0.950 & 0.185 & 0.815 \\
 \addlinespace[2pt]
+\quad DiD-BCF (corrected) & 50 & 2 & 0.211 & 1.851 & 1.863 & 1.000 & 3.596 & 0.496 \\
+\quad DiD-BCF (corrected) & 50 & 3 & 0.240 & 1.596 & 1.614 & 0.980 & 3.592 & 0.581 \\
+\quad DiD-BCF (corrected) & 100 & 2 & 0.085 & 0.882 & 0.886 & 0.990 & 2.283 & 0.668 \\
+\quad DiD-BCF (corrected) & 100 & 3 & 0.065 & 0.549 & 0.552 & 0.980 & 2.155 & 0.984 \\
 \quad DiD-BCF (corrected) & 200 & 2 & 0.019 & 0.268 & 0.269 & 0.990 & 1.160 & 1.065 \\
 \quad DiD-BCF (corrected) & 200 & 3 & -0.011 & 0.155 & 0.156 & 0.990 & 1.163 & 1.626 \\
 \quad DiD-BCF (corrected) & 400 & 2 & -0.113 & 0.831 & 0.839 & 0.990 & 1.018 & 0.315 \\
 \quad DiD-BCF (corrected) & 400 & 3 & -0.094 & 0.653 & 0.660 & 1.000 & 0.922 & 0.362 \\
 \quad DiD-BCF (corrected) & 800 & 2 & -0.014 & 0.175 & 0.176 & 1.000 & 0.431 & 0.605 \\
 \quad DiD-BCF (corrected) & 800 & 3 & -0.018 & 0.145 & 0.146 & 0.990 & 0.442 & 0.694 \\
-\quad DiD-BCF (corrected) & 1600 & 2 & 0.008 & 0.043 & 0.044 & 0.990 & 0.232 & 0.919 \\
-\quad DiD-BCF (corrected) & 1600 & 3 & 0.007 & 0.042 & 0.043 & 0.990 & 0.233 & 0.972 \\
 \addlinespace[2pt]
+\quad Callaway--Sant'Anna & 50 & 2 & 0.000 & 0.313 & 0.313 & 0.958 & 1.454 & 0.920 \\
+\quad Callaway--Sant'Anna & 50 & 3 & 0.000 & 0.313 & 0.313 & 0.969 & 1.458 & 0.998 \\
+\quad Callaway--Sant'Anna & 100 & 2 & 0.019 & 0.188 & 0.189 & 0.990 & 0.951 & 1.168 \\
+\quad Callaway--Sant'Anna & 100 & 3 & 0.019 & 0.188 & 0.189 & 0.990 & 0.961 & 1.198 \\
 \quad Callaway--Sant'Anna & 200 & 2 & -0.028 & 0.132 & 0.135 & 0.990 & 0.660 & 1.063 \\
 \quad Callaway--Sant'Anna & 200 & 3 & -0.028 & 0.132 & 0.135 & 0.990 & 0.668 & 0.994 \\
+\quad Callaway--Sant'Anna & 400 & 2 & 0.007 & 0.091 & 0.091 & 1.000 & 0.464 & 1.060 \\
+\quad Callaway--Sant'Anna & 400 & 3 & 0.007 & 0.091 & 0.091 & 0.990 & 0.466 & 1.126 \\
+\quad Callaway--Sant'Anna & 800 & 2 & 0.004 & 0.071 & 0.071 & 0.980 & 0.329 & 0.881 \\
+\quad Callaway--Sant'Anna & 800 & 3 & 0.004 & 0.071 & 0.071 & 0.980 & 0.326 & 0.772 \\
 \addlinespace[2pt]
+\quad DoubleML DR-DiD & 50 & 2 & 0.084 & 0.609 & 0.615 & 0.990 & 2.504 & 0.949 \\
+\quad DoubleML DR-DiD & 50 & 3 & 0.019 & 0.453 & 0.454 & 1.000 & 2.146 & 1.124 \\
+\quad DoubleML DR-DiD & 100 & 2 & 0.013 & 0.295 & 0.295 & 0.970 & 1.291 & 1.109 \\
+\quad DoubleML DR-DiD & 100 & 3 & -0.008 & 0.265 & 0.265 & 1.000 & 1.313 & 1.208 \\
 \quad DoubleML DR-DiD & 200 & 2 & -0.023 & 0.185 & 0.186 & 0.970 & 0.814 & 1.002 \\
 \quad DoubleML DR-DiD & 200 & 3 & -0.027 & 0.179 & 0.181 & 0.990 & 0.829 & 0.996 \\
 \quad DoubleML DR-DiD & 400 & 2 & 0.001 & 0.113 & 0.113 & 0.980 & 0.543 & 0.989 \\
@@ -88,6 +124,10 @@ Estimator & $N$ & $d$ & Bias & SD(err) & RMSE & Cov.95 & Len.95 & $\overline{\ma
 \quad DoubleML DR-DiD & 1600 & 2 & 0.008 & 0.048 & 0.049 & 1.000 & 0.251 & 0.940 \\
 \quad DoubleML DR-DiD & 1600 & 3 & 0.006 & 0.047 & 0.047 & 0.990 & 0.251 & 0.999 \\
 \addlinespace[2pt]
+\quad grf-DiD (Wang) & 50 & 2 & -0.013 & 0.291 & 0.291 & 0.940 & 1.093 & 0.757 \\
+\quad grf-DiD (Wang) & 50 & 3 & 0.004 & 0.284 & 0.284 & 0.960 & 1.119 & 0.929 \\
+\quad grf-DiD (Wang) & 100 & 2 & 0.012 & 0.188 & 0.188 & 0.900 & 0.730 & 0.899 \\
+\quad grf-DiD (Wang) & 100 & 3 & 0.006 & 0.188 & 0.188 & 0.900 & 0.766 & 0.979 \\
 \quad grf-DiD (Wang) & 200 & 2 & -0.032 & 0.130 & 0.133 & 0.900 & 0.458 & 0.809 \\
 \quad grf-DiD (Wang) & 200 & 3 & -0.032 & 0.129 & 0.133 & 0.910 & 0.458 & 0.811 \\
 \quad grf-DiD (Wang) & 400 & 2 & 0.004 & 0.090 & 0.090 & 0.910 & 0.334 & 0.829 \\
@@ -99,5 +139,5 @@ Estimator & $N$ & $d$ & Bias & SD(err) & RMSE & Cov.95 & Len.95 & $\overline{\ma
 \addlinespace[2pt]
 \addlinespace
 \end{longtable}
-\noindent \emph{Note.} 100 replications per cell; the $d=1$ counterpart is Table \ref{tab:sweep}. TWFE and Synthetic DiD use no covariates, so their entries are invariant to $d$ by construction. DoubleML DR-DiD is available at all four panel sizes in both sweeps.\par\vspace{6pt}
+\noindent \emph{Note.} 100 replications per cell; the $d=1$ counterpart is Table \ref{tab:sweep}. TWFE and Synthetic DiD use no covariates, so their entries are invariant to $d$ by construction. DoubleML DR-DiD is available at all 5 panel sizes in both sweeps.\par\vspace{6pt}
 }

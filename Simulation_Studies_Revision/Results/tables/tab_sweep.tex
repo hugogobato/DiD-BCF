@@ -17,23 +17,33 @@ Estimator & $N$ & Bias & SD(err) & RMSE & Cov.95 & Len.95 & $\overline{\mathrm{s
 \bottomrule
 \endlastfoot
 \multicolumn{8}{l}{\textit{B2\_sweep}} \\
+\quad DiD-BCF (plain) & 50 & -0.019 & 0.249 & 0.250 & 0.970 & 1.073 & 0.801 \\
+\quad DiD-BCF (plain) & 100 & 0.014 & 0.168 & 0.168 & 0.980 & 0.772 & 1.004 \\
 \quad DiD-BCF (plain) & 200 & -0.022 & 0.108 & 0.110 & 1.000 & 0.558 & 1.005 \\
 \quad DiD-BCF (plain) & 400 & 0.004 & 0.086 & 0.086 & 0.970 & 0.401 & 0.959 \\
 \quad DiD-BCF (plain) & 800 & 0.002 & 0.068 & 0.068 & 0.970 & 0.288 & 0.800 \\
-\quad DiD-BCF (plain) & 1600 & 0.008 & 0.045 & 0.046 & 1.000 & 0.208 & 0.822 \\
 \addlinespace[2pt]
+\quad DiD-BCF (corrected) & 50 & 0.083 & 0.702 & 0.707 & 0.940 & 2.889 & 0.950 \\
+\quad DiD-BCF (corrected) & 100 & 0.019 & 0.341 & 0.342 & 0.950 & 1.567 & 1.147 \\
 \quad DiD-BCF (corrected) & 200 & -0.028 & 0.229 & 0.231 & 0.950 & 0.979 & 1.047 \\
 \quad DiD-BCF (corrected) & 400 & 0.001 & 0.154 & 0.154 & 0.950 & 0.652 & 0.995 \\
 \quad DiD-BCF (corrected) & 800 & 0.001 & 0.107 & 0.107 & 0.980 & 0.450 & 0.912 \\
-\quad DiD-BCF (corrected) & 1600 & 0.010 & 0.066 & 0.067 & 1.000 & 0.316 & 0.985 \\
 \addlinespace[2pt]
+\quad Callaway--Sant'Anna & 50 & 0.055 & 0.452 & 0.455 & 0.940 & 1.898 & 0.905 \\
+\quad Callaway--Sant'Anna & 100 & 0.013 & 0.290 & 0.290 & 0.970 & 1.301 & 1.091 \\
 \quad Callaway--Sant'Anna & 200 & -0.031 & 0.219 & 0.221 & 0.980 & 0.905 & 1.034 \\
+\quad Callaway--Sant'Anna & 400 & 0.005 & 0.148 & 0.148 & 0.950 & 0.631 & 0.991 \\
+\quad Callaway--Sant'Anna & 800 & 0.002 & 0.107 & 0.107 & 0.980 & 0.445 & 0.893 \\
 \addlinespace[2pt]
+\quad DoubleML DR-DiD & 50 & 0.045 & 0.728 & 0.729 & 0.980 & 3.061 & 0.974 \\
+\quad DoubleML DR-DiD & 100 & -0.003 & 0.467 & 0.467 & 0.970 & 1.867 & 1.008 \\
 \quad DoubleML DR-DiD & 200 & -0.038 & 0.283 & 0.285 & 0.960 & 1.155 & 1.015 \\
 \quad DoubleML DR-DiD & 400 & -0.001 & 0.178 & 0.178 & 0.960 & 0.754 & 0.989 \\
 \quad DoubleML DR-DiD & 800 & 0.005 & 0.114 & 0.114 & 0.970 & 0.503 & 0.966 \\
 \quad DoubleML DR-DiD & 1600 & 0.014 & 0.072 & 0.073 & 0.990 & 0.349 & 1.068 \\
 \addlinespace[2pt]
+\quad grf-DiD (Wang) & 50 & 0.009 & 0.409 & 0.409 & 0.940 & 1.424 & 0.758 \\
+\quad grf-DiD (Wang) & 100 & 0.006 & 0.298 & 0.298 & 0.890 & 0.970 & 0.809 \\
 \quad grf-DiD (Wang) & 200 & -0.036 & 0.219 & 0.222 & 0.810 & 0.630 & 0.731 \\
 \quad grf-DiD (Wang) & 400 & 0.005 & 0.148 & 0.148 & 0.890 & 0.445 & 0.734 \\
 \quad grf-DiD (Wang) & 800 & 0.001 & 0.111 & 0.111 & 0.810 & 0.319 & 0.646 \\
@@ -41,23 +51,33 @@ Estimator & $N$ & Bias & SD(err) & RMSE & Cov.95 & Len.95 & $\overline{\mathrm{s
 \addlinespace[2pt]
 \addlinespace
 \multicolumn{8}{l}{\textit{B2\_sweep\_serial}} \\
+\quad DiD-BCF (plain) & 50 & -0.045 & 0.285 & 0.288 & 0.880 & 0.903 & 0.644 \\
+\quad DiD-BCF (plain) & 100 & 0.008 & 0.173 & 0.173 & 0.930 & 0.640 & 0.774 \\
 \quad DiD-BCF (plain) & 200 & -0.012 & 0.111 & 0.111 & 0.970 & 0.462 & 0.774 \\
 \quad DiD-BCF (plain) & 400 & 0.007 & 0.093 & 0.093 & 0.920 & 0.329 & 0.730 \\
 \quad DiD-BCF (plain) & 800 & 0.003 & 0.067 & 0.067 & 0.900 & 0.235 & 0.668 \\
-\quad DiD-BCF (plain) & 1600 & 0.009 & 0.047 & 0.048 & 0.960 & 0.173 & 0.675 \\
 \addlinespace[2pt]
+\quad DiD-BCF (corrected) & 50 & 0.030 & 0.477 & 0.478 & 0.970 & 1.955 & 0.911 \\
+\quad DiD-BCF (corrected) & 100 & 0.014 & 0.200 & 0.201 & 0.990 & 1.098 & 1.259 \\
 \quad DiD-BCF (corrected) & 200 & -0.024 & 0.134 & 0.136 & 0.990 & 0.693 & 1.098 \\
 \quad DiD-BCF (corrected) & 400 & 0.001 & 0.090 & 0.090 & 1.000 & 0.470 & 1.065 \\
 \quad DiD-BCF (corrected) & 800 & 0.006 & 0.071 & 0.071 & 0.990 & 0.328 & 0.880 \\
-\quad DiD-BCF (corrected) & 1600 & 0.008 & 0.043 & 0.043 & 0.990 & 0.231 & 0.923 \\
 \addlinespace[2pt]
+\quad Callaway--Sant'Anna & 50 & 0.016 & 0.300 & 0.301 & 0.980 & 1.361 & 0.889 \\
+\quad Callaway--Sant'Anna & 100 & 0.016 & 0.176 & 0.177 & 0.980 & 0.940 & 1.166 \\
 \quad Callaway--Sant'Anna & 200 & -0.025 & 0.126 & 0.129 & 0.990 & 0.653 & 1.098 \\
+\quad Callaway--Sant'Anna & 400 & 0.004 & 0.087 & 0.087 & 0.990 & 0.460 & 1.061 \\
+\quad Callaway--Sant'Anna & 800 & 0.005 & 0.070 & 0.070 & 0.990 & 0.326 & 0.872 \\
 \addlinespace[2pt]
+\quad DoubleML DR-DiD & 50 & 0.033 & 0.497 & 0.498 & 0.980 & 2.290 & 0.995 \\
+\quad DoubleML DR-DiD & 100 & 0.033 & 0.268 & 0.270 & 0.990 & 1.305 & 1.145 \\
 \quad DoubleML DR-DiD & 200 & -0.018 & 0.167 & 0.168 & 0.970 & 0.806 & 1.081 \\
 \quad DoubleML DR-DiD & 400 & -0.004 & 0.108 & 0.108 & 0.980 & 0.529 & 1.077 \\
 \quad DoubleML DR-DiD & 800 & 0.006 & 0.082 & 0.082 & 0.950 & 0.365 & 0.859 \\
 \quad DoubleML DR-DiD & 1600 & 0.011 & 0.047 & 0.048 & 0.990 & 0.248 & 0.963 \\
 \addlinespace[2pt]
+\quad grf-DiD (Wang) & 50 & -0.005 & 0.290 & 0.291 & 0.940 & 1.091 & 0.755 \\
+\quad grf-DiD (Wang) & 100 & 0.013 & 0.185 & 0.186 & 0.930 & 0.731 & 0.904 \\
 \quad grf-DiD (Wang) & 200 & -0.032 & 0.130 & 0.133 & 0.910 & 0.458 & 0.809 \\
 \quad grf-DiD (Wang) & 400 & 0.004 & 0.090 & 0.090 & 0.910 & 0.334 & 0.832 \\
 \quad grf-DiD (Wang) & 800 & 0.007 & 0.074 & 0.074 & 0.890 & 0.244 & 0.671 \\

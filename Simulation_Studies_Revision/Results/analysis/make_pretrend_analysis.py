@@ -223,10 +223,15 @@ def main() -> None:
     degree = int(sys.argv[1]) if len(sys.argv) > 1 else 1
     m = load(degree)
     s = summarise(m)
-    s.to_csv(os.path.join(AGG, "pretrend_all.csv"), index=False)
-    print(f"  -> {os.path.relpath(os.path.join(AGG, 'pretrend_all.csv'), ROOT)}")
-    make_figure(s, m, os.path.join(FIG, "fig_pretrend.pdf"))
-    make_table(s, os.path.join(TAB, "tab_pretrend.tex"))
+    # Degree 1 keeps the unsuffixed names the report already \input-s; any other
+    # degree writes alongside it rather than overwriting it, so the two can be
+    # compared in one document.
+    tag = "" if degree == 1 else f"_d{degree}"
+    csv_path = os.path.join(AGG, f"pretrend_all{tag}.csv")
+    s.to_csv(csv_path, index=False)
+    print(f"  -> {os.path.relpath(csv_path, ROOT)}")
+    make_figure(s, m, os.path.join(FIG, f"fig_pretrend{tag}.pdf"))
+    make_table(s, os.path.join(TAB, f"tab_pretrend{tag}.tex"))
     print()
     cols = ["setting", "family", "true_slope", "n_reps", "diag_detect_slope",
             "twfe_detect_slope", "diag_detect_anyk", "slope_bias", "slope_cover95"]

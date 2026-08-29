@@ -4,10 +4,15 @@ Scenario & Violation & True & \multicolumn{2}{c}{Detection, slope rule} & \multi
 \cmidrule(lr){4-5}\cmidrule(lr){6-6}\cmidrule(lr){7-8}
  & & slope & Diagnostic & TWFE ES & Diagnostic & bias & cover.\ 95\% \\
 \midrule
-PT\_violation\_a20 & via $\alpha_i$ & 0.189 & 0.667 & 0.667 & 0.667 & -0.007 & 1.00 \\
-PT\_conditional & unconditional only & 0.000 & 0.000 & 0.833 & 0.000 & 0.055 & 1.00 \\
-PT\_violation\_g10 & group slope & 0.100 & 0.667 & 0.167 & 0.500 & 0.051 & 1.00 \\
-PT\_violation\_g40 & group slope & 0.400 & 1.000 & 1.000 & 1.000 & 0.021 & 1.00 \\
-PT\_hold & none (PTA holds) & 0.000 & 0.000 & 0.000 & 0.000 & 0.015 & 1.00 \\
+PT\_violation\_het40 & via $\alpha_i$ & -0.001 & 0.115 & 0.065 & 0.075 & 0.045 & 0.94 \\
+PT\_violation\_het20 & via $\alpha_i$ & -0.001 & 0.055 & 0.055 & 0.040 & 0.043 & 0.94 \\
+PT\_violation\_het10 & via $\alpha_i$ & -0.000 & 0.040 & 0.045 & 0.025 & 0.041 & 0.94 \\
+PT\_violation\_a20 & via $\alpha_i$ & 0.207 & 0.930 & 0.705 & 0.845 & 0.016 & 0.98 \\
+PT\_conditional & unconditional only & 0.000 & 0.080 & 0.755 & 0.040 & 0.055 & 0.95 \\
+PT\_violation\_g05 & group slope & 0.050 & 0.220 & 0.100 & 0.120 & 0.031 & 0.96 \\
+PT\_violation\_g10 & group slope & 0.100 & 0.520 & 0.250 & 0.400 & 0.025 & 0.97 \\
+PT\_violation\_g20 & group slope & 0.200 & 0.935 & 0.700 & 0.880 & 0.017 & 0.96 \\
+PT\_violation\_g40 & group slope & 0.400 & 1.000 & 1.000 & 1.000 & 0.010 & 0.96 \\
+PT\_hold & none (PTA holds) & 0.000 & 0.045 & 0.045 & 0.030 & 0.040 & 0.96 \\
 \bottomrule
 \end{tabular}

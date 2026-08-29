@@ -17,8 +17,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+import sys
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 RES = os.path.dirname(HERE)
+sys.path.insert(0, os.path.dirname(RES))
+# The sweep axis is read from config rather than hard-coded, so adding or
+# dropping a panel size moves every figure's ticks with it.
+from did_bcf_revision.config import N_SWEEP  # noqa: E402
+NS = list(N_SWEEP)
 AGG = os.path.join(RES, "aggregated")
 TAB = os.path.join(RES, "tables")
 FIG = os.path.join(RES, "figures")
@@ -147,7 +154,7 @@ def tab_grid():
         "tab:grid",
         notes=r"\emph{Note.} Every scenario is additionally run at each linearity "
               r"degree $d\in\{1,2,3\}$. The DoubleML DR-DiD sweep cells are "
-              r"complete at all four panel sizes; "
+              rf"complete at all {len(NS)} panel sizes; "
               r"TWFE is not reported for the staggered scenarios at the "
               r"cohort-by-time level because pooling cohorts is precisely the "
               r"contamination it suffers from.")
@@ -284,13 +291,17 @@ def tab_sweep_deg():
         notes=r"\emph{Note.} 100 replications per cell; the $d=1$ counterpart is "
               r"Table \ref{tab:sweep}. TWFE and Synthetic DiD use no covariates, "
               r"so their entries are invariant to $d$ by construction. DoubleML "
-              r"DR-DiD is available at all four panel sizes in both sweeps.")
+              rf"DR-DiD is available at all {len(NS)} panel sizes in both sweeps.")
 
 
 def fig_sweep():
     fig, axes = plt.subplots(1, 3, figsize=(10.5, 3.3))
+    # Stale N=1600 files are still on disk for the estimators that were run
+    # there before it was dropped; restrict to the live sweep so the drawn
+    # points and the axis ticks agree.
     sub = met[(met.setting == "B2_sweep") & (met.estimand_type == "GATT") &
-              (met.estimand_id == "g=4_t=4") & (met.linearity_degree == 1)]
+              (met.estimand_id == "g=4_t=4") & (met.linearity_degree == 1) &
+              met.N.isin(NS)]
     panels = [("abs_bias", "|bias|", True),
               ("sd_err", "Monte-Carlo SD of the error", True),
               ("cover95", "95\\% coverage", False)]
@@ -303,24 +314,25 @@ def fig_sweep():
                     markersize=5.5, linewidth=1.6, label=PLAINLABEL[m],
                     markeredgecolor="white", markeredgewidth=0.5)
         ax.set_xscale("log", base=2)
-        ax.set_xticks([200, 400, 800, 1600])
-        ax.set_xticklabels(["200", "400", "800", "1600"])
+        ax.set_xticks(NS)
+        ax.set_xticklabels([str(n) for n in NS])
         ax.set_xlabel("panel size $N$")
         ax.set_ylabel(ylab.replace("\\%", "%"))
         if logy:
             ax.set_yscale("log")
         if col == "sd_err":
-            base = sub[(sub.method == "did_dr") & (sub.N == 200)].sd_err
+            anchor = NS[0]
+            base = sub[(sub.method == "did_dr") & (sub.N == anchor)].sd_err
             if len(base):
-                ns = np.array([200, 400, 800, 1600], dtype=float)
-                ax.plot(ns, float(base.iloc[0]) * np.sqrt(200 / ns), color="#8a8a85",
+                ns = np.array(NS, dtype=float)
+                ax.plot(ns, float(base.iloc[0]) * np.sqrt(anchor / ns), color="#8a8a85",
                         linewidth=1.0, linestyle=(0, (1, 2)), zorder=0)
-                ax.annotate(r"$\propto N^{-1/2}$", (1600, float(base.iloc[0]) * np.sqrt(200 / 1600)),
+                ax.annotate(r"$\propto N^{-1/2}$", (NS[-1], float(base.iloc[0]) * np.sqrt(anchor / NS[-1])),
                             textcoords="offset points", xytext=(-4, -12),
                             fontsize=7.5, color="#52514e", ha="right")
         if col == "cover95":
             ax.axhline(0.95, color="#8a8a85", linewidth=1.0, linestyle=(0, (1, 2)))
-            ax.annotate("nominal 0.95", (200, 0.95), textcoords="offset points",
+            ax.annotate("nominal 0.95", (NS[0], 0.95), textcoords="offset points",
                         xytext=(2, 4), fontsize=7.5, color="#52514e")
             ax.set_ylim(-0.03, 1.05)
     handles, labels = axes[0].get_legend_handles_labels()
@@ -336,7 +348,7 @@ def fig_sqrtn():
     fig, axes = plt.subplots(1, 2, figsize=(8.2, 3.3))
     for ax, s in zip(axes, ["B2_sweep", "B2_sweep_serial"]):
         sub = sqn[(sqn.setting == s) & (sqn.linearity_degree == 1) &
-                  (sqn.estimand_id == "g=4_t=4")]
+                  (sqn.estimand_id == "g=4_t=4") & sqn.N.isin(NS)]
         for m in METHOD_ORDER:
             blk = sub[sub.method == m].sort_values("N")
             if blk.empty:
@@ -345,8 +357,8 @@ def fig_sqrtn():
                     markersize=5.5, linewidth=1.6, label=PLAINLABEL[m],
                     markeredgecolor="white", markeredgewidth=0.5)
         ax.set_xscale("log", base=2)
-        ax.set_xticks([200, 400, 800, 1600])
-        ax.set_xticklabels(["200", "400", "800", "1600"])
+        ax.set_xticks(NS)
+        ax.set_xticklabels([str(n) for n in NS])
         ax.set_xlabel("panel size $N$")
         ax.set_ylabel(r"SD of $\sqrt{N}(\hat\theta-\theta)$")
         ax.set_title(s.replace("_", " "), fontsize=9, loc="left")
@@ -451,7 +463,8 @@ def fig_surface():
 
 def fig_surface_sweep():
     fig, ax = plt.subplots(figsize=(5.6, 3.6))
-    sub = surf[(surf.setting == "B2_sweep") & (surf.linearity_degree == 1)]
+    sub = surf[(surf.setting == "B2_sweep") & (surf.linearity_degree == 1) &
+               surf.N.isin(NS)]
     for m in METHOD_ORDER:
         blk = sub[sub.method == m].sort_values("N")
         if blk.empty:
@@ -461,8 +474,8 @@ def fig_surface_sweep():
                 label=PLAINLABEL[m], markeredgecolor="white",
                 markeredgewidth=0.5)
     ax.set_xscale("log", base=2)
-    ax.set_xticks([200, 400, 800, 1600])
-    ax.set_xticklabels(["200", "400", "800", "1600"])
+    ax.set_xticks(NS)
+    ax.set_xticklabels([str(n) for n in NS])
     ax.set_yscale("log")
     ax.set_xlabel("panel size $N$")
     ax.set_ylabel("CATT-surface RMSE")
