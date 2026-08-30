@@ -22,6 +22,10 @@ from .ablations import run_information_ablation
 
 
 def _dgp(task: ExperimentTask):
+    if task.design == "oracle_canonical":
+        from .oracle_dgp import generate_oracle_canonical_did
+        return generate_oracle_canonical_did(
+            seed=task.seed, n_units=task.N, linearity_degree=task.degree)
     try:
         from Simulation_Studies_Revision.did_bcf_revision.dgps import (
             generate_canonical_did, generate_staggered_did)
@@ -211,8 +215,23 @@ def run_task(task: ExperimentTask, *, bcf_params=None, smoke=False, K=2,
     except ImportError:
         from did_bcf_revision.dgps import true_estimands
     truth = true_estimands(df)
+    truth_columns = ["estimand_type", "estimand_id", "true"]
+    if task.design == "oracle_canonical":
+        if "gatt_population_oracle" not in df.columns:
+            raise AssertionError("oracle_canonical must expose gatt_population_oracle")
+        population_truth = np.asarray(df["gatt_population_oracle"], dtype=float)
+        if (not np.all(np.isfinite(population_truth)) or
+                not np.allclose(population_truth, population_truth[0])):
+            raise AssertionError("gatt_population_oracle must be one finite scalar")
+        expected_truth = float(population_truth[0])
+        if not np.allclose(truth["true"].to_numpy(float), expected_truth):
+            raise AssertionError(
+                "oracle_canonical realized truth drifted from gatt_population_oracle")
+        truth = truth.copy()
+        truth["truth_source"] = "gatt_population_oracle"
+        truth_columns.append("truth_source")
     # Exact estimand-type/id join prevents a GATT value being copied to CATT.
-    result = result.merge(truth[["estimand_type", "estimand_id", "true"]],
+    result = result.merge(truth[truth_columns],
                           on=["estimand_type", "estimand_id"], how="left")
     return _decorate(result, task)
 

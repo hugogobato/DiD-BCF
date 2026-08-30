@@ -54,11 +54,28 @@ clipped control odds, effective sample size, maximum normalized control weight,
 number clipped, and fold sizes. Clipping is an exploratory stabilization and is
 not theoretically neutral.
 
-Oracle requests require exact "m0_oracle" and "pi_oracle" columns (and can provide
-"barpi_oracle"). The shipped DGPs include logistic-normal assignment noise, so
-their exact propensity is not exposed. Oracle tasks are therefore present in the
-manifest as "unavailable", rather than silently using a pilot. This is an
-intentional scientific result.
+Oracle requests require exact "m0_oracle", "pi_oracle", and "barpi_oracle"
+columns. The production baseline, null, and serial DGPs include logistic-normal
+assignment noise, so their exact propensity is not exposed; their oracle tasks
+remain explicitly "unavailable", rather than silently using a pilot. The
+additional local `oracle_canonical` design is oracle-ready: treatment is sampled
+from the known Bernoulli probability `pi(X)`, the control long-difference mean is
+the stored `m0_oracle(X,g,t)`, and `barpi_oracle` is the exact population cell
+share 0.5, not a sample mean of evaluation propensities. Specifically,
+X1 is Bernoulli with z1=2X1-1, X2:X5 are iid Uniform[-1,1], and the joint
+sign-flip T(X)=(1-X1,-X2,...,-X5) gives `pi(TX)=1-pi(X)`. Therefore
+E[pi(X)]=0.5, while the bounded degree-1 and degree-2 indices keep
+`0.001 < pi(X) < 0.999` without clipping. It keeps the same GATT/ES/ATT
+definitions and panel columns, so its two oracle estimators actually run without
+changing the estimand. The degree-1 and degree-2 formulas are recorded in the
+DGP module and its metadata. The default has `alpha_sd=0` and iid Gaussian row
+errors, so it stays within the intended conditional-independence error setup;
+nonzero alpha is allowed only as an explicitly flagged `non_theorem_stress=True`
+option. Heterogeneous effects are always refused because this adapter does not
+implement their exact population GATT. The oracle DGP stores
+`gatt_population_oracle=3` and the runner labels joined truths with
+`truth_source="gatt_population_oracle"`, asserting that every realized
+GATT/ES/ATT truth remains exactly 3.
 
 Information ablations compare "full_panel_raw", "reduced_cell", and
 "pooled_full_panel". The reduced fit uses only cohort g and never-treated units
@@ -88,10 +105,14 @@ Real-data mpdta comparisons are out of scope.
 ## Configurations and shard accounting
 
 configs/correction_audit.json contains B1 baseline, null, and serial-correlation
-designs, degrees 1 and 2, N in {200,800}, 100 replications, raw/current/reference,
+designs (including the oracle-ready `oracle_canonical` design), degrees 1 and 2,
+N in {200,800}, 100 replications, raw/current/reference,
 intercept/logit/RF reference pilots, stabilized current logit variants at .01
 and .05, and explicit unavailable oracle rows. It expands to 13,200 manifest
-tasks, of which 2,400 are unavailable oracle requests. All methods for a
+tasks for the original three production designs, plus 4,400 additional
+oracle-canonical/production rows, for 17,600 total tasks. Of the 3,200 oracle
+requests, 800 oracle-canonical rows run and 2,400 production-DGP rows are
+explicitly unavailable. All methods for a
 design-degree-N-replication bundle share one shard and paired full-panel fit
 cache where applicable.
 
@@ -101,19 +122,32 @@ pooling variants. It expands to 3,600 tasks. Use build_manifest(..., reps=2)
 for a pilot. Sharding is deterministic after sorting by design, degree, N,
 and replication, with every method in one bundle on the same shard. There are
 48 generated compute notebooks per family, plus one lightweight validation
-notebook and two one-replication worst-case real-BCF pilot notebooks. The
-correction pilot selects exactly serial, degree 2, N=800, rep 0, with raw,
-current-logit, and reference-logit estimators. The information pilot selects
-exactly staggered, degree 3, N=800, rep 0, with full-panel, reduced-cell, and
-pooled estimators. Each compute notebook uses
+notebook, three one-replication worst-case real-BCF pilot notebooks, and one
+controlled-mechanics notebook (101 notebooks total). Each compute notebook
+accepts `ETE_N_WAVES` and `ETE_WAVE_ID`; the same 48 notebooks can be reused
+for successive waves without overwriting outputs, because wave identifiers are
+included in output directories, archives, manifests, and provenance. Pilots
+remain fixed at wave 0 of 1.
+The correction pilot selects exactly serial, degree 2, N=800,
+rep 0, with raw, current-logit, and reference-logit estimators. The information
+pilot selects exactly staggered, degree 3, N=800, rep 0, with full-panel,
+reduced-cell, and pooled estimators. The dedicated oracle pilot selects exactly
+`oracle_canonical`, degree 2, N=800, rep 0, with the two oracle estimators; it
+checks the production-sampler path against the exact nuisance columns, iid
+default errors, and homogeneous truth 3 at the tiny budget. Each compute notebook uses
 at most two workers, defaults to one, resumes per-task CSV checkpoints, and writes
-a manifest, CSV/Parquet summary, provenance JSON, and one zip archive.
+a manifest, CSV/Parquet summary, provenance JSON, and one zip archive. After
+timing pilots, choose correction and information wave counts separately so a
+wave-shard has a conservative predicted runtime below nine hours. The
+approximate cached fit load per notebook is 100/n_waves for correction and
+about 192/n_waves for information. The 48 notebooks are reused for every wave,
+minimizing uploads.
 
 Approximate wall time is 1 to 5 minutes per small N=200 structured fit and 5 to
 20 minutes per N=800 fit with a tiny sampler budget; production budgets can be
 materially longer. Reference fits are cached once per cohort-fold and are not
 multiplied by the number of calendar cells, although they remain a dominant
-cost. The pilot gate is mandatory: run the two representative worst-case pilots
+cost. The pilot gate is mandatory: run all three representative worst-case pilots
 with tiny budgets,
 inspect convergence, fold diagnostics, odds/ESS, and memory, then increase
 budgets and only proceed if one shard fits within Colab's 10-hour limit.
@@ -122,10 +156,27 @@ not assumed to accelerate the sampler.
 
 Compute notebooks expose the production study budget, num_gfr=50,
 num_mcmc=500, keep_every=5, num_chains=3. Each worst-case pilot uses one
-replication with a tiny budget. The correction pilot should yield three cached
-sampler fits, while the staggered information pilot should yield eleven. Their
-timing is a hard gate: do not launch the 100-replication waves until both pilots
-demonstrate that the assigned work fits within the ten-hour Colab limit.
+replication with a tiny budget. The correction and dedicated oracle pilots
+should each yield three cached sampler fits, while the staggered information
+pilot should yield eleven. Their timing is a hard gate: do not launch the
+100-replication waves until all three pilots demonstrate that the assigned work
+fits within the ten-hour Colab limit.
+
+## Controlled mechanics special case
+
+`controlled_mechanics.ipynb` and `scripts/run_controlled_mechanics.py` isolate
+algebra, Bayesian-bootstrap, and fold-convolution mechanics without fitting BCF.
+For both a homogeneous signal (`tau=3`) and a homogeneous null (`tau=0`), every
+prognostic posterior draw is fixed at the exact `m0_oracle`. The diagnostic
+compares the full-sample Algorithm-1 BB law with the K=2
+`reference_fold_convolution` law, reusing original-unit multipliers across
+calendar cells and using selected two-group cell-size weights. Default settings
+are 100 replications, 300 draws, and N=200, with `ETE_MECH_REPS`,
+`ETE_MECH_DRAWS`, and `ETE_MECH_UNITS` overrides for Colab or pilots. It writes
+per-replication and aggregate CSV files reporting GATT(g,t)/ATT bias, 95%
+coverage, interval length, and null rejection, together with manifest,
+provenance, and one zip archive. This is a controlled special-case diagnostic,
+not a theorem proof.
 
 ## Colab
 
@@ -147,8 +198,16 @@ from scripts/run_smoke.py. The notebooks do not rely on files outside the
 clone. After downloads, aggregate locally with
 python Extra_Theory_Experiments/scripts/aggregate_archives.py
 <download-directory> --output-dir aggregated --n-shards 48. The aggregator
-checks archive paths, manifests, config hashes, shard coverage, duplicate exact
-task/estimand/method keys, and missing bundles, then emits separate mean and
-median error metrics. Explicit oracle-unavailable rows are retained as
-unavailable rather than treated as failed estimates. Delete this folder to
-remove every added package, notebook, result, and checkpoint.
+checks archive paths, manifests, config hashes, shard and wave coverage,
+duplicate exact task/estimand/method keys, and missing bundles, then emits
+separate mean and median error metrics. It accepts `--n-waves` when auditing a
+collection, and infers the declared count from wave-aware manifests. Archives
+without wave fields remain valid as legacy one-wave inputs. Oracle-canonical rows are aggregated as ordinary
+estimates; explicit oracle-unavailable rows are retained as unavailable rather
+than treated as failed estimates. Delete this folder to remove every added
+package, notebook, result, and checkpoint.
+
+Aggregate correction and information archives separately (use separate download
+directories or `--family`), because the two families can legitimately use
+different wave counts and config hashes. Do not mix pilot or controlled-mechanics
+archives into a 48-shard aggregation directory.

@@ -14,11 +14,12 @@
     "oracle_current_hybrid",
     "oracle_reference_fold_convolution"
   ],
-  "oracle_supported": {},
+  "oracle_supported": {"oracle_canonical": [1, 2]},
   "designs": [
     {"name": "baseline", "degrees": [1, 2], "N": [200, 800]},
     {"name": "null", "degrees": [1, 2], "N": [200, 800]},
-    {"name": "serial", "degrees": [1, 2], "N": [200, 800]}
+    {"name": "serial", "degrees": [1, 2], "N": [200, 800]},
+    {"name": "oracle_canonical", "degrees": [1, 2], "N": [200, 800]}
   ],
-  "notes": "Oracle cells are unavailable for the shipped logistic-normal assignment DGP; no exact pi is exposed."
+  "notes": "Oracle rows are unavailable for the production logistic-normal assignment DGP, but run for the local oracle_canonical design with exact m0_oracle, pi_oracle, and barpi_oracle columns. Its default alpha_sd=0 and homogeneous base_effect=3 make row errors iid and population GATT/ES/ATT truth exactly 3; non-theorem stress overrides require non_theorem_stress=true."
 }

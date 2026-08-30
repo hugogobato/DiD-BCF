@@ -16,10 +16,11 @@ from .correction import (
 )
 from .reference import convolve_fold_draws, reference_fold_convolution
 from .metrics import summarise_replications
+from .oracle_dgp import generate_oracle_canonical_did
 
 __all__ = [
     "ExperimentTask", "build_manifest", "deterministic_seed",
     "algorithm2_draws", "current_hybrid_correction", "fit_propensity",
     "summarise_draws", "convolve_fold_draws", "reference_fold_convolution",
-    "summarise_replications",
+    "summarise_replications", "generate_oracle_canonical_did",
 ]

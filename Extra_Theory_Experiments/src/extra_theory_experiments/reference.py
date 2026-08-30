@@ -53,22 +53,54 @@ def check_unit_fold_separation(df, column: str = "fold") -> None:
 
 def convolve_fold_draws(
     fold_draws: Mapping[int, np.ndarray] | list[np.ndarray],
-    fold_treated_counts: Mapping[int, int] | list[int],
+    fold_cell_counts: Mapping[int, int] | list[int] | None = None,
+    *,
+    expected_folds: int | None = None,
+    fold_treated_counts: Mapping[int, int] | list[int] | None = None,
 ) -> np.ndarray:
-    """Exact selected two-group cell-size weighted convolution of fold draws."""
+    """Exact selected two-group cell-size weighted convolution of fold draws.
+
+    ``fold_cell_counts`` are N_{g,k}=|I_k intersect S_g|, the selected
+    two-group cell sizes.  ``fold_treated_counts`` remains a keyword alias for
+    older callers, but its name is misleading and is deprecated.  When
+    ``expected_folds`` is supplied, every fold 0,...,K-1 must be present;
+    partial convolutions are rejected rather than silently renormalized.
+    """
+    if fold_cell_counts is None:
+        fold_cell_counts = fold_treated_counts
+    elif fold_treated_counts is not None:
+        raise TypeError("pass fold_cell_counts, not both count argument names")
+    if fold_cell_counts is None:
+        raise ValueError("selected fold cell counts are required")
     if isinstance(fold_draws, Mapping):
         keys = list(fold_draws)
         draws = [np.asarray(fold_draws[k], dtype=float).reshape(-1) for k in keys]
-        counts = [float(fold_treated_counts[k]) for k in keys]
+        if expected_folds is not None:
+            expected = set(range(int(expected_folds)))
+            if set(keys) != expected:
+                raise ValueError(
+                    f"expected exactly {int(expected_folds)} valid folds "
+                    f"{sorted(expected)}, got {sorted(keys)}")
+        try:
+            counts = [float(fold_cell_counts[k]) for k in keys]
+        except (KeyError, IndexError, TypeError) as exc:
+            raise ValueError("fold draws and selected cell counts are misaligned") from exc
     else:
         draws = [np.asarray(x, dtype=float).reshape(-1) for x in fold_draws]
-        counts = [float(x) for x in fold_treated_counts]
+        if expected_folds is not None and len(draws) != int(expected_folds):
+            raise ValueError(
+                f"expected exactly {int(expected_folds)} valid folds, "
+                f"got {len(draws)}")
+        try:
+            counts = [float(x) for x in fold_cell_counts]
+        except TypeError as exc:
+            raise ValueError("fold draws and selected cell counts are misaligned") from exc
     if not draws or len(draws) != len(counts):
-        raise ValueError("fold draws/counts must be non-empty and aligned")
+        raise ValueError("fold draws/selected cell counts must be non-empty and aligned")
     if any(len(x) != len(draws[0]) for x in draws):
         raise ValueError("fold posterior vectors must have equal length")
     if any(c < 0 for c in counts) or not np.sum(counts) > 0:
-        raise ValueError("fold treated counts must be nonnegative and nonzero")
+        raise ValueError("selected fold cell counts must be nonnegative and nonzero")
     if any(not np.all(np.isfinite(x)) for x in draws):
         raise ValueError("fold draws must be finite")
     w = np.asarray(counts, dtype=float)
@@ -252,7 +284,7 @@ def reference_fold_convolution(
     for g, t in cells.itertuples(index=False):
         g, t = float(g), int(t)
         fold_draws: dict[int, np.ndarray] = {}
-        fold_counts: dict[int, int] = {}
+        fold_cell_counts: dict[int, int] = {}
         cell_diag: dict[str, Any] = {}
         cell_units = work.loc[
             (work["cohort"] == g) | np.isinf(work["cohort"]), "unit_id"
@@ -324,7 +356,7 @@ def reference_fold_convolution(
             # N_{g,k}=|I_k intersection S_g|, the selected two-group cell
             # size, not the treated count.  This is the exact convolution
             # weight required by the cell target.
-            fold_counts[fold] = int(len(eval_units))
+            fold_cell_counts[fold] = int(len(eval_units))
             cell_diag[str(fold)] = {
                 **p.diagnostics, "fold_sizes": p.fold_sizes,
                 "n_eval_units": int(len(eval_units)),
@@ -333,9 +365,14 @@ def reference_fold_convolution(
                 "posterior_cache_key": f"g={g:g}_fold={fold}",
                 "global_fold_bb": True,
             }
-        if not fold_draws:
-            continue
-        draws = convolve_fold_draws(fold_draws, fold_counts)
+        if len(fold_draws) != int(K):
+            missing = sorted(set(range(int(K))) - set(fold_draws))
+            raise ValueError(
+                f"reference_fold_convolution cell g={g:g}, t={t} has "
+                f"{len(fold_draws)} valid folds; expected exactly K={int(K)} "
+                f"(missing folds {missing})")
+        draws = convolve_fold_draws(
+            fold_draws, fold_cell_counts, expected_folds=int(K))
         all_draws[(g, t)] = draws
         diagnostics["cells"][f"g={g:g}_t={t}"] = cell_diag
         records.append(summarise_draws(

@@ -29,6 +29,8 @@ class ExperimentTask:
     estimator: str
     shard: int = 0
     n_shards: int = 1
+    wave_id: int = 0
+    n_waves: int = 1
     oracle_available: bool = False
     config_hash: str = ""
     base_seed: int = 20260829
@@ -69,10 +71,11 @@ def oracle_is_supported(family: str, design: str, degree: int,
                         config: dict[str, Any]) -> bool:
     """Check a manifest declaration, never silently substitute a pilot.
 
-    The shipped DGPs add logistic-normal assignment noise.  Consequently an
-    exact propensity is not available from the observed panel alone.  A future
-    DGP may set ``oracle_supported_degrees`` explicitly after exposing exact
-    nuisance columns; this gate keeps unsupported requests visible.
+    The shipped production DGPs add logistic-normal assignment noise.
+    Consequently an exact propensity is not available from the observed panel
+    alone.  The local ``oracle_canonical`` adapter explicitly declares its
+    supported degrees after exposing exact nuisance columns; this gate keeps
+    all other unsupported requests visible.
     """
     spec = config.get("oracle_supported", {})
     values = spec.get(design, []) if isinstance(spec, dict) else []
@@ -87,17 +90,23 @@ def build_manifest(
     base_seed: int = 20260829,
     shard_id: int = 0,
     n_shards: int = 1,
+    wave_id: int = 0,
+    n_waves: int = 1,
     include_unavailable: bool = True,
 ) -> list[ExperimentTask]:
     """Expand a JSON family specification into deterministic shard tasks.
 
     Sharding is performed after sorting bundles by design, degree, N, and
-    replication. Every estimator in a bundle is assigned to the same shard, so
-    paired methods can share cached fits and changing worker counts does not
-    change which replication is run by a shard.
+    replication. With multiple waves, sorted bundles are assigned over the
+    Cartesian product of ``n_waves * n_shards`` slots, then mapped to
+    ``(wave_id, shard_id)``. Every estimator in a bundle is assigned to the
+    same slot, so paired methods can share cached fits. The defaults
+    ``wave_id=0, n_waves=1`` preserve the original shard assignment.
     """
     if n_shards < 1 or not 0 <= shard_id < n_shards:
         raise ValueError("shard_id must satisfy 0 <= shard_id < n_shards")
+    if n_waves < 1 or not 0 <= wave_id < n_waves:
+        raise ValueError("wave_id must satisfy 0 <= wave_id < n_waves")
     config = _load_config(family, config_path)
     config_hash = _config_hash(config)
     methods = list(config["estimators"])
@@ -128,18 +137,26 @@ def build_manifest(
     # required for paired comparisons and permits the runner to cache one
     # full-panel posterior per replication.
     bundle_order = sorted({(t.design, t.degree, t.N, t.rep) for t in out})
-    bundle_shard = {key: i % n_shards for i, key in enumerate(bundle_order)}
+    n_slots = int(n_shards) * int(n_waves)
+    bundle_slot = {key: i % n_slots for i, key in enumerate(bundle_order)}
+    bundle_location = {
+        key: (slot // int(n_shards), slot % int(n_shards))
+        for key, slot in bundle_slot.items()
+    }
     return [
         ExperimentTask(
             family=task.family, design=task.design, degree=task.degree,
             N=task.N, rep=task.rep, estimator=task.estimator,
-            shard=bundle_shard[(task.design, task.degree, task.N, task.rep)],
+            shard=bundle_location[(task.design, task.degree, task.N, task.rep)][1],
             n_shards=n_shards,
+            wave_id=bundle_location[(task.design, task.degree, task.N, task.rep)][0],
+            n_waves=n_waves,
             oracle_available=task.oracle_available,
             config_hash=task.config_hash, base_seed=task.base_seed,
         )
         for task in out
-        if bundle_shard[(task.design, task.degree, task.N, task.rep)] == shard_id
+        if bundle_location[(task.design, task.degree, task.N, task.rep)] ==
+        (wave_id, shard_id)
     ]
 
 

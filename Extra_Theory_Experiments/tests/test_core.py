@@ -1,4 +1,5 @@
 import json
+from itertools import product
 from pathlib import Path
 import sys
 import zipfile
@@ -21,6 +22,13 @@ from extra_theory_experiments.reference import (
 from extra_theory_experiments.reference import _outcome_pilot
 from extra_theory_experiments.ablations import fit_panel_variant, run_information_ablation
 from extra_theory_experiments import runner
+from extra_theory_experiments.oracle_dgp import (
+    generate_oracle_canonical_did, oracle_assignment_probability,
+    oracle_control_long_difference, oracle_control_slope,
+)
+from extra_theory_experiments.controlled_mechanics import (
+    reference_fold_mechanics, run_controlled_mechanics,
+)
 
 
 def test_algorithm2_sign_scaling_and_offfold_pilot():
@@ -71,11 +79,111 @@ def test_unsupported_oracle_rejected():
         oracle_nuisance(df, 1., 1, np.array([1]), np.array([1.]))
 
 
+def test_oracle_canonical_nuisances_are_exact_and_rows_run():
+    with pytest.raises(ValueError, match="non-theorem stress"):
+        generate_oracle_canonical_did(seed=4, n_units=80, alpha_sd=1.0)
+    with pytest.raises(ValueError, match="heterogeneous.*unsupported"):
+        generate_oracle_canonical_did(
+            seed=4, n_units=80, effect_type="heterogeneous",
+            non_theorem_stress=True)
+    df = generate_oracle_canonical_did(seed=4, n_units=80, linearity_degree=2)
+    post = df[df["time"] == 4].sort_values("unit_id")
+    X = [post.X1.to_numpy(), post.X2.to_numpy(), post.X3.to_numpy(),
+         post.X4.to_numpy(), post.X5.to_numpy()]
+    transformed_X = [1.0 - X[0], *[-x for x in X[1:]]]
+    for degree in (1, 2):
+        pi = oracle_assignment_probability(*X, degree)
+        pi_transformed = oracle_assignment_probability(*transformed_X, degree)
+        np.testing.assert_allclose(pi + pi_transformed, 1.0)
+        assert np.min(pi) > 1e-3 and np.max(pi) < 1.0 - 1e-3
+        corners = np.asarray(list(product((0.0, 1.0), repeat=5)))
+        corners[:, 1:] = 2.0 * corners[:, 1:] - 1.0
+        corner_pi = oracle_assignment_probability(
+            corners[:, 0], corners[:, 1], corners[:, 2], corners[:, 3],
+            corners[:, 4], degree)
+        assert np.min(corner_pi) > 1e-3 and np.max(corner_pi) < 1.0 - 1e-3
+    expected_pi = oracle_assignment_probability(*X, 2)
+    expected_slope = oracle_control_slope(
+        *X, 2)
+    np.testing.assert_allclose(post["pi_oracle"], expected_pi)
+    np.testing.assert_allclose(
+        post["m0_oracle"], oracle_control_long_difference(expected_slope, 4, 4))
+    assert np.allclose(post["barpi_oracle"], 0.5)
+    assert np.allclose(df["alpha"], 0.0)
+    assert np.allclose(df.loc[df["D"] == 1, "CATT"], 3.0)
+    assert np.allclose(df["gatt_population_oracle"], 3.0)
+    assert df.attrs["truth"] == {
+        "gatt_population_oracle": 3.0,
+        "truth_source": "homogeneous_population_effect",
+        "homogeneous": True,
+    }
+    m0, pi, barpi = oracle_nuisance(
+        df, 4., 4, post.index.to_numpy(), post["D"].to_numpy())
+    np.testing.assert_allclose(m0, post["m0_oracle"])
+    np.testing.assert_allclose(pi, post["pi_oracle"])
+    assert barpi == pytest.approx(0.5)
+
+    tasks = [task for task in build_manifest("correction_audit", reps=1)
+             if task.design == "oracle_canonical" and task.N == 200
+             and task.estimator in {"oracle_current_hybrid",
+                                    "oracle_reference_fold_convolution"}]
+    assert len(tasks) == 4 and all(task.oracle_available for task in tasks)
+    for task in tasks:
+        out = runner.run_task(task, smoke=True, K=2)
+        assert not out.empty
+        assert "status" not in out or not np.any(out["status"] == "unavailable")
+        assert np.allclose(out["true"].dropna(), 3.0)
+        assert set(out["truth_source"]) == {"gatt_population_oracle"}
+
+
 def test_error_sd_differs_from_raw_est_sd():
     out = scalar_metrics(np.array([1., 4.]), np.array([0., 2.]))
     assert out["empirical_sd_error"] == pytest.approx(np.sqrt(.5))
     assert out["raw_sd_est"] == pytest.approx(np.sqrt(4.5))
     assert out["bias_mcse"] == pytest.approx(np.sqrt(.5 / 2))
+
+
+def test_controlled_mechanics_smoke_reports_both_laws(tmp_path):
+    per_rep, metrics, archive = run_controlled_mechanics(
+        out_dir=tmp_path / "mechanics", reps=2, n_draws=20, n_units=40)
+    assert set(per_rep["scenario"]) == {"signal", "null"}
+    assert set(per_rep["method"]) == {
+        "full_algorithm1_bb", "reference_fold_convolution"}
+    assert set(per_rep["estimand_type"]) == {"GATT", "ATT"}
+    assert per_rep["posterior_m_fixed_exact_m0"].all()
+    assert {"bias", "cover95", "mean_interval_length95",
+            "null_rejection_rate"}.issubset(metrics.columns)
+    assert metrics["estimand_id"].notna().all()
+    assert (metrics["scenario"] == "null").any()
+    assert archive.exists()
+    with zipfile.ZipFile(archive) as handle:
+        assert {"controlled_mechanics_per_replication.csv",
+                "controlled_mechanics_metrics.csv",
+                "controlled_mechanics_manifest.csv", "provenance.json",
+                "README_run.txt"}.issubset(handle.namelist())
+
+
+def test_reference_requires_exactly_k_valid_folds_for_small_n():
+    df = _panel(n=8)
+
+    def factory(panel, **kwargs):
+        return FakeFit(panel, kwargs["seed"])
+
+    with pytest.raises(ValueError, match="expected exactly K=4"):
+        reference_fold_convolution(
+            df, K=4, fold_seed=9, posterior_seed=3,
+            fit_factory=factory, propensity_method="intercept")
+
+    oracle = generate_oracle_canonical_did(seed=12, n_units=8)
+    with pytest.raises(ValueError, match="expected exactly K=4"):
+        reference_fold_mechanics(
+            oracle, g=4, t=4, n_draws=8, fold_seed=9,
+            posterior_seed=3, K=4)
+
+
+def test_convolution_expected_folds_rejects_partial_mapping():
+    with pytest.raises(ValueError, match="expected exactly 2 valid folds"):
+        convolve_fold_draws({0: np.array([1., 2.])}, {0: 4}, expected_folds=2)
 
 
 def test_replication_metrics_keep_mean_and_median_rows():
@@ -222,12 +330,46 @@ def test_deterministic_manifest_sharding():
                 if x.design == "baseline" and x.degree == 1 and x.N == 200]
     assert len({x.seed for x in same_rep}) == 1
     assert len({x.shard for x in same_rep}) == 1
+    oracle = [x for x in build_manifest("correction_audit", reps=1)
+              if x.estimator.startswith("oracle")]
+    assert len(oracle) == 32
+    assert sum(x.oracle_available for x in oracle) == 8
+    assert {x.design for x in oracle if x.oracle_available} == {"oracle_canonical"}
+
+
+def test_multiwave_manifest_bundle_allocation_is_complete_and_disjoint():
+    n_shards, n_waves = 4, 3
+    allocations = {}
+    all_tasks = []
+    for wave in range(n_waves):
+        for shard in range(n_shards):
+            tasks = build_manifest(
+                "correction_audit", reps=2, n_shards=n_shards,
+                shard_id=shard, n_waves=n_waves, wave_id=wave)
+            all_tasks.extend(tasks)
+            for task in tasks:
+                key = (task.design, task.degree, task.N, task.rep)
+                allocations.setdefault(key, set()).add((task.wave_id, task.shard))
+                assert task.n_waves == n_waves and task.n_shards == n_shards
+    full = build_manifest("correction_audit", reps=2, n_shards=1)
+    task_keys = lambda rows: {
+        (x.design, x.degree, x.N, x.rep, x.estimator) for x in rows
+    }
+    assert task_keys(all_tasks) == task_keys(full)
+    assert allocations and all(len(locations) == 1 for locations in allocations.values())
+    repeated = build_manifest(
+        "correction_audit", reps=2, n_shards=n_shards, shard_id=2,
+        n_waves=n_waves, wave_id=1)
+    assert [x.as_dict() for x in repeated] == [
+        x.as_dict() for x in build_manifest(
+            "correction_audit", reps=2, n_shards=n_shards, shard_id=2,
+            n_waves=n_waves, wave_id=1)]
 
 
 def test_notebooks_are_valid_and_download_one_zip():
     root = Path(__file__).parents[1] / "notebooks"
     books = sorted(root.glob("*.ipynb"))
-    assert len(books) == 99
+    assert len(books) == 101
     for path in books:
         obj = json.loads(path.read_text())
         assert obj["nbformat"] == 4
@@ -243,6 +385,9 @@ def test_notebooks_are_valid_and_download_one_zip():
     assert "num_gfr': 50" in compute_code and "num_mcmc': 500" in compute_code
     assert "N_SHARDS = 48" in compute_code
     assert "n_shards=N_SHARDS" in compute_code and "bcf_params=BCF_PARAMS" in compute_code
+    assert "ETE_N_WAVES" in compute_code and "ETE_WAVE_ID" in compute_code
+    assert "wave_id=WAVE_ID" in compute_code and "n_waves=N_WAVES" in compute_code
+    assert "_wave_" in compute_code and '"wave_id": WAVE_ID' in compute_code
     assert len(list(root.glob("correction_audit_shard_*.ipynb"))) == 48
     assert len(list(root.glob("information_ablation_shard_*.ipynb"))) == 48
     pilots = {
@@ -254,6 +399,10 @@ def test_notebooks_are_valid_and_download_one_zip():
             "information_ablation", "staggered", "degree == 3", "N=800",
             ["full_panel_raw", "reduced_cell", "pooled_full_panel"],
             "expected cached sampler fits: 11"),
+        "oracle_bcf_pilot.ipynb": (
+            "correction_audit", "oracle_canonical", "degree == 2", "N=800",
+            ["oracle_current_hybrid", "oracle_reference_fold_convolution"],
+            "expected cached sampler fits: 3"),
     }
     for name, (family, design, degree, n_value, estimators, fit_note) in pilots.items():
         pilot = json.loads((root / name).read_text())
@@ -262,10 +411,20 @@ def test_notebooks_are_valid_and_download_one_zip():
         assert f"FAMILY = '{family}'" in pilot_code
         assert f"task.design == '{design}'" in pilot_code
         assert degree in pilot_code and n_value in pilot_code
-        assert "task.rep == 0" in pilot_code and "assert len(tasks) == 3" in pilot_code
+        task_count = 2 if name == "oracle_bcf_pilot.ipynb" else 3
+        assert "task.rep == 0" in pilot_code
+        assert f"assert len(tasks) == {task_count}" in pilot_code
         for estimator in estimators:
             assert estimator in pilot_code
         assert fit_note in pilot_code
+        if name == "oracle_bcf_pilot.ipynb":
+            assert "exact nuisance-column alignment" in pilot_code
+    mechanics = json.loads((root / "controlled_mechanics.ipynb").read_text())
+    mechanics_code = "\n".join("".join(c.get("source", [])) for c in mechanics["cells"])
+    assert "controlled_mechanics" in mechanics_code
+    assert "exact m0_oracle" in mechanics_code
+    assert "not a theorem proof" in mechanics_code
+    assert "ETE_MECH_REPS" in mechanics_code and "ETE_MECH_DRAWS" in mechanics_code
 
 
 def test_archive_aggregation_deduplicates_and_reports_metrics(tmp_path):
@@ -289,3 +448,55 @@ def test_archive_aggregation_deduplicates_and_reports_metrics(tmp_path):
         [archive_path], output_dir=tmp_path / "out", n_shards=1)
     assert report["missing_shards"] == []
     assert len(combined) == 1 and set(metrics["point_summary"]) == {"mean", "median"}
+
+
+def test_archive_aggregation_retains_unavailable_only_summary(tmp_path):
+    sys.path.insert(0, str(Path(__file__).parents[1] / "scripts"))
+    from aggregate_archives import aggregate_archives
+    from extra_theory_experiments.manifest import ExperimentTask, manifest_frame
+    task = ExperimentTask("correction_audit", "baseline", 1, 200, 0,
+                          "oracle_current_hybrid", shard=0, n_shards=1,
+                          config_hash="abc", oracle_available=False)
+    manifest = manifest_frame([task])
+    summary = pd.DataFrame([{
+        "status": "unavailable",
+        "reason": "exact nuisance unavailable",
+    }])
+    archive_path = tmp_path / "unavailable.zip"
+    with zipfile.ZipFile(archive_path, "w") as archive:
+        archive.writestr("manifest.csv", manifest.to_csv(index=False))
+        archive.writestr("summary.csv", summary.to_csv(index=False))
+    report, combined, metrics = aggregate_archives(
+        [archive_path], output_dir=tmp_path / "out", n_shards=1)
+    assert len(combined) == 1 and combined.iloc[0]["status"] == "unavailable"
+    assert metrics.empty
+    assert report["oracle_unavailable_not_failed"] is True
+    assert report["unavailable_rows_without_task_key"] == 1
+
+
+def test_archive_aggregation_reports_missing_waves(tmp_path):
+    sys.path.insert(0, str(Path(__file__).parents[1] / "scripts"))
+    from aggregate_archives import aggregate_archives
+    from extra_theory_experiments.manifest import ExperimentTask, manifest_frame
+    task = ExperimentTask("correction_audit", "baseline", 1, 200, 0,
+                          "raw_structured", shard=0, n_shards=1,
+                          wave_id=0, n_waves=2, config_hash="abc")
+    manifest = manifest_frame([task])
+    summary = pd.DataFrame([{
+        **task.as_dict(), "task_estimator": task.estimator,
+        "estimand_type": "ATT", "estimand_id": "ATT",
+        "method": "raw_structured", "post_mean": 1.,
+        "post_median": 1., "sd": 1., "q05": 0., "q95": 2.,
+        "q025": 0., "q975": 2., "true": 0.,
+    }])
+    archive_path = tmp_path / "wave0.zip"
+    with zipfile.ZipFile(archive_path, "w") as archive:
+        archive.writestr("manifest.csv", manifest.to_csv(index=False))
+        archive.writestr("summary.csv", summary.to_csv(index=False))
+    report, _, _ = aggregate_archives(
+        [archive_path], output_dir=tmp_path / "out", n_shards=1)
+    assert report["wave_fields_present"] is True
+    assert report["expected_n_waves"] == 2
+    assert report["observed_waves"] == [0]
+    assert report["missing_waves"] == [1]
+    assert report["missing_wave_shards"] == [{"wave_id": 1, "shard": 0}]
