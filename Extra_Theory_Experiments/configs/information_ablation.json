@@ -1,0 +1,12 @@
+{
+  "family": "information_ablation",
+  "reps": 100,
+  "estimators": ["full_panel_raw", "reduced_cell", "pooled_full_panel"],
+  "oracle_supported": {},
+  "designs": [
+    {"name": "baseline", "degrees": [1, 2], "N": [200, 800]},
+    {"name": "serial", "degrees": [1, 2], "N": [200, 800]},
+    {"name": "staggered", "degrees": [1, 3], "N": [200, 800]}
+  ],
+  "notes": "Reduced-cell fits use two groups and two calendar periods. The local adapter directly passes effect_by_cohort=False for pooled_full_panel; pooling remains exploratory because its target comparison is not theorem-covered."
+}

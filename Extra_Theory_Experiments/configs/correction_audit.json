@@ -1,0 +1,24 @@
+{
+  "family": "correction_audit",
+  "reps": 100,
+  "estimators": [
+    "raw_structured",
+    "current_hybrid_intercept",
+    "current_hybrid_logit",
+    "current_hybrid_rf",
+    "current_hybrid_logit_clip01",
+    "current_hybrid_logit_clip05",
+    "reference_fold_convolution_intercept",
+    "reference_fold_convolution_logit",
+    "reference_fold_convolution_rf",
+    "oracle_current_hybrid",
+    "oracle_reference_fold_convolution"
+  ],
+  "oracle_supported": {},
+  "designs": [
+    {"name": "baseline", "degrees": [1, 2], "N": [200, 800]},
+    {"name": "null", "degrees": [1, 2], "N": [200, 800]},
+    {"name": "serial", "degrees": [1, 2], "N": [200, 800]}
+  ],
+  "notes": "Oracle cells are unavailable for the shipped logistic-normal assignment DGP; no exact pi is exposed."
+}

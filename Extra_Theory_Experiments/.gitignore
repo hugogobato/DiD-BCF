@@ -1,0 +1,5 @@
+# Ignore only regenerated Python and test caches.
+# Experimental outputs under results/ are intentionally tracked.
+__pycache__/
+*.py[cod]
+.pytest_cache/
