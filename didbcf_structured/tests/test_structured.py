@@ -14,6 +14,7 @@ import pytest
 
 from didbcf_structured import (StructuredDiDBCF, build_design,
                                structured_estimands)
+from didbcf_structured.model import _stochtree_seed
 
 SHORT = dict(num_gfr=5, num_mcmc=20, keep_every=1, num_chains=1, seed=0)
 
@@ -195,3 +196,15 @@ def test_contrast_estimands_match_forest_estimands():
 def test_rejects_unknown_rfx():
     with pytest.raises(ValueError):
         StructuredDiDBCF(rfx="household")
+
+
+def test_large_seeds_are_normalized_for_stochtree_cpp():
+    """Manifest/chain seeds may exceed RngCpp's signed 32-bit constructor."""
+    assert _stochtree_seed(None) == -1
+    assert _stochtree_seed(-1) == -1
+    assert 0 <= _stochtree_seed(3928232464000) < 2 ** 31
+    assert _stochtree_seed(2 ** 31) == 0
+    model = StructuredDiDBCF().sample(
+        make_panel(n_units=30), num_gfr=1, num_mcmc=2, keep_every=1,
+        num_chains=2, seed=3928232464)
+    assert model.n_draws == 4

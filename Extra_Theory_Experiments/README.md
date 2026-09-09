@@ -102,6 +102,17 @@ finite posterior and bootstrap draw budgets, and posterior mean versus median
 can matter. Extreme inverse odds are always recorded even in clipped variants.
 Real-data mpdta comparisons are out of scope.
 
+## Colab troubleshooting
+
+The structured sampler normalizes experiment seeds at the `stochtree_cpp.RngCpp`
+boundary because that binding accepts signed 32-bit seeds, while the manifest
+and chain derivation intentionally use a wider deterministic seed space. The
+three BCF pilot notebooks and all shard notebooks refresh an existing
+disposable `DiD-BCF` clone to the pinned branch before installing this package.
+If a notebook downloaded before this fix is already running, restart its runtime
+or rerun its bootstrap cell so the clone is refreshed; previously written
+untracked checkpoints are preserved.
+
 ## Configurations and shard accounting
 
 configs/correction_audit.json contains B1 baseline, null, and serial-correlation

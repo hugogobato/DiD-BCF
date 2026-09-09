@@ -68,6 +68,11 @@ BRANCH = {BRANCH!r}
 target = pathlib.Path("DiD-BCF")
 if not (target / ".git").exists():
     subprocess.run(["git", "clone", "--depth", "1", "--branch", BRANCH, REPO_URL, str(target)], check=True)
+else:
+    # A rerun can reuse an older disposable clone. Refresh tracked source
+    # files while leaving untracked result checkpoints intact.
+    subprocess.run(["git", "-C", str(target), "fetch", "--depth", "1", "origin", BRANCH], check=True)
+    subprocess.run(["git", "-C", str(target), "reset", "--hard", f"origin/{BRANCH}"], check=True)
 subprocess.run([sys.executable, "-m", "pip", "install", "-q", "-r",
                 str(target / "Extra_Theory_Experiments" / "requirements-colab.txt")], check=True)
 sys.path.insert(0, str(target))
@@ -116,6 +121,10 @@ TARGET = pathlib.Path("DiD-BCF")
 if not (TARGET / ".git").exists():
     subprocess.run(["git", "clone", "--depth", "1", "--branch", BRANCH,
                     REPO_URL, str(TARGET)], check=True)
+else:
+    # Refresh an existing disposable clone so reruns cannot keep stale code.
+    subprocess.run(["git", "-C", str(TARGET), "fetch", "--depth", "1", "origin", BRANCH], check=True)
+    subprocess.run(["git", "-C", str(TARGET), "reset", "--hard", f"origin/{BRANCH}"], check=True)
 subprocess.run([sys.executable, "-m", "pip", "install", "-q", "-r",
                 str(TARGET / "Extra_Theory_Experiments" / "requirements-colab.txt")], check=True)
 sys.path.insert(0, str(TARGET))
@@ -232,6 +241,10 @@ TARGET = pathlib.Path("DiD-BCF")
 if not (TARGET / ".git").exists():
     subprocess.run(["git", "clone", "--depth", "1", "--branch", BRANCH,
                     REPO_URL, str(TARGET)], check=True)
+else:
+    # Refresh an existing disposable clone so reruns cannot keep stale code.
+    subprocess.run(["git", "-C", str(TARGET), "fetch", "--depth", "1", "origin", BRANCH], check=True)
+    subprocess.run(["git", "-C", str(TARGET), "reset", "--hard", f"origin/{BRANCH}"], check=True)
 subprocess.run([sys.executable, "-m", "pip", "install", "-q", "-r",
                 str(TARGET / "Extra_Theory_Experiments" / "requirements-colab.txt")], check=True)
 sys.path.insert(0, str(TARGET))

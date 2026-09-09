@@ -80,6 +80,31 @@ from .priors import (EFFECT_PRIOR, GLOBAL_PRIOR, LEVEL_PRIOR, TREND_PRIOR,
 __all__ = ["StructuredDiDBCF"]
 
 
+# ``stochtree_cpp.RngCpp`` is currently bound to a signed 32-bit integer,
+# although the Python-level ``stochtree.sampler.RNG`` annotation only says
+# ``int``.  Experiment manifests deliberately use a wider deterministic seed
+# space, and chain derivation multiplies those seeds by 1,000.  Normalize only
+# the seed crossing into the C++ binding; NumPy continues to receive the full
+# chain seed, so this compatibility guard does not reduce the Python RNG's
+# seed space.
+_STOCHTREE_SEED_MODULUS = 2 ** 31
+
+
+def _stochtree_seed(seed: int | None) -> int:
+    """Map a Python seed to the range accepted by ``stochtree_cpp.RngCpp``.
+
+    ``None`` and the stochtree sentinel ``-1`` retain their documented
+    nondeterministic behavior.  Other values, including large deterministic
+    seeds and negative values, are wrapped into ``[0, 2**31 - 1]``.
+    """
+    if seed is None:
+        return -1
+    value = int(seed)
+    if value == -1:
+        return -1
+    return value % _STOCHTREE_SEED_MODULUS
+
+
 def _forest_config(prior: ForestPrior, n_obs: int, n_features: int,
                    leaf_model_type: int, leaf_scale: np.ndarray):
     from stochtree import ForestModelConfig
@@ -243,7 +268,9 @@ class StructuredDiDBCF:
 
         n = dm.n
         resid_var = float(np.var(resid0))
-        rng = RNG(-1 if seed is None else int(seed))
+        # The C++ stochtree RNG accepts only a signed 32-bit seed.  Keep the
+        # full chain seed for NumPy, but normalize the value at this boundary.
+        rng = RNG(_stochtree_seed(seed))
         np_rng = np.random.default_rng(seed)
 
         sigma2 = resid_var
