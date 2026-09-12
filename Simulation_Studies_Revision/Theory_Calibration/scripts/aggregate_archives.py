@@ -238,7 +238,8 @@ def main():
     parser.add_argument("--family", default=None,
                         choices=["correction_audit", "information_ablation",
                                  "correction_completion"])
-    parser.add_argument("--n-shards", type=int, default=48)
+    parser.add_argument("--n-shards", type=int, default=None,
+                        help="default: 384 for correction_completion, else 48")
     parser.add_argument("--n-waves", type=int, default=None,
                         help="expected waves; inferred from wave-aware manifests")
     args = parser.parse_args()
@@ -246,8 +247,10 @@ def main():
     if output_dir is None:
         output_dir = (str(HERE / "results" / "aggregated_completion")
                       if args.family == "correction_completion" else "aggregated")
+    n_shards = (args.n_shards if args.n_shards is not None else
+                (384 if args.family == "correction_completion" else 48))
     report, _, _ = aggregate_archives(args.inputs, output_dir=output_dir,
-                                       family=args.family, n_shards=args.n_shards,
+                                       family=args.family, n_shards=n_shards,
                                        n_waves=args.n_waves)
     print(json.dumps(report, indent=2))
 

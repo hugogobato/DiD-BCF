@@ -22,11 +22,40 @@ from extra_theory_experiments.manifest import build_manifest, manifest_frame
 from extra_theory_experiments.runner import run_tasks, write_provenance
 
 
+COMPLETION_N_SHARDS = 384
+COMPLETION_ESTIMATORS = ["raw_structured", "reference_fold_convolution_rf"]
+
+
+def _completion_fits_per_bundle(design: str) -> int:
+    """Cached sampler fits per paired bundle (raw + reference)."""
+    if design == "staggered":
+        return 7   # 1 raw full-panel + 3 cohorts x 2 folds
+    return 3       # 1 raw + 2 fold fits; PT uses one unconstrained fit per arm
+
+
 def _completion_check(out: Path) -> None:
     out.mkdir(parents=True, exist_ok=True)
-    tasks = build_manifest("correction_completion", reps=1, n_shards=1)
+    n_shards = COMPLETION_N_SHARDS
+    tasks = []
+    for shard in range(n_shards):
+        tasks.extend(build_manifest("correction_completion", reps=1,
+                                    n_shards=n_shards, shard_id=shard))
     designs = sorted({task.design for task in tasks})
+    estimators = sorted({task.estimator for task in tasks})
     assert len(designs) == 21, designs
+    assert estimators == COMPLETION_ESTIMATORS, estimators
+    assert {task.n_shards for task in tasks} == {n_shards}
+    total_fits = 0
+    print("completion estimators:", estimators)
+    for design in designs:
+        bundles = sum(1 for task in tasks
+                      if task.design == design
+                      and task.estimator == estimators[0])
+        fits = bundles * _completion_fits_per_bundle(design)
+        total_fits += fits
+        print(f"  {design:24s} {bundles:3d} bundles x "
+              f"{_completion_fits_per_bundle(design)} fits = {fits}")
+    print(f"  total sampler fits (one replication): {total_fits}")
     manifest_path = out / "manifest.csv"
     manifest_frame(tasks).to_csv(manifest_path, index=False)
     result = run_tasks(tasks, out_dir=out / "checkpoints", smoke=True, resume=True)
@@ -41,14 +70,16 @@ def _completion_check(out: Path) -> None:
     from aggregate_archives import aggregate_archives
     report, _, metrics = aggregate_archives(
         [archive_path], output_dir=out / "aggregated",
-        family="correction_completion", n_shards=1)
+        family="correction_completion", n_shards=n_shards)
     print("completion smoke tasks:", len(tasks), "| output rows:", len(result))
-    print("designs:", len(designs), "| estimators:",
-          sorted({task.estimator for task in tasks}))
+    print("designs:", len(designs), "| estimators:", estimators)
     print(summary_path.read_text(encoding="utf-8").splitlines()[0])
-    print("missing shards:", report["missing_shards"],
-          "| missing tasks:", len(report["missing_task_bundles"]),
-          "| metrics rows:", len(metrics))
+    print("inconsistent n_shards:", report["inconsistent_n_shards"],
+          "| missing task bundles:", len(report["missing_task_bundles"]),
+          "| expected/missing shards:", n_shards,
+          len(report["missing_shards"]), "| metrics rows:", len(metrics))
+    if report["inconsistent_n_shards"] != [n_shards]:
+        raise SystemExit("smoke aggregation saw the wrong n_shards")
     if report["missing_task_bundles"]:
         raise SystemExit("smoke aggregation reports missing task bundles")
     if not (out / "aggregated" / "aggregation_report.json").exists():

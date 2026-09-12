@@ -168,14 +168,16 @@ declares its exact `dgp_params` overrides in the JSON, which the manifest
 carries per task and the runner passes to `generate_canonical_did` /
 `generate_staggered_did`; old families declare none, so their seeds and config
 hashes are unchanged. The family expands to 15,200 task rows (7,600 paired
-bundles) and generates 48 shard notebooks under
-`Simulation_Studies_Revision/DiD_BCF/Correction_Completion/`. A completion
-notebook needs roughly 84 sampler fits per wave-shard at six waves or 63 at
-eight waves (about 24,000 fits in total: three per canonical bundle, seven per
-staggered bundle, and three per pre-trend bundle). Recommended `ETE_N_WAVES` is
-6 to 8 after the pilot gate; at five minutes per N=200 fit that is 5 to 7 hours
-per wave-shard, so the completion notebooks must not be launched until a pilot
-wave has been timed. Null and pre-trend designs are the only rows at 200
+bundles) and is emitted as one single wave of 384 shard notebooks,
+`correction_completion_shard_000.ipynb` through `_383.ipynb`, under
+`Simulation_Studies_Revision/DiD_BCF/Correction_Completion/`. Each notebook is
+run exactly once with no `ETE_N_WAVES`/`ETE_WAVE_ID` setup (`N_WAVES = 1`,
+`WAVE_ID = 0`); the file name is the whole schedule. The average notebook
+carries about 20 paired bundles and roughly 60 sampler fits (about 24,000 fits
+in total: three per canonical bundle, seven per staggered bundle, and three per
+pre-trend bundle), which is 4 to 7 hours per notebook at five minutes per
+nonlinear fit. Time a `PT_*` and a `staggered` notebook first and only then
+launch the rest. Null and pre-trend designs are the only rows at 200
 replications; everything else follows the family default of 100.
 
 The pre-trend arm is a diagnostic. For `PT_*` designs the raw estimator runs the
@@ -249,7 +251,10 @@ completion family gets its own full smoke check with
 aggregates the resulting checkpoints. The notebooks do not rely on files
 outside the clone. After downloads, aggregate locally with
 python Simulation_Studies_Revision/Theory_Calibration/scripts/aggregate_archives.py
-<download-directory> --output-dir aggregated --n-shards 48. The aggregator
+<download-directory> --output-dir aggregated --n-shards 48. For the completion
+family, `--family correction_completion` defaults to `--n-shards 384` and
+`--output-dir Theory_Calibration/results/aggregated_completion/`, so a single
+wave of downloaded shard archives can simply be pointed at. The aggregator
 checks archive paths, manifests, config hashes, shard and wave coverage,
 duplicate exact task/estimand/method keys, and missing bundles, then emits
 separate mean and median error metrics. It accepts `--n-waves` when auditing a
@@ -261,7 +266,6 @@ package, notebook, result, and checkpoint.
 
 Aggregate correction, information and completion archives separately (use
 separate download directories or `--family`), because the families can
-legitimately use different wave counts and config hashes. For
-`--family correction_completion` the CLI defaults its output to
-`Theory_Calibration/results/aggregated_completion/`. Do not mix pilot or
-controlled-mechanics archives into a 48-shard aggregation directory.
+legitimately use different shard counts, wave counts, and config hashes. Do not
+mix pilot or controlled-mechanics archives into a 48-shard or 384-shard
+aggregation directory.

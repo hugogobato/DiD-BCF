@@ -302,7 +302,12 @@ def run_tasks(tasks, *, out_dir="results", bcf_params=None, smoke=False,
             path = out / checkpoint_name(task)
             if resume and path.exists():
                 try:
-                    rows.append(pd.read_csv(path)); continue
+                    # ``design="null"`` is a legitimate value; pandas' default
+                    # NA coercion would turn it into a missing value on resume
+                    # and corrupt the task key, so match the archive reader.
+                    rows.append(pd.read_csv(path, keep_default_na=False,
+                                            na_values=[]))
+                    continue
                 except Exception:
                     path.unlink(missing_ok=True)
             frame = run_task(task, bcf_params=bcf_params, smoke=smoke, K=K,

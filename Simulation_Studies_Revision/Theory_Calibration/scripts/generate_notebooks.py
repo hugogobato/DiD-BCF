@@ -57,7 +57,8 @@ def cell(kind, source):
             **({"outputs": [], "execution_count": None} if kind == "code" else {})}
 
 
-def notebook(*, family=None, shard=0, n_shards=1, validation=False, pilot=None):
+def notebook(*, family=None, shard=0, n_shards=1, validation=False, pilot=None,
+             single_wave=False):
     if validation:
         title = "Extra Theory Experiments lightweight validation"
         setup = f"""# Lightweight local/Colab validation. This runs two smoke tasks only.
@@ -110,9 +111,11 @@ except Exception as e:
                 "language": "python", "name": "python3"}}, "nbformat": 4, "nbformat_minor": 5}
     pilot_spec = PILOT_SPECS.get(pilot) if pilot else None
     notebook_family = pilot_spec["family"] if pilot_spec else family
+    shard_digits = 3 if single_wave else 2
     title = (f"Extra Theory Experiments | {notebook_family} | {pilot} worst-case BCF pilot"
              if pilot else
-             f"Extra Theory Experiments | {family} | shard {shard:02d}/{n_shards}")
+             f"Extra Theory Experiments | {family} | shard "
+             f"{shard:0{shard_digits}d}/{n_shards}")
     setup = f"""# Colab bootstrap: branch is pinned so this notebook is self-contained.
 import os, sys, pathlib, subprocess
 REPO_URL = {REPO_URL!r}
@@ -154,17 +157,29 @@ print("Using clone:", TARGET.resolve(), "| max workers: 2, default workers: 1")
     pilot_n_shards = 1 if pilot else n_shards
     wave_controls = (
         "N_WAVES = 1\nWAVE_ID = 0"
-        if pilot else
+        if (pilot or single_wave) else
         "N_WAVES = int(os.environ.get('ETE_N_WAVES', '1'))\n"
         "WAVE_ID = int(os.environ.get('ETE_WAVE_ID', '0'))\n"
         "if N_WAVES < 1 or not 0 <= WAVE_ID < N_WAVES:\n"
         "    raise ValueError('ETE_WAVE_ID must satisfy 0 <= ETE_WAVE_ID < ETE_N_WAVES')"
     )
-    pilot_reps = "1" if pilot else (
-        "int(os.environ['ETE_REPS']) if os.environ.get('ETE_REPS', '').strip() "
-        "not in ('', '0') else None")
+    if pilot:
+        pilot_reps = "1"
+    elif single_wave:
+        # Single-wave completion notebooks keep the per-design replication
+        # counts (null/PT at 200) unless ETE_REPS overrides them.
+        pilot_reps = ("int(os.environ['ETE_REPS']) if os.environ.get('ETE_REPS', '').strip() "
+                      "not in ('', '0') else None")
+    else:
+        pilot_reps = 'int(os.environ.get("ETE_REPS", "100"))'
     pilot_smoke = False if pilot else 'os.environ.get("ETE_SMOKE", "0") == "1"'
-    output_suffix = pilot_spec["output"] if pilot_spec else f"shard_{shard:02d}"
+    output_suffix = (pilot_spec["output"] if pilot_spec else
+                     f"shard_{shard:0{shard_digits}d}")
+    if single_wave:
+        out_path = f'f"extra_theory_{notebook_family}_{output_suffix}"'
+    else:
+        out_path = (f'f"extra_theory_{notebook_family}_{output_suffix}_wave_'
+                    f'{{WAVE_ID:02d}}_of_{{N_WAVES:02d}}"')
     pilot_value = repr(pilot)
     run = f"""from extra_theory_experiments.manifest import build_manifest, manifest_frame
 from extra_theory_experiments.runner import run_tasks, write_provenance
@@ -177,7 +192,7 @@ SMOKE = {pilot_smoke}
 BCF_PARAMS = {bcf_literal}
 {wave_controls}
 OUT = str(TARGET / "Simulation_Studies_Revision" / "Theory_Calibration" / "results" /
-          f"extra_theory_{notebook_family}_{output_suffix}_wave_{{WAVE_ID:02d}}_of_{{N_WAVES:02d}}")
+          {out_path})
 os.makedirs(OUT, exist_ok=True)
 tasks = build_manifest(FAMILY, reps=REPS, n_shards=N_SHARDS, shard_id=SHARD_ID,
                        wave_id=WAVE_ID, n_waves=N_WAVES)
@@ -220,9 +235,12 @@ except Exception as e:
                          "This shard resumes local checkpoints and downloads one zip. "
                          + ("The pilot is fixed to wave 0 of 1."
                             if pilot else
+                            "This is a single-wave notebook: run it once; no ETE_N_WAVES or "
+                            "ETE_WAVE_ID configuration is needed. Replication counts follow each "
+                            "design's config value (ETE_REPS overrides)."
+                            if single_wave else
                             "Set ETE_N_WAVES and ETE_WAVE_ID to reuse this notebook across waves; "
-                            "the wave is included in the output directory and archive name. "
-                            "Replication counts follow each design's config value (ETE_REPS overrides).")
+                            "the wave is included in the output directory and archive name.")
                          + (" The oracle pilot checks exact nuisance-column alignment, iid default errors, and homogeneous truth 3 through the production sampler."
                             if pilot == "oracle" else "")),
         cell("code", setup),
@@ -290,7 +308,9 @@ except Exception as e:
 FAMILY_SHARDS = {
     "correction_audit": 48,
     "information_ablation": 48,
-    "correction_completion": 48,
+    # The completion family is emitted as one single wave of 384 shards, so no
+    # notebook needs ETE_N_WAVES/ETE_WAVE_ID edits.
+    "correction_completion": 384,
 }
 FAMILIES = ("all", "correction_audit", "information_ablation",
             "correction_completion")
@@ -304,11 +324,14 @@ COMPLETION_NOTEBOOKS = NOTEBOOK_ROOT / "Correction_Completion"
 
 def _write_shards(out: Path, family: str) -> None:
     n_shards = FAMILY_SHARDS[family]
+    single_wave = family == "correction_completion"
+    digits = 3 if single_wave else 2
     for shard in range(n_shards):
-        name = f"{family}_shard_{shard:02d}.ipynb"
+        name = f"{family}_shard_{shard:0{digits}d}.ipynb"
         (out / name).write_text(
-            json.dumps(notebook(family=family, shard=shard, n_shards=n_shards),
-                       indent=1), encoding="utf-8")
+            json.dumps(notebook(family=family, shard=shard, n_shards=n_shards,
+                                single_wave=single_wave), indent=1),
+            encoding="utf-8")
 
 
 def generate(output_dir: str | Path | None = None, family: str = "all"):

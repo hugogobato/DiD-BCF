@@ -431,23 +431,56 @@ def test_notebooks_are_valid_and_download_one_zip():
     assert "ETE_MECH_REPS" in mechanics_code and "ETE_MECH_DRAWS" in mechanics_code
 
     completion_books = sorted(completion.glob("*.ipynb"))
-    assert len(completion_books) == 48
-    for path in completion_books:
+    assert len(completion_books) == 384
+    assert completion_books[0].name == "correction_completion_shard_000.ipynb"
+    assert completion_books[-1].name == "correction_completion_shard_383.ipynb"
+    for index, path in enumerate(completion_books):
         obj = json.loads(path.read_text())
         assert obj["nbformat"] == 4
         code = "\n".join("".join(c.get("source", [])) for c in obj["cells"]
                           if c["cell_type"] == "code")
         assert "FAMILY = 'correction_completion'" in code
-        assert "N_SHARDS = 48" in code
+        assert "N_SHARDS = 384" in code
+        assert f"SHARD_ID = {index}\n" in code
+        assert "N_WAVES = 1" in code and "WAVE_ID = 0" in code
+        assert "ETE_N_WAVES" not in code and "ETE_WAVE_ID" not in code
         assert "n_shards=N_SHARDS" in code and "bcf_params=BCF_PARAMS" in code
         assert "num_gfr': 50" in code and "num_mcmc': 500" in code
-        assert "ETE_N_WAVES" in code and "ETE_WAVE_ID" in code
         assert "wave_id=WAVE_ID" in code and "n_waves=N_WAVES" in code
-        assert "_wave_" in code and '"wave_id": WAVE_ID' in code
+        assert "_wave_" not in code and '"wave_id": WAVE_ID' in code
         assert "ETE_REPS" in code
         assert "BRANCH = 'main'" in code
         assert "files.download(output_file)" in code
         compile(code, str(path), "exec")
+
+
+def test_theory_notebook_regeneration_is_byte_identical(tmp_path):
+    sys.path.insert(0, str(Path(__file__).parents[1] / "scripts"))
+    import generate_notebooks as gn
+    committed = Path(__file__).parents[2] / "DiD_BCF" / "Theory_Calibration"
+    gn.generate(tmp_path, "correction_audit")
+    gn.generate(tmp_path, "information_ablation")
+    produced = sorted(tmp_path.glob("*.ipynb"))
+    assert len(produced) == 101
+    mismatches = [p.name for p in produced
+                  if (committed / p.name).read_bytes() != p.read_bytes()]
+    assert mismatches == []
+
+
+def test_completion_single_wave_manifest_is_one_wave():
+    tasks = []
+    for shard in range(384):
+        tasks.extend(build_manifest("correction_completion", reps=1,
+                                    n_shards=384, shard_id=shard))
+    assert len(tasks) == 110
+    assert {t.n_waves for t in tasks} == {1}
+    assert {t.wave_id for t in tasks} == {0}
+    assert {t.n_shards for t in tasks} == {384}
+    assert all(0 <= t.shard < 384 for t in tasks)
+    keys = {(t.design, t.degree, t.N, t.rep, t.estimator) for t in tasks}
+    assert len(keys) == 110
+    assert {t.estimator for t in tasks} == {
+        "raw_structured", "reference_fold_convolution_rf"}
 
 
 def test_archive_aggregation_deduplicates_and_reports_metrics(tmp_path):
