@@ -1,6 +1,0 @@
-
-wrote summaries_wang_B2_sweep_lin_1.csv ( 500 rows )
-
-wrote summaries_wang_B2_sweep_lin_2.csv ( 500 rows )
-
-wrote summaries_wang_B2_sweep_lin_3.csv ( 500 rows )

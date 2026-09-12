@@ -1,6 +1,0 @@
-
-wrote summaries_doubleml_B1_serial_corr_lin_1.csv ( 500 rows )
-
-wrote summaries_doubleml_B1_serial_corr_lin_2.csv ( 500 rows )
-
-wrote summaries_doubleml_B1_serial_corr_lin_3.csv ( 500 rows )

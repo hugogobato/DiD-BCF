@@ -1,6 +1,0 @@
-
-wrote summaries_doubleml_D_staggered_lin_1.csv ( 1000 rows )
-
-wrote summaries_doubleml_D_staggered_lin_2.csv ( 1000 rows )
-
-wrote summaries_doubleml_D_staggered_lin_3.csv ( 1000 rows )
