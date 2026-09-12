@@ -681,6 +681,36 @@ def test_fold_pretrend_runs_smoke_and_pools_fold_draws():
     assert np.isclose(float(contrast["true"].iloc[0]), 0.4, atol=1e-12)
 
 
+def test_wide_manifest_seeds_are_wrapped_for_stochtree():
+    """Regression: >int32 task seeds used to crash stochtree's RngCpp.
+
+    ``deterministic_seed`` emits values modulo ``2**32 - 1``, so about half of
+    all manifest seeds exceed the signed 32-bit constructor.  Every direct
+    stochtree boundary must wrap them (e.g. the user-visible seed 2670955147
+    in the pre-trend raw arm).
+    """
+    from did_bcf_revision.seeds import stochtree_seed
+
+    assert stochtree_seed(None) == -1
+    assert stochtree_seed(-1) == -1
+    for seed in (0, 1, 2**31 - 1, 2**31, 2670955147, 4179655998):
+        normalized = stochtree_seed(seed)
+        assert normalized == seed % 2**31
+        assert 0 <= normalized < 2**31
+
+    pytest.importorskip("stochtree")
+    from did_bcf_revision.pretrend import fit_pretrend
+
+    tasks = build_manifest("correction_completion", reps=1, n_shards=1)
+    task = next(t for t in tasks if t.design == "PT_violation_het20"
+                and t.degree == 1)
+    panel = runner._dgp(task)
+    fit = fit_pretrend(panel, bcf_params={"num_gfr": 3, "num_mcmc": 10,
+                                          "keep_every": 1, "num_chains": 1},
+                       seed=2670955147)
+    assert fit.tau_draws.shape[0] == len(panel)
+
+
 def test_completion_smoke_aggregation(tmp_path):
     sys.path.insert(0, str(Path(__file__).parents[1] / "scripts"))
     from aggregate_archives import aggregate_archives

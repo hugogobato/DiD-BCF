@@ -104,6 +104,8 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 
+from .seeds import stochtree_seed
+
 # Fixed design-matrix column order shared with the posterior-correction module.
 PROGNOSTIC_COLS = ["eventually_treated", "X1", "X2", "X3", "X4", "X5",
                    "time", "treatment_group"]
@@ -247,7 +249,7 @@ def unit_propensity(df: pd.DataFrame, seed: int | None = None) -> np.ndarray:
             m = BARTModel()
             m.sample(X_train=Xu, y_train=du, num_gfr=10, num_burnin=0,
                      num_mcmc=10,
-                     general_params={"random_seed": int(seed)} if seed is not None else {})
+                     general_params={"random_seed": stochtree_seed(seed)} if seed is not None else {})
             pi_unit = np.asarray(m.predict(X=Xu, terms="y_hat", type="mean"),
                                  dtype=float)
         except ImportError:
@@ -282,7 +284,7 @@ def fit_did_bcf(df: pd.DataFrame, bcf_params: dict | None = None,
 
     general_params = {"keep_every": p["keep_every"], "num_chains": p["num_chains"]}
     if seed is not None:
-        general_params["random_seed"] = int(seed)
+        general_params["random_seed"] = stochtree_seed(seed)
 
     kwargs: dict = {}
     if spec.propensity == "constant":

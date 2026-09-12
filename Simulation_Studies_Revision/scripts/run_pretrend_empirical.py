@@ -47,6 +47,7 @@ sys.path.insert(0, ROOT)
 
 from did_bcf_revision.pretrend import (fit_pretrend, pretrend_estimands,
                                        quantile_subgroups, twfe_pretrend)
+from did_bcf_revision.seeds import stochtree_seed
 
 DEFAULT_DATA = os.path.abspath(
     os.path.join(ROOT, "..", "Empirical_Study", "mpdta.csv"))
@@ -102,7 +103,7 @@ def paper_att(data_path: str, bcf_params: dict, seed: int = 0) -> pd.DataFrame:
                  num_gfr=bcf_params["num_gfr"], num_mcmc=bcf_params["num_mcmc"],
                  general_params={"keep_every": bcf_params["keep_every"],
                                  "num_chains": bcf_params["num_chains"],
-                                 "random_seed": int(seed)},
+                                 "random_seed": stochtree_seed(seed)},
                  prognostic_forest_params={"keep_vars": np.array([0, 1, 2, 3])},
                  treatment_effect_forest_params={"keep_vars": np.array([1, 2])})
 

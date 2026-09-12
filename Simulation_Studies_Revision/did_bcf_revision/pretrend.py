@@ -73,6 +73,7 @@ import numpy as np
 import pandas as pd
 
 from .did_bcf import DEFAULT_BCF_PARAMS, _summarise
+from .seeds import stochtree_seed
 
 __all__ = ["fit_pretrend", "pretrend_estimands", "twfe_pretrend",
            "true_pretrend", "PretrendFit", "PRETREND_COVARIATE_COLS"]
@@ -201,7 +202,7 @@ def fit_pretrend(df: pd.DataFrame, bcf_params: dict | None = None,
     general_params = {"keep_every": p["keep_every"], "num_chains": p["num_chains"],
                       "propensity_covariate": "none"}
     if seed is not None:
-        general_params["random_seed"] = int(seed)
+        general_params["random_seed"] = stochtree_seed(seed)
 
     kwargs: dict = {}
     if rfx == "unit":
