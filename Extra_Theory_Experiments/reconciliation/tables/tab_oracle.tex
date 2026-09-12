@@ -1,0 +1,53 @@
+{\footnotesize
+\begin{longtable}{lrrrrrrr}
+\caption{\texttt{oracle\_canonical} design (known bounded $\pi(X)\in(0.001,0.999)$, exact $m_0$; population truth $=3$): the new estimators only.}\label{tab:oracle}\\
+\toprule
+Estimator & Bias & SD(err) & RMSE & Cov.95 & Len.95 & $\overline{\mathrm{sd}}/\mathrm{SD}$ & $n$ \\
+\midrule
+
+\endfirsthead
+\toprule
+Estimator & Bias & SD(err) & RMSE & Cov.95 & Len.95 & $\overline{\mathrm{sd}}/\mathrm{SD}$ & $n$ \\
+\midrule
+
+\endhead
+\bottomrule
+\endlastfoot
+\multicolumn{8}{l}{\textit{$N=200$, degree $d=1$}} \\
+\quad New raw structured & 0.008 & 0.112 & 0.112 & 1.000 & 0.526 & 1.199 & 100 \\
+\quad New current hybrid, logit & 0.004 & 0.260 & 0.259 & 0.910 & 0.988 & 0.961 & 100 \\
+\quad New current hybrid, RF & 0.004 & 0.236 & 0.235 & 0.910 & 0.858 & 0.924 & 100 \\
+\quad New reference fold, logit & 0.033 & 0.323 & 0.323 & 0.890 & 1.028 & 0.807 & 100 \\
+\quad New reference fold, RF & 0.016 & 0.279 & 0.278 & 0.900 & 0.890 & 0.811 & 100 \\
+\quad New oracle current hybrid & 0.008 & 0.248 & 0.247 & 0.930 & 0.934 & 0.954 & 100 \\
+\quad New oracle reference fold & 0.009 & 0.254 & 0.253 & 0.930 & 0.947 & 0.946 & 100 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{$N=200$, degree $d=2$}} \\
+\quad New raw structured & 0.009 & 0.121 & 0.121 & 0.970 & 0.519 & 1.088 & 100 \\
+\quad New current hybrid, logit & -0.025 & 0.222 & 0.222 & 0.960 & 1.020 & 1.163 & 100 \\
+\quad New current hybrid, RF & -0.011 & 0.200 & 0.199 & 0.950 & 0.862 & 1.099 & 100 \\
+\quad New reference fold, logit & -0.044 & 0.262 & 0.265 & 0.950 & 1.054 & 1.017 & 100 \\
+\quad New reference fold, RF & -0.025 & 0.239 & 0.239 & 0.910 & 0.896 & 0.952 & 100 \\
+\quad New oracle current hybrid & -0.007 & 0.221 & 0.220 & 0.970 & 0.985 & 1.130 & 100 \\
+\quad New oracle reference fold & -0.008 & 0.224 & 0.223 & 0.970 & 1.001 & 1.128 & 100 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{$N=800$, degree $d=1$}} \\
+\quad New raw structured & 0.005 & 0.066 & 0.066 & 0.970 & 0.278 & 1.067 & 100 \\
+\quad New current hybrid, logit & -0.007 & 0.144 & 0.143 & 0.920 & 0.478 & 0.849 & 100 \\
+\quad New current hybrid, RF & -0.002 & 0.146 & 0.145 & 0.920 & 0.484 & 0.847 & 100 \\
+\quad New reference fold, logit & -0.001 & 0.157 & 0.157 & 0.880 & 0.485 & 0.786 & 100 \\
+\quad New reference fold, RF & -0.006 & 0.161 & 0.160 & 0.890 & 0.495 & 0.786 & 100 \\
+\quad New oracle current hybrid & -0.000 & 0.137 & 0.136 & 0.940 & 0.470 & 0.878 & 100 \\
+\quad New oracle reference fold & -0.000 & 0.137 & 0.136 & 0.940 & 0.472 & 0.879 & 100 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{$N=800$, degree $d=2$}} \\
+\quad New raw structured & 0.016 & 0.064 & 0.066 & 0.970 & 0.282 & 1.124 & 100 \\
+\quad New current hybrid, logit & 0.014 & 0.117 & 0.117 & 0.970 & 0.479 & 1.047 & 100 \\
+\quad New current hybrid, RF & 0.016 & 0.120 & 0.120 & 0.970 & 0.494 & 1.050 & 100 \\
+\quad New reference fold, logit & 0.015 & 0.122 & 0.123 & 0.960 & 0.481 & 1.005 & 100 \\
+\quad New reference fold, RF & 0.014 & 0.129 & 0.130 & 0.930 & 0.493 & 0.972 & 100 \\
+\quad New oracle current hybrid & 0.011 & 0.109 & 0.109 & 0.970 & 0.476 & 1.118 & 100 \\
+\quad New oracle reference fold & 0.011 & 0.109 & 0.109 & 0.970 & 0.477 & 1.119 & 100 \\
+\addlinespace
+\end{longtable}
+}

@@ -1,0 +1,39 @@
+{\footnotesize
+\begin{longtable}{lrrrrrrr}
+\caption{$\mathrm{GATT}(g{=}4,t{=}4)$, $N=200$, AR(1) serial design: published JBES run (100 replications) against the Extra\_Theory calibration run (available replications shown). Metrics use replication-specific truths; here $\overline{\mathrm{sd}}/\mathrm{SD}$ is average reported posterior SD over the Monte-Carlo error SD $\mathrm{SD}(\widehat\theta-\theta_0)$, which is the common scale used throughout this note (the published tables divided by the raw spread of estimates instead).}\label{tab:repro_serial}\\
+\toprule
+Estimator & Bias & SD(err) & RMSE & Cov.95 & Len.95 & $\overline{\mathrm{sd}}/\mathrm{SD}$ & $n$ \\
+\midrule
+
+\endfirsthead
+\toprule
+Estimator & Bias & SD(err) & RMSE & Cov.95 & Len.95 & $\overline{\mathrm{sd}}/\mathrm{SD}$ & $n$ \\
+\midrule
+
+\endhead
+\bottomrule
+\endlastfoot
+\multicolumn{8}{l}{\textit{degree $d=1$}} \\
+\quad JBES plain (structured) & -0.012 & 0.111 & 0.111 & 0.970 & 0.462 & 1.058 & 100 \\
+\quad JBES corrected (same-sample) & -0.024 & 0.134 & 0.136 & 0.990 & 0.693 & 1.317 & 100 \\
+\quad New raw structured & 0.003 & 0.127 & 0.126 & 0.920 & 0.465 & 0.935 & 100 \\
+\quad New current hybrid, logit & -0.008 & 0.146 & 0.145 & 0.980 & 0.696 & 1.219 & 100 \\
+\quad New current hybrid, logit clip .05 & -0.008 & 0.146 & 0.145 & 0.980 & 0.696 & 1.219 & 100 \\
+\quad New current hybrid, RF & -0.009 & 0.144 & 0.144 & 0.980 & 0.672 & 1.192 & 100 \\
+\quad New reference fold, logit & -0.003 & 0.185 & 0.184 & 0.940 & 0.717 & 0.987 & 100 \\
+\quad New reference fold, RF & -0.012 & 0.161 & 0.160 & 0.960 & 0.687 & 1.090 & 100 \\
+\quad New reference fold, intercept & -0.010 & 0.154 & 0.154 & 0.950 & 0.646 & 1.066 & 100 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{degree $d=2$}} \\
+\quad JBES plain (structured) & -0.013 & 0.127 & 0.128 & 0.960 & 0.478 & 0.957 & 100 \\
+\quad JBES corrected (same-sample) & 0.019 & 0.269 & 0.269 & 0.990 & 1.160 & 1.101 & 100 \\
+\quad New raw structured & -0.016 & 0.141 & 0.141 & 0.880 & 0.480 & 0.871 & 100 \\
+\quad New current hybrid, logit & -0.025 & 0.264 & 0.264 & 0.990 & 0.969 & 0.935 & 100 \\
+\quad New current hybrid, logit clip .05 & -0.001 & 0.159 & 0.158 & 0.990 & 0.761 & 1.223 & 100 \\
+\quad New current hybrid, RF & 0.002 & 0.145 & 0.145 & 1.000 & 0.688 & 1.207 & 100 \\
+\quad New reference fold, logit & -0.014 & 0.327 & 0.325 & 0.950 & 0.942 & 0.738 & 100 \\
+\quad New reference fold, RF & 0.003 & 0.165 & 0.164 & 0.980 & 0.701 & 1.083 & 100 \\
+\quad New reference fold, intercept & 0.003 & 0.147 & 0.147 & 0.990 & 0.655 & 1.137 & 100 \\
+\addlinespace
+\end{longtable}
+}

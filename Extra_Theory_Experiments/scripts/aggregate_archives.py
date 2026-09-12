@@ -41,7 +41,9 @@ def _read_zip(path: Path):
                 continue
             data = archive.read(info)
             from io import BytesIO
-            frame = pd.read_csv(BytesIO(data))
+            # ``design="null"`` is a legitimate design name; pandas' default NA
+            # handling would silently turn it into a missing value.
+            frame = pd.read_csv(BytesIO(data), keep_default_na=False, na_values=[])
             (manifests if name.name == "manifest.csv" else summaries).append(frame)
     return manifests, summaries
 

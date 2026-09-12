@@ -1,0 +1,63 @@
+{\footnotesize
+\begin{longtable}{lrrrrr}
+\caption{$\mathrm{GATT}(g{=}4,t{=}4)$: the new DiD-BCF calibration estimators against the published JBES benchmarks (100 replications per cell, replication-specific truths).}\label{tab:benchgatt}\\
+\toprule
+Estimator & Bias & SD(err) & RMSE & Cov.95 & Len.95 \\
+\midrule
+\endfirsthead
+\toprule
+Estimator & Bias & SD(err) & RMSE & Cov.95 & Len.95 \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\multicolumn{6}{l}{\textit{baseline, $N=200$, degree $d=1$}} \\
+\quad JBES plain (structured) & -0.022 & 0.109 & 0.110 & 1.000 & 0.558 \\
+\quad JBES corrected (same-sample) & -0.028 & 0.231 & 0.231 & 0.950 & 0.979 \\
+\quad DiD-BCF raw (new) & -0.018 & 0.131 & 0.131 & 0.980 & 0.561 \\
+\quad DiD-BCF same-sample, logit (new) & -0.036 & 0.212 & 0.214 & 0.960 & 0.965 \\
+\quad DiD-BCF same-sample, logit clip .05 (new) & -0.036 & 0.212 & 0.214 & 0.960 & 0.965 \\
+\quad DiD-BCF reference fold, RF (new) & -0.030 & 0.243 & 0.243 & 0.910 & 0.962 \\
+\quad DiD-BCF reference fold, logit (new) & -0.031 & 0.254 & 0.254 & 0.910 & 0.994 \\
+\quad Callaway--Sant'Anna & -0.031 & 0.220 & 0.221 & 0.970 & 0.902 \\
+\quad DoubleML DR-DiD & -0.039 & 0.303 & 0.304 & 0.920 & 1.157 \\
+\quad grf-DiD (Wang) & -0.036 & 0.220 & 0.222 & 0.810 & 0.630 \\
+\addlinespace
+\multicolumn{6}{l}{\textit{baseline, $N=200$, degree $d=2$}} \\
+\quad JBES plain (structured) & -0.024 & 0.120 & 0.122 & 0.980 & 0.572 \\
+\quad JBES corrected (same-sample) & 0.109 & 1.039 & 1.040 & 0.960 & 1.676 \\
+\quad DiD-BCF raw (new) & 0.018 & 0.134 & 0.135 & 0.960 & 0.575 \\
+\quad DiD-BCF same-sample, logit (new) & 0.796 & 5.923 & 5.947 & 0.980 & 4.024 \\
+\quad DiD-BCF same-sample, logit clip .05 (new) & 0.021 & 0.259 & 0.258 & 0.980 & 1.062 \\
+\quad DiD-BCF reference fold, RF (new) & 0.022 & 0.234 & 0.234 & 0.970 & 0.986 \\
+\quad DiD-BCF reference fold, logit (new) & 0.651 & 6.898 & 6.894 & 0.920 & 3.546 \\
+\quad Callaway--Sant'Anna & -0.034 & 0.224 & 0.225 & 0.960 & 0.914 \\
+\quad DoubleML DR-DiD & -0.034 & 0.279 & 0.280 & 0.940 & 1.127 \\
+\quad grf-DiD (Wang) & -0.037 & 0.221 & 0.223 & 0.810 & 0.630 \\
+\addlinespace
+\multicolumn{6}{l}{\textit{serial, $N=200$, degree $d=1$}} \\
+\quad JBES plain (structured) & -0.012 & 0.111 & 0.111 & 0.970 & 0.462 \\
+\quad JBES corrected (same-sample) & -0.024 & 0.134 & 0.136 & 0.990 & 0.693 \\
+\quad DiD-BCF raw (new) & 0.003 & 0.127 & 0.126 & 0.920 & 0.465 \\
+\quad DiD-BCF same-sample, logit (new) & -0.008 & 0.146 & 0.145 & 0.980 & 0.696 \\
+\quad DiD-BCF same-sample, logit clip .05 (new) & -0.008 & 0.146 & 0.145 & 0.980 & 0.696 \\
+\quad DiD-BCF reference fold, RF (new) & -0.012 & 0.161 & 0.160 & 0.960 & 0.687 \\
+\quad DiD-BCF reference fold, logit (new) & -0.003 & 0.185 & 0.184 & 0.940 & 0.717 \\
+\quad Callaway--Sant'Anna & -0.025 & 0.127 & 0.129 & 0.990 & 0.653 \\
+\quad DoubleML DR-DiD & -0.029 & 0.163 & 0.165 & 0.990 & 0.776 \\
+\quad grf-DiD (Wang) & -0.032 & 0.130 & 0.133 & 0.910 & 0.458 \\
+\addlinespace
+\multicolumn{6}{l}{\textit{serial, $N=200$, degree $d=2$}} \\
+\quad JBES plain (structured) & -0.013 & 0.127 & 0.128 & 0.960 & 0.478 \\
+\quad JBES corrected (same-sample) & 0.019 & 0.269 & 0.269 & 0.990 & 1.160 \\
+\quad DiD-BCF raw (new) & -0.016 & 0.141 & 0.141 & 0.880 & 0.480 \\
+\quad DiD-BCF same-sample, logit (new) & -0.025 & 0.264 & 0.264 & 0.990 & 0.969 \\
+\quad DiD-BCF same-sample, logit clip .05 (new) & -0.001 & 0.159 & 0.158 & 0.990 & 0.761 \\
+\quad DiD-BCF reference fold, RF (new) & 0.003 & 0.165 & 0.164 & 0.980 & 0.701 \\
+\quad DiD-BCF reference fold, logit (new) & -0.014 & 0.327 & 0.325 & 0.950 & 0.942 \\
+\quad Callaway--Sant'Anna & -0.028 & 0.133 & 0.135 & 0.990 & 0.662 \\
+\quad DoubleML DR-DiD & -0.022 & 0.170 & 0.170 & 0.970 & 0.773 \\
+\quad grf-DiD (Wang) & -0.032 & 0.130 & 0.133 & 0.900 & 0.458 \\
+\addlinespace
+\end{longtable}
+}

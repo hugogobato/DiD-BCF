@@ -1,0 +1,61 @@
+{\footnotesize
+\begin{longtable}{lrrrrrrr}
+\caption{$\mathrm{GATT}(g{=}4,t{=}4)$, $N=800$: the published $B2$ sweep against the new calibration runs.}\label{tab:repro800}\\
+\toprule
+Estimator & Bias & SD(err) & RMSE & Cov.95 & Len.95 & $\overline{\mathrm{sd}}/\mathrm{SD}$ & $n$ \\
+\midrule
+
+\endfirsthead
+\toprule
+Estimator & Bias & SD(err) & RMSE & Cov.95 & Len.95 & $\overline{\mathrm{sd}}/\mathrm{SD}$ & $n$ \\
+\midrule
+
+\endhead
+\bottomrule
+\endlastfoot
+\multicolumn{8}{l}{\textit{baseline, degree $d=1$}} \\
+\quad JBES plain (structured) & 0.002 & 0.069 & 0.068 & 0.970 & 0.288 & 1.073 & 100 \\
+\quad JBES corrected (same-sample) & 0.001 & 0.107 & 0.107 & 0.980 & 0.450 & 1.072 & 100 \\
+\quad New raw structured & 0.008 & 0.069 & 0.069 & 0.960 & 0.286 & 1.059 & 100 \\
+\quad New current hybrid, logit & 0.004 & 0.109 & 0.109 & 0.940 & 0.451 & 1.058 & 100 \\
+\quad New current hybrid, logit clip .05 & 0.004 & 0.109 & 0.109 & 0.940 & 0.451 & 1.058 & 100 \\
+\quad New current hybrid, RF & 0.001 & 0.110 & 0.109 & 0.950 & 0.471 & 1.098 & 100 \\
+\quad New reference fold, logit & -0.001 & 0.122 & 0.122 & 0.920 & 0.456 & 0.954 & 100 \\
+\quad New reference fold, RF & -0.004 & 0.130 & 0.130 & 0.920 & 0.477 & 0.936 & 100 \\
+\quad New reference fold, intercept & 0.000 & 0.114 & 0.113 & 0.930 & 0.446 & 1.002 & 100 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{baseline, degree $d=2$}} \\
+\quad JBES plain (structured) & -0.001 & 0.073 & 0.072 & 0.960 & 0.302 & 1.061 & 100 \\
+\quad JBES corrected (same-sample) & -0.046 & 0.316 & 0.318 & 0.990 & 0.624 & 0.511 & 100 \\
+\quad New raw structured & 0.009 & 0.060 & 0.061 & 0.990 & 0.301 & 1.273 & 100 \\
+\quad New current hybrid, logit & 0.005 & 0.103 & 0.102 & 0.960 & 0.453 & 1.129 & 100 \\
+\quad New current hybrid, logit clip .05 & 0.005 & 0.103 & 0.102 & 0.960 & 0.453 & 1.129 & 100 \\
+\quad New current hybrid, RF & 0.003 & 0.100 & 0.099 & 0.960 & 0.476 & 1.223 & 100 \\
+\quad New reference fold, logit & 0.008 & 0.109 & 0.108 & 0.950 & 0.457 & 1.078 & 100 \\
+\quad New reference fold, RF & 0.007 & 0.114 & 0.114 & 0.950 & 0.479 & 1.073 & 100 \\
+\quad New reference fold, intercept & 0.006 & 0.103 & 0.102 & 0.960 & 0.446 & 1.111 & 100 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{serial, degree $d=1$}} \\
+\quad JBES plain (structured) & 0.003 & 0.067 & 0.067 & 0.900 & 0.235 & 0.896 & 100 \\
+\quad JBES corrected (same-sample) & 0.006 & 0.071 & 0.071 & 0.990 & 0.328 & 1.177 & 100 \\
+\quad New raw structured & 0.001 & 0.063 & 0.063 & 0.920 & 0.234 & 0.959 & 100 \\
+\quad New current hybrid, logit & 0.003 & 0.065 & 0.064 & 1.000 & 0.329 & 1.300 & 100 \\
+\quad New current hybrid, logit clip .05 & 0.003 & 0.065 & 0.064 & 1.000 & 0.329 & 1.300 & 100 \\
+\quad New current hybrid, RF & 0.002 & 0.067 & 0.067 & 1.000 & 0.341 & 1.289 & 100 \\
+\quad New reference fold, logit & 0.001 & 0.068 & 0.068 & 1.000 & 0.330 & 1.235 & 100 \\
+\quad New reference fold, RF & 0.002 & 0.072 & 0.072 & 0.980 & 0.343 & 1.211 & 100 \\
+\quad New reference fold, intercept & 0.002 & 0.066 & 0.065 & 1.000 & 0.324 & 1.262 & 100 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{serial, degree $d=2$}} \\
+\quad JBES plain (structured) & 0.000 & 0.071 & 0.071 & 0.910 & 0.249 & 0.898 & 100 \\
+\quad JBES corrected (same-sample) & -0.014 & 0.176 & 0.176 & 1.000 & 0.431 & 0.634 & 100 \\
+\quad New raw structured & 0.001 & 0.074 & 0.074 & 0.910 & 0.252 & 0.872 & 100 \\
+\quad New current hybrid, logit & -0.005 & 0.065 & 0.065 & 0.980 & 0.337 & 1.332 & 100 \\
+\quad New current hybrid, logit clip .05 & -0.005 & 0.065 & 0.065 & 0.980 & 0.335 & 1.322 & 100 \\
+\quad New current hybrid, RF & -0.006 & 0.064 & 0.064 & 0.990 & 0.346 & 1.391 & 100 \\
+\quad New reference fold, logit & -0.007 & 0.077 & 0.077 & 0.980 & 0.346 & 1.151 & 100 \\
+\quad New reference fold, RF & -0.004 & 0.074 & 0.074 & 0.990 & 0.347 & 1.201 & 100 \\
+\quad New reference fold, intercept & -0.006 & 0.062 & 0.062 & 0.990 & 0.327 & 1.337 & 100 \\
+\addlinespace
+\end{longtable}
+}

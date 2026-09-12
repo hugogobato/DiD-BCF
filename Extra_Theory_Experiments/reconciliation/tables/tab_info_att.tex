@@ -1,0 +1,39 @@
+{\footnotesize
+\begin{longtable}{llrrrrrr}
+\caption{ATT in the information-ablation family (100 replications per cell). ``reduced'' uses only the two groups and periods of the cell; ``pooled'' fits one effect surface with \texttt{effect\_by\_cohort=False}.}\label{tab:infoatt}\\
+\toprule
+Design & $d$ & $N$ & Variant & Bias & RMSE & Cov.95 & Len.95 \\
+\midrule
+\endfirsthead
+\toprule
+Design & $d$ & $N$ & Variant & Bias & RMSE & Cov.95 & Len.95 \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+baseline & 1 & 200 & full panel & 0.004 & 0.109 & 0.960 & 0.426 \\
+baseline & 1 & 200 & pooled & 0.006 & 0.106 & 0.970 & 0.427 \\
+baseline & 1 & 800 & full panel & 0.007 & 0.054 & 0.940 & 0.215 \\
+baseline & 1 & 800 & pooled & 0.007 & 0.054 & 0.940 & 0.215 \\
+baseline & 2 & 200 & full panel & -0.029 & 0.129 & 0.940 & 0.438 \\
+baseline & 2 & 200 & pooled & -0.030 & 0.129 & 0.940 & 0.440 \\
+baseline & 2 & 800 & full panel & 0.014 & 0.058 & 0.920 & 0.226 \\
+baseline & 2 & 800 & pooled & 0.015 & 0.057 & 0.930 & 0.227 \\
+serial & 1 & 200 & full panel & 0.016 & 0.129 & 0.850 & 0.360 \\
+serial & 1 & 200 & pooled & 0.017 & 0.132 & 0.850 & 0.361 \\
+serial & 1 & 800 & full panel & -0.005 & 0.062 & 0.880 & 0.183 \\
+serial & 1 & 800 & pooled & -0.004 & 0.062 & 0.830 & 0.182 \\
+serial & 2 & 200 & full panel & -0.009 & 0.146 & 0.770 & 0.382 \\
+serial & 2 & 200 & pooled & -0.008 & 0.149 & 0.770 & 0.383 \\
+serial & 2 & 800 & full panel & 0.008 & 0.072 & 0.820 & 0.196 \\
+serial & 2 & 800 & pooled & 0.009 & 0.071 & 0.850 & 0.196 \\
+staggered & 1 & 200 & full panel & -0.025 & 0.126 & 0.930 & 0.441 \\
+staggered & 1 & 200 & pooled & -0.224 & 0.266 & 0.550 & 0.476 \\
+staggered & 1 & 800 & full panel & 0.011 & 0.055 & 0.950 & 0.219 \\
+staggered & 1 & 800 & pooled & -0.203 & 0.213 & 0.130 & 0.240 \\
+staggered & 3 & 200 & full panel & -0.049 & 0.141 & 0.860 & 0.468 \\
+staggered & 3 & 200 & pooled & -0.248 & 0.290 & 0.580 & 0.503 \\
+staggered & 3 & 800 & full panel & -0.007 & 0.057 & 0.960 & 0.235 \\
+staggered & 3 & 800 & pooled & -0.217 & 0.225 & 0.050 & 0.255 \\
+\end{longtable}
+}

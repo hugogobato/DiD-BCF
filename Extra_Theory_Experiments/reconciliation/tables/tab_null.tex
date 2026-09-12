@@ -1,0 +1,26 @@
+{\footnotesize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{lrrrrrrrr}
+\caption{Sharp null ($\tau\equiv 0$): rejection rate of the two-sided 5\% posterior test. Published JBES run: 100 replications; new run: available replications.}\label{tab:null}\\
+\toprule
+Estimator & \multicolumn{4}{c}{$\mathrm{GATT}(4,4)$} & \multicolumn{4}{c}{ATT} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+ & $d1,N200$ & $d2,N200$ & $d1,N800$ & $d2,N800$ & $d1,N200$ & $d2,N200$ & $d1,N800$ & $d2,N800$ \\
+\midrule
+\endfirsthead
+\toprule
+Estimator & \multicolumn{4}{c}{$\mathrm{GATT}(4,4)$} & \multicolumn{4}{c}{ATT} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+ & $d1,N200$ & $d2,N200$ & $d1,N800$ & $d2,N800$ & $d1,N200$ & $d2,N200$ & $d1,N800$ & $d2,N800$ \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+JBES plain (structured) & 0.010 & 0.010 & -- & -- & 0.040 & 0.050 & -- & -- \\
+JBES corrected (same-sample) & 0.090 & 0.080 & -- & -- & 0.060 & 0.040 & -- & -- \\
+New raw structured & 0.040 & 0.060 & 0.020 & 0.010 & 0.030 & 0.070 & 0.080 & 0.030 \\
+New current hybrid, logit & 0.060 & 0.050 & 0.060 & 0.060 & 0.060 & 0.030 & 0.060 & 0.000 \\
+New current hybrid, RF & 0.070 & 0.040 & 0.040 & 0.030 & 0.070 & 0.030 & 0.060 & 0.020 \\
+New reference fold, logit & 0.060 & 0.060 & 0.090 & 0.070 & 0.100 & 0.100 & 0.070 & 0.050 \\
+New reference fold, RF & 0.050 & 0.060 & 0.090 & 0.090 & 0.090 & 0.080 & 0.090 & 0.040 \\
+\end{longtable}
+}

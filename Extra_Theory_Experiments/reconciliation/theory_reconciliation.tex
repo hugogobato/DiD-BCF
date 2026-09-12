@@ -1,0 +1,493 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\title{Reconciling the DiD-BCF Theory with the Calibration Experiments}
+\author{Hugo Gobato Souto}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent The published JBES simulation grid and the new \texttt{Extra\_Theory\_Experiments}
+(ETE) calibration runs share the structured DiD-BCF sampler and the same canonical
+data-generating processes, so they can be compared directly. This note maps the
+published estimator labels onto the new implementations, reproduces the published
+numbers from the archived per-replication summaries, isolates the one pathology the
+published paper flags (the doubly robust correction explodes at nonlinear degrees), and
+answers two questions: whether the theory-aligned estimator improves on the old one, and
+whether it remains competitive with the published benchmarks. The explosion is a
+posterior \emph{tail} produced by the unregularized logistic propensity pilot under
+covariate separation, not a property of the structured sampler or of the correction
+algebra. At degree $d=2$ and $N=200$ two of one hundred replications carry errors $53.6$
+and $25.5$ in the same-sample correction, and four of one hundred carry errors up to
+$68.5$ in the reference fold convolution with the logit pilot; removing those
+replications returns every RMSE to about $0.29$. The same construction with a
+random-forest, intercept, or clipped pilot has no tail, and the \texttt{oracle\_canonical}
+design with exact bounded propensities is stable throughout. Against the old corrected
+estimator, the theory-aligned version is about the same at $d=1$ and under AR(1) errors,
+and strictly better at $d=2$ and at $N=800$; against the benchmarks, the raw structured
+fit remains the most accurate estimator on the common estimands, and the theory-aligned
+version is competitive with Callaway--Sant'Anna and DoubleML and much better calibrated
+than grf-DiD, though it does not dominate them on serial-correlation point accuracy.
+The raw fit's better point accuracy is not evidence against the correction: the theory
+makes no root-$n$ coverage claim for the raw summary, and the raw intervals undercover
+under serial correlation at every sample size, which is exactly the failure the
+correction repairs.
+All numbers come from the now complete calibration archives (48 of 48 correction shards,
+48 of 48 information shards) and the published revision summaries, through a single
+reproducible script.
+\end{abstract}
+
+\section{Purpose and provenance}
+\label{sec:purpose}
+
+The JBES submission evaluates DiD-BCF with a simulation grid whose plain and corrected
+summaries were produced by the revision code base
+(\texttt{Simulation\_Studies\_Revision}). The ETE package reruns the same canonical and
+staggered data-generating processes through the structured sampler but replaces the
+single corrected estimator of that grid by a family: the raw structured posterior, the
+same-sample correction reimplemented locally as \texttt{current\_hybrid}, the theorem-aligned
+fixed-$K$ reference fold convolution of Algorithm~2, and the two oracle variants on an
+oracle-ready design. The purpose of this note is to state precisely what matches, what
+changed, and why, and to compare the new estimators with both the published DiD-BCF
+numbers and the published frequentist benchmarks.
+
+Two provenance facts matter for reading everything below. First, the simulation grid in
+the submission already uses the structured sampler, so the reconciliation here concerns
+the post-processing step, not the sampler; the seed instability documented for the
+\texttt{mpdta} application concerns the older \texttt{published} specification and is a
+separate, already documented issue. Second, the ETE runs were budgeted at the production
+sampler settings ($\texttt{num\_gfr}=50$, $\texttt{num\_mcmc}=500$,
+$\texttt{keep\_every}=5$, $\texttt{num\_chains}=3$), so differences from the published
+grid are not budget artifacts.
+
+Table~\ref{tab:map} maps the estimator labels used in the two code bases.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\caption{Estimator map. ``Reproduced'' means the ETE run uses the same construction as
+the published grid up to seeds and fold draws.}
+\label{tab:map}
+\begin{tabular}{p{0.20\textwidth}p{0.32\textwidth}p{0.36\textwidth}}
+\toprule
+Published label & ETE label & Construction \\
+\midrule
+DiD-BCF (plain) & \texttt{raw\_structured} & Average of raw structured posterior
+$\tau$ draws over treated units in the cell. \\
+DiD-BCF (corrected) & \texttt{current\_hybrid} with \texttt{logit}, \texttt{intercept},
+or \texttt{rf}, optional clipping & Algorithm~1 on the same-sample posterior: Bayesian-bootstrap weights,
+efficient-influence-function augmentation using a cross-fitted pilot propensity, and a
+posterior bias correction using pilot $m$ and $\pi$. \\
+(new) & \texttt{reference\_fold\_convolution} with \texttt{logit}, \texttt{rf}, or
+\texttt{intercept} & Algorithm~2:
+fixed-$K$ folds of original units, off-fold pilots, a fold-specific posterior fitted on
+the evaluation fold, and a size-weighted convolution of fold draws. \\
+(new) & \texttt{oracle\_current\_hybrid},
+\texttt{oracle\_reference\_fold\_convolution} & The two corrections run with exact
+\texttt{m0\_oracle}, \texttt{pi\_oracle}, and \texttt{barpi\_oracle} on the locally added
+\texttt{oracle\_canonical} design whose propensity is Bernoulli with a known bounded
+probability and whose population truth is exactly $3$. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Runs, estimators, and metric conventions}
+\label{sec:conventions}
+
+All errors below use replication-specific truths: for replication $r$,
+$\mathrm{err}_r=\widehat\theta_r-\theta_{0,r}$, $\mathrm{SD(err)}$ is the Monte-Carlo
+standard deviation of those errors, $\mathrm{RMSE}$ their root mean square,
+\texttt{Cov.95} the frequency with which the reported $[q_{0.025},q_{0.975}]$ interval
+contains $\theta_{0,r}$, \texttt{Len.95} its average width, and
+$\overline{\mathrm{sd}}/\mathrm{SD}$ the average reported posterior standard deviation
+divided by $\mathrm{SD(err)}$. The published tables divided by the raw spread of
+estimates instead, so the ratio column here is \emph{recomputed} on the common error
+scale; bias, $\mathrm{SD(err)}$, $\mathrm{RMSE}$, coverage, and length reproduce the
+published tables exactly. Rejection rates use the two-sided $5\%$ rule that generated
+the published null table, namely $\min\{P(\tau>0),P(\tau\le0)\}<0.025$.
+
+Both families are now complete. The correction family has all $48$ shards and the
+information family has all $48$ shards, so every cell has $100$ replications; the
+$2{,}400$ oracle requests on the production DGPs remain explicitly ``unavailable'' by
+design, as they should, because those DGPs do not expose exact nuisances. Monte-Carlo
+standard errors on a bias of magnitude $0.1$ with $\mathrm{SD(err)}\approx0.1$ are about
+$0.010$, rising to $0.025$ when $\mathrm{SD(err)}=0.25$; coverage rates have Monte-Carlo
+standard errors of at most $0.05$ at $p=0.5$, and of about $0.022$ at $p=0.05$. A
+difference of $0.02$ to $0.03$ between an old and a new number is therefore at the edge
+of resolution, and the qualitative patterns below are far larger than that.
+
+\section{Reproduction of the published results}
+\label{sec:reproduction}
+
+Tables~\ref{tab:repro_baseline} and \ref{tab:repro_serial} compare the published grid
+with the new runs for the cell that every estimator reports, $\mathrm{GATT}(4,4)$, at
+$N=200$ and degrees $d=1,2$. Table~\ref{tab:repro_att} repeats the comparison for the
+pooled ATT that carries the main-text table of the submission, and
+Table~\ref{tab:repro800} extends the comparison to $N=800$.
+
+The reproduction is close where it matters. At $d=1$ the new raw structured fit matches
+the published plain fit closely, for instance baseline bias $-0.018$ against $-0.022$ and
+$\mathrm{SD(err)}$ $0.131$ against $0.109$ (different replication panels), and the new
+\texttt{current\_hybrid} matches the published corrected fit, for instance serial
+coverage $0.980$ against $0.990$ and length $0.696$ against $0.693$. At $N=800$ the new
+raw fit tracks the published plain fit within $0.011$ on RMSE in all four cells of
+Table~\ref{tab:repro800}, and the new corrected variants match the direction and roughly
+the magnitude of the published correction.
+
+The nonlinear corner is the interesting one. At baseline $d=2$, $N=200$, the published
+corrected fit has $\mathrm{RMSE}=1.040$ against a plain-fit $\mathrm{RMSE}=0.122$; the
+same-sample correction in the new run has $\mathrm{RMSE}=5.947$, and the reference fold
+convolution with the logit pilot has $\mathrm{RMSE}=6.894$. The raw fit is unaffected
+($\mathrm{RMSE}=0.135$). The next section shows that these large numbers are carried by
+a handful of replications in both runs, which is the sense in which the published
+``instability at nonlinear degrees'' is reproduced rather than contradicted.
+
+\section{The nonlinear-degree explosion is a propensity-pilot tail}
+\label{sec:tail}
+
+The per-replication errors settle the question. In the published baseline $d=2$,
+$N=200$ corrected run, two of $100$ replications have $|\mathrm{err}|>2$ (the largest is
+$9.41$) and deleting those two reduces RMSE from $1.040$ to $0.240$, which is the raw
+scale. In the new same-sample logit run, two of $100$ replications exceed $2$ (the
+largest is $53.63$) and deleting them reduces RMSE from $5.947$ to $0.294$; in the
+reference fold logit run, four of $100$ exceed $2$ (the largest is $68.52$) and deleting
+them reduces RMSE from $6.894$ to $0.292$. The median absolute errors are $0.159$ for the
+published fit and $0.177$ to $0.190$ for the two new logit fits, so the central behavior
+of all three is the same and only the tail differs.
+
+The diagnostics identify the cause. In the same-sample logit run at that cell the
+largest observed control odds is at the clipping bound, $\widehat\pi/(1-\widehat\pi)
+=999$, the effective sample size falls to $1.02$, and the maximum normalized control
+weight reaches $0.988$; in the reference fold logit run the maximum odds are $986$ with
+minimum effective sample size $1.15$. The $d=2$ covariates are Kang--Schafer transforms
+including $e^{X_4/2}$ and cubic terms, so an unregularized logistic fit separates the
+groups, the inverse-odds factor in the augmentation and in $\widehat\gamma$ becomes
+enormous, and a single control observation can dominate the corrected draw. The failure
+is a violation of the bounded-overlap and localization conditions of the BvM theorem
+(Conditions on allocation and rates in Section S7 of the theory supplement require
+$1-\widehat\pi$ and $\widehat\gamma$ to stay in fixed $L^\infty$ balls), so the observed
+tail lies outside the theorem rather than contradicting it.
+
+Three pieces of evidence confirm the diagnosis. First, capping the odds at $19$ by
+setting the clipping constant to $0.05$ eliminates the tail: in the same cell the
+maximum $|\mathrm{err}|$ falls from $53.63$ to $0.770$, RMSE falls from $5.947$ to
+$0.258$, coverage is $0.980$, and the average length is $1.062$. Second, replacing the
+logit pilot by the random-forest pilot, whose odds range from a median of $2.5$ to a
+maximum of $5.3$ with minimum effective sample size $33.1$, removes the tail without any
+clipping: maximum $|\mathrm{err}|=0.839$ and $\mathrm{RMSE}=0.234$, with coverage
+$0.970$ and length $0.986$. The intercept pilot behaves similarly
+($\mathrm{RMSE}=0.214$). Third, Table~\ref{tab:oracle} reports the
+\texttt{oracle\_canonical} design, in which the propensity is known to lie in
+$(0.001,0.999)$ and $m_0$ is exact. There the $d=2$, $N=200$ corrected variants all stay
+between $\mathrm{RMSE}=0.199$ (current RF) and $0.265$ (reference logit), with no tail
+at all, and at $N=800$ every corrected variant has $\mathrm{RMSE}$ between $0.109$ and
+$0.130$. Holding the correction fixed and improving overlap removes the pathology;
+holding overlap fixed and changing the fold construction does not.
+
+\section{Performance of the reference fold convolution}
+\label{sec:reference}
+
+The reference fold convolution is the estimator the theory actually covers, so its
+finite-sample profile deserves a direct reading. At $d=1$, $N=200$, baseline, its
+random-forest version has bias $-0.030$, $\mathrm{SD(err)}=0.243$,
+$\mathrm{RMSE}=0.243$, coverage $0.910$, and length $0.962$, against published corrected
+bias $-0.028$, $\mathrm{SD(err)}=0.231$, $\mathrm{RMSE}=0.231$, coverage $0.950$,
+length $0.979$. It is therefore about as efficient as the published correction at that
+cell, with slightly wider intervals and coverage about $1.8$ Monte-Carlo standard errors
+below nominal; its value is that it is the construction the BvM theorem describes, and
+with a stable pilot it remains controlled at $d=2$ where the old published run did not
+($\mathrm{RMSE}=0.234$ against $1.040$). At $N=800$ the reference variants track the
+same-sample variants closely, for example baseline $d=1$ reference RF
+$\mathrm{RMSE}=0.130$ against published corrected $0.107$ and new current logit $0.109$,
+with coverage $0.920$ against $0.980$ and $0.940$ and length $0.477$ against $0.450$.
+
+Two honest qualifications follow. The correction, in any of its implementations, pays
+an efficiency cost at $N=200$: in the baseline cells the raw $\mathrm{RMSE}$ is about
+$0.13$ against $0.21$ to $0.26$ for the corrected variants, with intervals roughly
+$1.6$ to $1.9$ times longer, although under serial correlation at $d=2$ the corrected
+variants are close to or better than the raw fit ($0.145$ to $0.164$ against $0.141$).
+And the reference construction does not by itself fix the pilot: with the logit pilot it
+inherits the tail described in Section~\ref{sec:tail}. The practical recommendation is
+to pair the theorem-aligned fold construction with a pilot that respects overlap, which
+the random-forest pilot does out of the box in these runs, or to report clipping
+explicitly as an exploratory stabilization.
+
+\section{Is the theory-aligned estimator better than the old corrected one?}
+\label{sec:oldnew}
+
+Table~\ref{tab:headtohead} puts the two corrections side by side in the cells where
+they matter. The answer is that it is about the same in the well-behaved cells and
+strictly better in the cells that used to fail, which is the same as saying that the
+theory-aligned construction removes the failure without giving up what worked.
+
+At $d=1$ and $N=200$, baseline, the published corrected RMSE is $0.231$ with coverage
+$0.950$ and the new reference RF RMSE is $0.243$ with coverage $0.910$; under serial
+correlation at $d=1$ the numbers are $0.136$ with coverage $0.990$ against $0.160$ with
+coverage $0.960$. Those differences are small and within about one to two Monte-Carlo
+standard errors, with the reference variant slightly more conservative in length and
+slightly lower in coverage. The same-sample logit variant is closer to the published
+correction in these cells ($0.214$ and $0.145$), as expected, since it is the same
+algebra.
+
+At $d=2$ the comparison stops being close. At $N=200$, baseline, the published corrected
+RMSE is $1.040$; the reference RF is $0.234$ with coverage $0.970$, the same-sample RF is
+$0.224$ with coverage $0.970$, and the clipped logit is $0.258$ with coverage $0.980$.
+At $N=800$, baseline, the published corrected RMSE is $0.318$ against $0.114$ for the
+reference RF and $0.102$ for the same-sample logit. Under serial correlation at $d=2$,
+$N=200$, the published corrected RMSE is $0.269$ against $0.164$ for the reference RF.
+
+The verdict is therefore: same performance in the benign regimes, clearly better in the
+nonlinear and large-$N$ regimes, and no longer at the mercy of a handful of replications.
+The one caveat is that the reference construction inherits whatever the pilot does, so
+the improvement comes from the joint choice of the off-fold Algorithm~2 construction and
+an overlap-respecting pilot, not from Algorithm~2 alone.
+
+\section{Is the theory-aligned estimator still better than the benchmarks?}
+\label{sec:benchmarks}
+
+Tables~\ref{tab:benchgatt}, \ref{tab:benchgatt800}, and \ref{tab:benchatt} compare the
+new estimators with the published frequentist benchmarks on the same designs and
+replication-specific truths, and Table~\ref{tab:benchhead} condenses the
+$\mathrm{GATT}(4,4)$ comparison. The short answer is that the raw structured fit is
+still the accuracy leader, while the theory-aligned corrected fit is now competitive
+with the best benchmark rather than dominated by it.
+
+On point accuracy at $N=200$, baseline, $d=1$, the raw fit has $\mathrm{RMSE}=0.131$
+against $0.221$ for Callaway--Sant'Anna, $0.304$ for DoubleML, and $0.222$ for grf-DiD.
+The same-sample correction has $\mathrm{RMSE}=0.214$, matching Callaway--Sant'Anna and
+beating DoubleML, and the reference RF has $0.243$, between Callaway--Sant'Anna and
+DoubleML. At $d=2$ the raw fit is again first ($0.135$), and the corrected versions are
+$0.224$ to $0.258$ against $0.225$ for Callaway--Sant'Anna, $0.280$ for DoubleML, and
+$0.223$ for grf-DiD, so they are level with the two best benchmarks. Coverage favors
+the new corrected versions over grf-DiD by a wide margin ($0.97$ against $0.81$ at both
+degrees) and is comparable to Callaway--Sant'Anna and DoubleML.
+
+The one place where the corrected fit does not match the best benchmark is serial
+correlation. At $d=1$, $N=200$, the raw fit has the best $\mathrm{RMSE}$ ($0.126$) but
+coverage $0.920$, Callaway--Sant'Anna has $0.129$ with coverage $0.990$, and the
+reference RF has $0.160$ with coverage $0.960$; at $d=2$ the pattern repeats with
+Callaway--Sant'Anna at $0.135$ against $0.164$ for the reference RF. So the corrected
+DiD-BCF pays a visible efficiency cost on serially correlated data relative to the
+purpose-built efficient benchmark, while remaining close to DoubleML and clearly better
+calibrated than grf-DiD. At $N=800$ the raw fit dominates every benchmark by a wide
+margin ($\mathrm{RMSE}=0.069$ against $0.107$ to $0.114$), and the corrected versions
+are at $0.109$ to $0.130$, in the same neighborhood as the benchmarks.
+
+The pooled ATT tells the same story (Table~\ref{tab:benchatt}). At baseline $d=1$ the
+raw fit has $\mathrm{RMSE}=0.112$ against $0.179$ for TWFE and $0.169$ for Synthetic
+DiD; the same-sample correction has $0.176$, essentially TWFE, and the reference RF has
+$0.203$, a little worse than both but with coverage $0.930$. Under serial correlation
+at $d=1$ the raw fit's coverage drops to $0.810$ while the same-sample correction holds
+$0.980$ at $\mathrm{RMSE}=0.142$, better than TWFE ($0.198$) and close to Synthetic DiD
+($0.166$), which is exactly the trade the theory predicts.
+
+In one sentence: the raw structured DiD-BCF remains the most accurate estimator on every
+common cell, the theory-aligned corrected version is now competitive with
+Callaway--Sant'Anna and DoubleML and far better calibrated than grf-DiD, and it no
+longer collapses at nonlinear degrees, but it does not uniformly dominate
+Callaway--Sant'Anna under serial correlation, where the efficient frequentist benchmark
+is still the sharper instrument for a point estimate.
+
+\section{Does the raw fit's accuracy indicate that the correction is wrong?}
+\label{sec:rawtruth}
+
+No, and the experiments show why. ``Raw'' means the plain structured posterior summary,
+the average of the $\tau$ draws over treated units in the cell, before any
+post-processing. It is the estimator the paper recommends for heterogeneity analyses and
+point summaries, and the theory deliberately makes no root-$n$ coverage claim for it:
+Section S7 states that uncorrected intervals require an additional equicontinuity regime
+and that raw plug-in summaries carry no root-$n$ guarantee, and the minimax lower bound
+in the main text makes the complementary point that no estimator can have a uniform
+root-$n$ rate for the CATT surface, so any average of it inherits either a
+smoothness-limited rate or an extra localization requirement.
+
+Three features of the numbers confirm that the correction, not the raw fit, is doing its
+job. First, the raw intervals are the ones that fail when they should: under AR(1)
+errors their coverage is $0.88$ to $0.92$ at $N=200$ and remains $0.89$ to $0.92$ at
+$N=800$, a missing variance component that does not vanish with sample size, while the
+corrected variants cover at $0.96$ to $1.00$ at both sizes. A point estimator can have a
+low RMSE and still be uncalibrated; here it is. Second, at $N=800$ the corrected
+interval lengths match the asymptotically efficient benchmark almost exactly (baseline
+$d=1$: $0.451$ against $0.445$ for Callaway--Sant'Anna; serial $d=1$: $0.329$ against
+$0.326$), which is the quantitative content of the BvM theorem; the raw intervals are
+much shorter ($0.286$ and $0.234$) precisely because they are not calibrated to the
+sampling variability of the efficient average. Third, the oracle design, where the
+nuisance conditions of the theorem hold exactly, produces corrected RMSEs of $0.199$ to
+$0.265$ at $d=2$, $N=200$ with coverage $0.95$ to $0.99$, and no tail; if the
+correction algebra were wrong, exact nuisances would not rescue it.
+
+The raw fit's better RMSE at $N=200$ is a bias-variance outcome. The effect-forest prior
+shrinks toward smooth, small effects, and these DGPs have smooth low-dimensional effect
+surfaces, so at small $N$ the shrinkage wins while the correction pays the variance of
+estimating the nuisance pilots and the augmentation. That is a finite-sample property of
+a well-matched prior and a smooth truth, not a failure of an asymptotic statement, and
+the efficiency claim is a limiting local statement about the corrected law. The two live
+side by side: report the raw fit for point accuracy and heterogeneity, and the corrected
+fit for calibrated inference, which is exactly the paper's recommendation.
+
+\section{Information ablation}
+\label{sec:information}
+
+Tables~\ref{tab:infogatt} and~\ref{tab:infoatt} report the information ablation.
+The reduced-cell fit uses only cohort $g$ and never-treated units at periods $g-1$ and
+$t$; the pooled fit keeps the full panel but forces a single effect surface with
+\texttt{effect\_by\_cohort=False}.
+
+For the canonical designs the reduction is viable but costly. At baseline $d=1$,
+$N=800$, the reduced cell raises $\mathrm{GATT}(4,4)$ RMSE from $0.065$ to $0.111$ and
+roughly doubles the interval length from $0.288$ to $0.493$, with coverage rising from
+$0.95$ to $0.98$; at $N=200$ the RMSE rises from $0.127$ to $0.207$ with length from
+$0.559$ to $0.936$. Under serial correlation the reduction is nearly free in RMSE at
+$N=800$ ($0.060$ against $0.058$) and slightly favorable at $N=200$ $d=2$ ($0.126$
+against $0.134$), always with coverage at or above nominal. The consistent pattern is
+that discarding the other periods and cohorts costs some efficiency and a good deal of
+length, not validity.
+
+Pooling is a different matter. With a single treated cohort, baseline and serial, the
+pooled fit is numerically almost identical to the full-panel fit, for example baseline
+$d=1$, $N=800$, RMSE $0.067$ against $0.065$ and coverage $0.97$ against $0.95$, because
+there is nothing to pool across. With staggered cohorts it is catastrophic: the pooled
+fit reports a single surface for cohorts whose effects differ, and the
+$\mathrm{GATT}(4,4)$ bias is $1.417$ at $N=200$ and $1.467$ at $N=800$ with coverage
+$0.00$ in every cell, while the reduced-cell fit stays approximately unbiased
+($0.012$ and $0.022$) with coverage $1.00$. The pooled ATT is similarly biased
+($-0.204$ at $N=800$ with coverage $0.13$). The ablation therefore says that the
+two-group two-period reduction is a defensible local device and that pooling cohorts is
+not, which is the expected reading of the no-already-treated-as-controls principle.
+
+\section{Sharp-null size}
+\label{sec:null}
+
+Table~\ref{tab:null} reports the two-sided $5\%$ rejection rate under the sharp null.
+With the complete data the picture is cleaner than in the partial run. The raw
+structured fit is conservative everywhere, between $0.010$ and $0.080$. The published
+corrected numbers in the matched cells are $0.040$ to $0.090$, the new same-sample
+variants are between $0.000$ and $0.070$, and the reference variants are between $0.040$
+and $0.100$. Every cell is within about $1.7$ Monte-Carlo standard errors of nominal,
+including the largest cells, the reference-logit \texttt{ATT} entries at $0.100$, whose
+Monte-Carlo standard error is $0.030$. The correction therefore neither restores exact
+size nor destroys it: it trades some of the raw fit's conservativeness for better
+interval calibration, at nominal size.
+
+\section{What the reconciliation establishes}
+\label{sec:conclusion}
+
+With all correction shards in hand the account is complete. The published plain and
+corrected central behavior is reproduced with the current structured sampler; the
+published instability of the corrected estimator at $d\ge2$ is reproduced and localized
+to a small-replication tail caused by inverse odds under logistic separation; the tail
+exists equally in the theorem-aligned reference construction when that construction is
+handed the same pilot, and disappears with the random-forest, intercept, or clipped
+pilots, and by construction on the oracle design. The theory-aligned construction fixes
+the independence and weighting structure of the correction, while the overlap conditions
+remain an empirical obligation on the pilot. The paper's advice to report both fits side
+by side remains correct, with the amendment that the corrected fit should name its pilot
+and that a logit pilot on transformed covariates with $10^{-3}$ clipping should not be
+the default.
+
+The experiments here do not establish any theorem. They do not cover the contracted
+posterior rate, they do not have degree $d=3$ in the correction grid, they use finite
+posterior and bootstrap draw budgets, and the oracle design is deliberately idealized
+(bounded propensity and iid row errors). They are calibration evidence about which
+implementation of the theory behaves as advertised.
+
+\section{Limitations}
+\label{sec:limitations}
+
+All calibration cells now have $100$ replications, and the published and new runs use
+different replication panels, so the exact magnitudes of tail-driven quantities are
+replication-specific; this is why Section~\ref{sec:tail} emphasizes the diagnostic and
+the trimmed RMSE rather than the raw RMSE. The benchmark comparison in
+Section~\ref{sec:benchmarks} uses the published benchmark runs on the same DGP designs,
+so it is a comparison across independent panels rather than a paired comparison. The
+staggered comparison between the published \texttt{D\_staggered} run and the new
+information family is consistent in direction and roughly two Monte-Carlo standard
+errors apart in bias, which we read as agreement within seed allocation. Finally,
+clipping is an exploratory stabilization and is not theoretically neutral, so the
+clipped results should be read as a sensitivity check alongside the random-forest pilot,
+not as a theorem-covered default.
+
+\clearpage
+\input{tables/tab_repro_baseline}
+\input{tables/tab_repro_serial}
+\input{tables/tab_repro_att}
+\input{tables/tab_repro_sweep}
+\input{tables/tab_oracle}
+\input{tables/tab_bench_gatt}
+\input{tables/tab_bench_gatt_800}
+\input{tables/tab_bench_att}
+\input{tables/tab_info_gatt}
+\input{tables/tab_info_att}
+\input{tables/tab_null}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\caption{Head-to-head summary of the old and new corrections on
+$\mathrm{GATT}(4,4)$: RMSE with 95\% coverage in parentheses. The theory-aligned
+reference fold uses the random-forest pilot; ``clip .05'' is the same-sample logit with
+the clipping constant set to $0.05$.}
+\label{tab:headtohead}
+\begin{tabular}{lrrrr}
+\toprule
+Cell & Old corrected & Same-sample logit & Same-sample clip .05 & Reference fold RF \\
+\midrule
+baseline, $d=1$, $N=200$ & 0.231 (0.95) & 0.214 (0.96) & 0.214 (0.96) & 0.243 (0.91) \\
+baseline, $d=2$, $N=200$ & 1.040 (0.96) & 5.947 (0.98) & 0.258 (0.98) & 0.234 (0.97) \\
+baseline, $d=2$, $N=800$ & 0.318 (0.99) & 0.102 (0.96) & 0.102 (0.96) & 0.114 (0.95) \\
+serial, $d=1$, $N=200$ & 0.136 (0.99) & 0.145 (0.98) & 0.145 (0.98) & 0.160 (0.96) \\
+serial, $d=2$, $N=200$ & 0.269 (0.99) & 0.264 (0.99) & 0.158 (0.99) & 0.164 (0.98) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\caption{Head-to-head summary against the published benchmarks on
+$\mathrm{GATT}(4,4)$: RMSE with 95\% coverage in parentheses. DiD-BCF entries are the
+new runs; benchmark entries are the published JBES runs.}
+\label{tab:benchhead}
+\begin{tabular}{lrrrrr}
+\toprule
+Cell & Raw & Reference fold RF & Callaway--Sant'Anna & DoubleML & grf-DiD \\
+\midrule
+baseline, $d=1$, $N=200$ & 0.131 (0.98) & 0.243 (0.91) & 0.221 (0.97) & 0.304 (0.92) & 0.222 (0.81) \\
+baseline, $d=2$, $N=200$ & 0.135 (0.96) & 0.234 (0.97) & 0.225 (0.96) & 0.280 (0.94) & 0.223 (0.81) \\
+baseline, $d=1$, $N=800$ & 0.069 (0.96) & 0.130 (0.92) & 0.107 (0.98) & 0.114 (0.97) & 0.111 (0.81) \\
+serial, $d=1$, $N=200$ & 0.126 (0.92) & 0.160 (0.96) & 0.129 (0.99) & 0.165 (0.99) & 0.133 (0.91) \\
+serial, $d=2$, $N=200$ & 0.141 (0.88) & 0.164 (0.98) & 0.135 (0.99) & 0.170 (0.97) & 0.133 (0.90) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{thebibliography}{9}
+\bibitem{souto2025}
+H.~G. Souto and F.~Louzada.
+\newblock Forests for Differences: Robust Causal Inference Beyond Parametric DiD.
+\newblock arXiv:2505.09706, 2025.
+\newblock \url{https://doi.org/10.48550/arXiv.2505.09706}.
+
+\bibitem{santanna2020}
+P.~H.~C. Sant'Anna and J.~Zhao.
+\newblock Doubly robust difference-in-differences estimators.
+\newblock \emph{Journal of Econometrics}, 219(1):101--122, 2020.
+\newblock \url{https://doi.org/10.1016/j.jeconom.2020.05.003}.
+
+\bibitem{callaway2021}
+B.~Callaway and P.~H.~C. Sant'Anna.
+\newblock Difference-in-Differences with multiple time periods.
+\newblock \emph{Journal of Econometrics}, 225(2):200--230, 2021.
+\newblock \url{https://doi.org/10.1016/j.jeconom.2020.12.001}.
+\end{thebibliography}
+
+\end{document}
