@@ -134,11 +134,13 @@ for a pilot. Sharding is deterministic after sorting by design, degree, N,
 and replication, with every method in one bundle on the same shard. There are
 48 generated compute notebooks per family, plus one lightweight validation
 notebook, three one-replication worst-case real-BCF pilot notebooks, and one
-controlled-mechanics notebook (101 notebooks total). Each compute notebook
-accepts `ETE_N_WAVES` and `ETE_WAVE_ID`; the same 48 notebooks can be reused
-for successive waves without overwriting outputs, because wave identifiers are
-included in output directories, archives, manifests, and provenance. Pilots
-remain fixed at wave 0 of 1.
+controlled-mechanics notebook (101 notebooks total). They are committed under
+`Simulation_Studies_Revision/DiD_BCF/Theory_Calibration/`. Each compute
+notebook accepts `ETE_N_WAVES` and `ETE_WAVE_ID`; the same 48 notebooks can be
+reused for successive waves without overwriting outputs, because wave
+identifiers are included in output directories, archives, manifests, and
+provenance. Replication counts follow each design's config value; `ETE_REPS`
+overrides them for a pilot. Pilots remain fixed at wave 0 of 1.
 The correction pilot selects exactly serial, degree 2, N=800,
 rep 0, with raw, current-logit, and reference-logit estimators. The information
 pilot selects exactly staggered, degree 3, N=800, rep 0, with full-panel,
@@ -153,6 +155,40 @@ wave-shard has a conservative predicted runtime below nine hours. The
 approximate cached fit load per notebook is 100/n_waves for correction and
 about 192/n_waves for information. The 48 notebooks are reused for every wave,
 minimizing uploads.
+
+configs/correction_completion.json is the completion family for the cells that
+still used the same-sample correction. It pairs `raw_structured` with the
+reference `reference_fold_convolution_rf` on 21 designs: baseline/null/serial at
+degree 3, strong-confounder, observable- and both-selection, staggered, the
+baseline and serial sample-size sweeps that the correction family does not
+cover (degrees 1-2 at N in {50, 100, 400}, degree 3 at N in {50, 100, 400, 800};
+the existing family already has degrees 1-2 at N=200 and 800), and the ten
+pre-trend designs at degrees 1 and 3, N=200, 200 replications. Each design
+declares its exact `dgp_params` overrides in the JSON, which the manifest
+carries per task and the runner passes to `generate_canonical_did` /
+`generate_staggered_did`; old families declare none, so their seeds and config
+hashes are unchanged. The family expands to 15,200 task rows (7,600 paired
+bundles) and generates 48 shard notebooks under
+`Simulation_Studies_Revision/DiD_BCF/Correction_Completion/`. A completion
+notebook needs roughly 84 sampler fits per wave-shard at six waves or 63 at
+eight waves (about 24,000 fits in total: three per canonical bundle, seven per
+staggered bundle, and three per pre-trend bundle). Recommended `ETE_N_WAVES` is
+6 to 8 after the pilot gate; at five minutes per N=200 fit that is 5 to 7 hours
+per wave-shard, so the completion notebooks must not be launched until a pilot
+wave has been timed. Null and pre-trend designs are the only rows at 200
+replications; everything else follows the family default of 100.
+
+The pre-trend arm is a diagnostic. For `PT_*` designs the raw estimator runs the
+published unconstrained `fit_pretrend` diagnostic and reproduces its point
+summaries, while the reference estimator (`pretrend_fold.py`) fits the same
+unconstrained model once per fold, pools the lead contrasts `Delta(k)` with
+fixed unit-count weights, and forms the slope with the same least-squares
+combination as the raw slope rule. That fold aggregation has no
+efficient-influence-function correction and is therefore explicitly NOT covered
+by the fixed-fold convolution theorem; only the post-treatment `GATT`/`ES`/`ATT`
+reference cells are. The `any`/`any_bonf`/`joint` decision rows of the
+production diagnostic are not carried into this family; the per-replication
+CSVs retain the posterior intervals needed to reconstruct detection rates.
 
 Approximate wall time is 1 to 5 minutes per small N=200 structured fit and 5 to
 20 minutes per N=800 fit with a tiny sampler budget; production budgets can be
@@ -206,8 +242,12 @@ only the single zip is downloaded. The exact fallback used by each notebook is:
 Locally, set PYTHONPATH=Simulation_Studies_Revision/Theory_Calibration/src
 and run the smoke path from
 Simulation_Studies_Revision/Theory_Calibration/scripts/run_smoke.py. The
-notebooks do not rely on files outside the clone. After downloads, aggregate
-locally with
+completion family gets its own full smoke check with
+`python Simulation_Studies_Revision/Theory_Calibration/scripts/run_smoke.py
+--family correction_completion`, which exercises every design and estimator
+(including the pre-trend arms) with one replication, no stochtree, and then
+aggregates the resulting checkpoints. The notebooks do not rely on files
+outside the clone. After downloads, aggregate locally with
 python Simulation_Studies_Revision/Theory_Calibration/scripts/aggregate_archives.py
 <download-directory> --output-dir aggregated --n-shards 48. The aggregator
 checks archive paths, manifests, config hashes, shard and wave coverage,
@@ -219,7 +259,9 @@ estimates; explicit oracle-unavailable rows are retained as unavailable rather
 than treated as failed estimates. Delete this folder to remove every added
 package, notebook, result, and checkpoint.
 
-Aggregate correction and information archives separately (use separate download
-directories or `--family`), because the two families can legitimately use
-different wave counts and config hashes. Do not mix pilot or controlled-mechanics
-archives into a 48-shard aggregation directory.
+Aggregate correction, information and completion archives separately (use
+separate download directories or `--family`), because the families can
+legitimately use different wave counts and config hashes. For
+`--family correction_completion` the CLI defaults its output to
+`Theory_Calibration/results/aggregated_completion/`. Do not mix pilot or
+controlled-mechanics archives into a 48-shard aggregation directory.

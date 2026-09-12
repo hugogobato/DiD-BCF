@@ -10,7 +10,8 @@ import zipfile
 
 import pandas as pd
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+HERE = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(HERE / "src"))
 from extra_theory_experiments.metrics import summarise_replications
 
 
@@ -231,13 +232,21 @@ def aggregate_archives(inputs, *, output_dir="aggregated", family=None,
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("inputs", nargs="+", help="downloaded zip files or directories")
-    parser.add_argument("--output-dir", default="aggregated")
-    parser.add_argument("--family", default=None)
+    parser.add_argument("--output-dir", default=None,
+                        help="default: 'aggregated', or the family results folder "
+                             "for correction_completion")
+    parser.add_argument("--family", default=None,
+                        choices=["correction_audit", "information_ablation",
+                                 "correction_completion"])
     parser.add_argument("--n-shards", type=int, default=48)
     parser.add_argument("--n-waves", type=int, default=None,
                         help="expected waves; inferred from wave-aware manifests")
     args = parser.parse_args()
-    report, _, _ = aggregate_archives(args.inputs, output_dir=args.output_dir,
+    output_dir = args.output_dir
+    if output_dir is None:
+        output_dir = (str(HERE / "results" / "aggregated_completion")
+                      if args.family == "correction_completion" else "aggregated")
+    report, _, _ = aggregate_archives(args.inputs, output_dir=output_dir,
                                        family=args.family, n_shards=args.n_shards,
                                        n_waves=args.n_waves)
     print(json.dumps(report, indent=2))

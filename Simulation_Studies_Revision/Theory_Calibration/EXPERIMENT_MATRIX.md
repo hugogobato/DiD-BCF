@@ -4,9 +4,10 @@ The matrix is defined by the JSON configs, so this table records expected fit
 multipliers and the scheduling assumptions.
 
 | family | grid | estimator classes | approximate fits per replication | shard plan |
-|---|---|---|---:|---|
+|---|---|---|---|---:|---|
 | correction audit | 4 designs x 2 degrees x 2 N | 1 raw, 5 current pilots, 3 reference propensity variants, 2 oracle variants (oracle_canonical available; production DGP rows unavailable) | 3 unique sampler fits after cache (1 full + 2 cohort-fold fits), with oracle rows using the same cached fits | 48 shards per family |
 | information ablation | 3 designs x selected degrees x 2 N | full (1), pooled (1), reduced (4 cells for canonical, 9 for staggered) | 6 to 11 fits | 48 shards per family |
+| correction completion | 21 designs x selected degrees x N=200 (sweeps vary N); degrees 1-3 | raw (1) plus reference per cohort-fold (2 canonical, 6 staggered); pre-trend designs use the unconstrained diagnostic (1 raw + 2 fold fits) | 3 per canonical bundle, 7 per staggered bundle | 48 shards; 6 to 8 waves advised |
 
 The correction audit has 17,600 attempted task rows: 800 oracle-canonical oracle
 rows run, while 2,400 oracle rows for the production DGPs are explicitly
@@ -23,10 +24,23 @@ not multiplied by the number of calendar cells.
 The 48 compute notebooks are reusable across waves. After the timing pilots,
 choose `n_waves` separately by family so each wave-shard has a conservative
 predicted runtime below nine hours. The approximate cached fit load per
-notebook is 100/n_waves for correction and about 192/n_waves for information.
-Set `ETE_N_WAVES` and `ETE_WAVE_ID` in a notebook, and aggregate all waves
-together. Bundle allocation is deterministic over the wave-shard Cartesian
-product, so no replication is split across methods or duplicated across waves.
+notebook is 100/n_waves for correction, about 192/n_waves for information, and
+about 500/n_waves for completion (the completion family is the largest: 7,600
+paired bundles and roughly 24,000 sampler fits, so it needs its own wave count,
+advised at six to eight). Set `ETE_N_WAVES` and `ETE_WAVE_ID` in a notebook, and
+aggregate all waves together. Bundle allocation is deterministic over the
+wave-shard Cartesian product, so no replication is split across methods or
+duplicated across waves.
+
+Completion designs carry their exact DGP overrides in the JSON `dgp_params`
+field; the manifest records them per task and the runner applies them to
+`generate_canonical_did` / `generate_staggered_did`. Legacy families declare no
+overrides, which keeps their seeds, config hashes, and shard allocation
+unchanged. For the ten `PT_*` designs the raw arm is the published unconstrained
+pre-trend diagnostic and the reference arm is the fold-pooled diagnostic
+aggregation implemented in `src/extra_theory_experiments/pretrend_fold.py`. The
+fold-pooled lead aggregation is exploratory and is NOT covered by the fixed-fold
+convolution theorem, which applies only to the post-treatment cells.
 
 Run the three representative worst-case pilots with one replication and tiny
 sampler settings such as num_gfr=2, num_mcmc=8, keep_every=2, num_chains=1.
@@ -39,7 +53,13 @@ cached sampler fits. Verify that every requested method has a row or an
 explicit unavailable record, that no unit appears in multiple folds, and that
 propensity diagnostics expose raw odds, clipped odds, ESS, normalized weights,
 and fold sizes. Compare posterior median and mean, and inspect the
-checkpoint/resume result before scaling.
+checkpoint/resume result before scaling. The completion family has its own cheap
+pre-flight check: `python scripts/run_smoke.py --family correction_completion`
+runs one no-stochtree replication of every design and estimator (including the
+pre-trend arms) and aggregates the checkpoints. Before a production completion
+wave, time a one-replication `PT_*` and a one-replication `staggered` shard with
+the tiny budget, because the pre-trend arm fits the unconstrained model once per
+fold rather than the constrained production model.
 
 Use one worker for memory-heavy structured/reference fits. At most two workers
 are allowed on a Colab session with approximately 12 GB RAM. A tiny N=200 fit

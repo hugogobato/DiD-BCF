@@ -17,6 +17,7 @@ if str(_REPO_ROOT) not in sys.path:
 
 from .correction import current_hybrid_correction
 from .manifest import ExperimentTask, deterministic_seed, manifest_frame
+from .pretrend_fold import raw_pretrend_estimands, reference_fold_pretrend
 from .reference import reference_fold_convolution
 from .ablations import run_information_ablation
 
@@ -31,14 +32,19 @@ def _dgp(task: ExperimentTask):
             generate_canonical_did, generate_staggered_did)
     except ImportError:
         from did_bcf_revision.dgps import generate_canonical_did, generate_staggered_did
+    overrides = dict(task.dgp_params or {})
     if task.design == "staggered":
         return generate_staggered_did(seed=task.seed, n_units=task.N,
-                                      linearity_degree=task.degree)
+                                      linearity_degree=task.degree, **overrides)
     kwargs = {"n_units": task.N, "linearity_degree": task.degree}
-    if task.design == "serial":
-        kwargs["ar1_rho"] = .6
-    elif task.design == "null":
-        kwargs.update(base_effect=0.0, effect_type="homogeneous")
+    if not overrides:
+        # Legacy families predate per-design dgp_params; keep their hard-coded
+        # overrides byte-identical.
+        if task.design == "serial":
+            kwargs["ar1_rho"] = .6
+        elif task.design == "null":
+            kwargs.update(base_effect=0.0, effect_type="homogeneous")
+    kwargs.update(overrides)
     return generate_canonical_did(seed=task.seed, **kwargs)
 
 
@@ -58,6 +64,16 @@ class _SmokeFit:
         self.n_draws = S
         self.spec = "smoke"
         self.bcf_params = {"smoke": True}
+        self.ref_k = -1
+
+
+def _pretrend_fit(panel, *, bcf_params=None, seed=0, **_kwargs):
+    """Production unconstrained diagnostic fit used by the PT designs."""
+    try:
+        from Simulation_Studies_Revision.did_bcf_revision.pretrend import fit_pretrend
+    except ImportError:
+        from did_bcf_revision.pretrend import fit_pretrend
+    return fit_pretrend(panel, bcf_params=bcf_params, seed=int(seed))
 
 
 def _production_fit(df, *, bcf_params=None, seed=0, spec="structured",
@@ -147,7 +163,22 @@ def run_task(task: ExperimentTask, *, bcf_params=None, smoke=False, K=2,
         if key not in fit_cache:
             fit_cache[key] = base_factory(panel, seed=seed, **kwargs)
         return fit_cache[key]
-    if task.estimator == "raw_structured":
+    if task.design.startswith("PT_"):
+        # The pre-trend designs replace the constrained production fit with the
+        # unconstrained diagnostic; the raw arm reproduces the published raw
+        # diagnostic, the reference arm is the exploratory fold aggregation.
+        pretrend_factory = _smoke_factory if smoke else _pretrend_fit
+        if task.estimator == "raw_structured":
+            fit = pretrend_factory(df, bcf_params=bcf_params, seed=task.seed)
+            result = raw_pretrend_estimands(fit)
+        elif task.estimator.startswith("reference_fold_convolution"):
+            result = reference_fold_pretrend(
+                df, K=K, fold_seed=task.seed,
+                posterior_seed=deterministic_seed("posterior", task.seed),
+                bcf_params=bcf_params, fit_factory=pretrend_factory)
+        else:
+            raise ValueError(f"unknown pre-trend estimator task {task.estimator!r}")
+    elif task.estimator == "raw_structured":
         fit = factory(df, bcf_params=bcf_params, seed=task.seed)
         from .ablations import _raw_scalar_records
         result = _raw_scalar_records(fit, "raw_structured")
@@ -210,11 +241,20 @@ def run_task(task: ExperimentTask, *, bcf_params=None, smoke=False, K=2,
         raise ValueError(f"unknown estimator task {task.estimator!r}")
     if result.empty:
         return pd.DataFrame()
-    try:
-        from Simulation_Studies_Revision.did_bcf_revision.dgps import true_estimands
-    except ImportError:
-        from did_bcf_revision.dgps import true_estimands
-    truth = true_estimands(df)
+    if task.design.startswith("PT_"):
+        # Pre-trend rows use true_pretrend (the DGP's realised differential
+        # slope); true_estimands has no PRE rows.
+        try:
+            from Simulation_Studies_Revision.did_bcf_revision.pretrend import true_pretrend
+        except ImportError:
+            from did_bcf_revision.pretrend import true_pretrend
+        truth = true_pretrend(df)
+    else:
+        try:
+            from Simulation_Studies_Revision.did_bcf_revision.dgps import true_estimands
+        except ImportError:
+            from did_bcf_revision.dgps import true_estimands
+        truth = true_estimands(df)
     truth_columns = ["estimand_type", "estimand_id", "true"]
     if task.design == "oracle_canonical":
         if "gatt_population_oracle" not in df.columns:

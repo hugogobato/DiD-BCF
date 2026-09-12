@@ -64,7 +64,10 @@ original `../Simulation_Studies/`, adapted to the revision DGPs:
 ## Workflow (matches the split: DiD-BCF on Colab, the rest on your PC)
 
 ```
-1. (Colab, slow)   DiD_BCF/DiD_BCF_<scen>_lin_<d>.ipynb -> Results/summaries_<scen>_lin_<d>.csv
+1. (Colab, slow)   DiD_BCF/Theory_Calibration/*.ipynb   -> Theory_Calibration/results/*.zip
+                   DiD_BCF/Correction_Completion/*.ipynb -> Theory_Calibration/results/*.zip
+                   (the old-generation DiD_BCF/<scen>_lin_<d>.ipynb notebooks and
+                   their summaries now live in the local legacy tree)
 1b.(Colab, slow)   Pretrend/Pretrend_<PT>_lin_<d>.ipynb -> Results/summaries_pretrend_<PT>_lin_<d>.csv
 2. (PC, fast)      TWFE/OLS_<scen>_lin_<d>.ipynb        -> Results/summaries_twfe_<scen>_lin_<d>.csv
 3. (PC, fast)      DGPs/data_creation_<scen>.py         -> R_code/<scen>_datasets/.../iteration_*.csv
@@ -141,9 +144,14 @@ so the 54 notebooks cannot drift apart — regenerate them all from
 ## Layout
 
 Mirrors `../Simulation_Studies/`: per-scenario data-creation scripts under
-`DGPs/`, **one model notebook per scenario per `linearity_degree`** under
-`DiD_BCF/` and `TWFE/`, per-scenario R benchmarks under `R_code/`, and a
-`Results/` sink — with a shared engine package so nothing is duplicated.
+`DGPs/`, the final-generation DiD-BCF Colab notebooks under `DiD_BCF/`
+(`Theory_Calibration/` for the correction and information families,
+`Correction_Completion/` for the completion cells) and the TWFE notebooks under
+`TWFE/`, per-scenario R benchmarks under `R_code/`, and a `Results/` sink, with
+a shared engine package so nothing is duplicated. The old-generation
+`DiD_BCF/<scenario>_lin_<d>.ipynb` notebooks and their summary CSVs were moved
+to the local legacy tree (`Old_Simulation_Studies/_moved_from_repo/Simulation_Studies_Revision/DiD_BCF_old_generation/`,
+gitignored); their published aggregates stay committed under `Results/aggregated/`.
 
 The **estimation scenarios** are `B1_baseline`, `B1_strong_confounder`,
 `B1_serial_corr`, `B1_selection_obs`, `B1_selection_both`, `B1_null`,
@@ -177,8 +185,11 @@ Simulation_Studies_Revision/
 │   └── config.py                  # the scenario grid (N=200, linearity 1/3)
 ├── DGPs/                          # one data-creation script per scenario (-> R CSV panels)
 │   ├── data_creation_B1_baseline.py ... data_creation_D_contamination.py   (9)
-├── DiD_BCF/                       # DiD-BCF: one notebook per scenario × linearity (32; Colab)
-│   ├── DiD_BCF_B1_baseline_lin_1.ipynb ... DiD_BCF_D_contamination_lin_3.ipynb
+├── DiD_BCF/                       # DiD-BCF Colab notebooks (final generation)
+│   ├── Theory_Calibration/        # correction-audit + information-ablation shards (96),
+│   │                              #   three BCF pilots, validation, controlled mechanics
+│   └── Correction_Completion/     # 48 shards for the completion cells (strong confounder,
+│                                  #   selection, staggered, d=3, N sweeps, pre-trend)
 ├── TWFE/                          # OLS benchmark: one notebook per scenario × linearity (32; PC)
 │   ├── OLS_B1_baseline_lin_1.ipynb ... OLS_D_contamination_lin_3.ipynb
 ├── Pretrend/                      # PT diagnostic: one notebook per PT scenario × linearity (20)

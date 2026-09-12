@@ -1,0 +1,7 @@
+family,design,degree,N,rep,estimator,shard,n_shards,wave_id,n_waves,oracle_available,config_hash,base_seed,dgp_params,seed
+correction_audit,baseline,1,200,0,current_hybrid_logit,0,1,0,1,True,1d4ec075e86f013d,20260829,{},1300356034
+correction_audit,baseline,1,200,0,raw_structured,0,1,0,1,True,1d4ec075e86f013d,20260829,{},1300356034
+correction_audit,baseline,1,200,0,reference_fold_convolution_logit,0,1,0,1,True,1d4ec075e86f013d,20260829,{},1300356034
+information_ablation,baseline,1,200,0,full_panel_raw,0,1,0,1,True,7999df0eb8c5fe6a,20260829,{},3090460067
+information_ablation,baseline,1,200,0,pooled_full_panel,0,1,0,1,True,7999df0eb8c5fe6a,20260829,{},3090460067
+information_ablation,baseline,1,200,0,reduced_cell,0,1,0,1,True,7999df0eb8c5fe6a,20260829,{},3090460067

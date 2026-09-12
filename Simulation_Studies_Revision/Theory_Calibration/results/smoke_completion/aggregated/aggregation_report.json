@@ -1,0 +1,45 @@
+{
+  "archives_read": [
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/smoke_completion/correction_completion_smoke.zip"
+  ],
+  "family": "correction_completion",
+  "expected_shards": [
+    0
+  ],
+  "observed_shards": [
+    0
+  ],
+  "missing_shards": [],
+  "wave_fields_present": true,
+  "expected_n_waves": 1,
+  "expected_waves": [
+    0
+  ],
+  "observed_waves": [
+    0
+  ],
+  "missing_waves": [],
+  "observed_wave_shards": [
+    {
+      "wave_id": 0,
+      "shard": 0
+    }
+  ],
+  "missing_wave_shards": [],
+  "backward_compatible_one_wave": false,
+  "inconsistent_n_shards": [
+    1
+  ],
+  "config_hashes": [
+    "24d6dd33116d62ca"
+  ],
+  "duplicate_manifest_tasks": 0,
+  "duplicate_summary_rows": 0,
+  "manifest_tasks": 110,
+  "summary_task_bundles": 110,
+  "missing_task_bundles": [],
+  "unavailable_task_bundles": [],
+  "unavailable_rows_without_task_key": 0,
+  "oracle_unavailable_not_failed": true,
+  "metrics_rows": 3240
+}

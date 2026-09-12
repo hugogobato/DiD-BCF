@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate validation, 48-way family shards, BCF pilots, and mechanics audit."""
+"""Generate validation, family shards, BCF pilots, mechanics, and completion."""
 from __future__ import annotations
 
 import argparse
@@ -160,7 +160,9 @@ print("Using clone:", TARGET.resolve(), "| max workers: 2, default workers: 1")
         "if N_WAVES < 1 or not 0 <= WAVE_ID < N_WAVES:\n"
         "    raise ValueError('ETE_WAVE_ID must satisfy 0 <= ETE_WAVE_ID < ETE_N_WAVES')"
     )
-    pilot_reps = 1 if pilot else 'int(os.environ.get("ETE_REPS", "100"))'
+    pilot_reps = "1" if pilot else (
+        "int(os.environ['ETE_REPS']) if os.environ.get('ETE_REPS', '').strip() "
+        "not in ('', '0') else None")
     pilot_smoke = False if pilot else 'os.environ.get("ETE_SMOKE", "0") == "1"'
     output_suffix = pilot_spec["output"] if pilot_spec else f"shard_{shard:02d}"
     pilot_value = repr(pilot)
@@ -219,7 +221,8 @@ except Exception as e:
                          + ("The pilot is fixed to wave 0 of 1."
                             if pilot else
                             "Set ETE_N_WAVES and ETE_WAVE_ID to reuse this notebook across waves; "
-                            "the wave is included in the output directory and archive name.")
+                            "the wave is included in the output directory and archive name. "
+                            "Replication counts follow each design's config value (ETE_REPS overrides).")
                          + (" The oracle pilot checks exact nuisance-column alignment, iid default errors, and homogeneous truth 3 through the production sampler."
                             if pilot == "oracle" else "")),
         cell("code", setup),
@@ -284,25 +287,69 @@ except Exception as e:
         "nbformat": 4, "nbformat_minor": 5}
 
 
-def generate(output_dir: str | Path):
-    out = Path(output_dir)
-    out.mkdir(parents=True, exist_ok=True)
-    (out / "validation.ipynb").write_text(
-        json.dumps(notebook(validation=True), indent=1), encoding="utf-8")
-    for family in ("correction_audit", "information_ablation"):
-        for shard in range(48):
-            name = f"{family}_shard_{shard:02d}.ipynb"
-            (out / name).write_text(
-                json.dumps(notebook(family=family, shard=shard, n_shards=48), indent=1),
-                encoding="utf-8")
-    for pilot_name in ("correction", "information", "oracle"):
-        (out / f"{pilot_name}_bcf_pilot.ipynb").write_text(
-            json.dumps(notebook(pilot=pilot_name), indent=1), encoding="utf-8")
-    (out / "controlled_mechanics.ipynb").write_text(
-        json.dumps(controlled_mechanics_notebook(), indent=1), encoding="utf-8")
+FAMILY_SHARDS = {
+    "correction_audit": 48,
+    "information_ablation": 48,
+    "correction_completion": 48,
+}
+FAMILIES = ("all", "correction_audit", "information_ablation",
+            "correction_completion")
+# The generated notebooks live with the final revision artifacts.  The package
+# itself (src/, scripts/, configs/, results/, tests/) stays under
+# Theory_Calibration/; only the uploadable notebooks moved.
+NOTEBOOK_ROOT = Path(__file__).resolve().parents[2] / "DiD_BCF"
+THEORY_NOTEBOOKS = NOTEBOOK_ROOT / "Theory_Calibration"
+COMPLETION_NOTEBOOKS = NOTEBOOK_ROOT / "Correction_Completion"
+
+
+def _write_shards(out: Path, family: str) -> None:
+    n_shards = FAMILY_SHARDS[family]
+    for shard in range(n_shards):
+        name = f"{family}_shard_{shard:02d}.ipynb"
+        (out / name).write_text(
+            json.dumps(notebook(family=family, shard=shard, n_shards=n_shards),
+                       indent=1), encoding="utf-8")
+
+
+def generate(output_dir: str | Path | None = None, family: str = "all"):
+    """Write the selected notebook family (or every family) to disk.
+
+    Without ``output_dir`` the theory notebooks land in
+    ``Simulation_Studies_Revision/DiD_BCF/Theory_Calibration`` and the
+    completion shards in ``Simulation_Studies_Revision/DiD_BCF/Correction_Completion``.
+    A caller-supplied ``output_dir`` collects the selected notebooks flat in
+    that directory.
+    """
+    if family not in FAMILIES:
+        raise ValueError(f"unknown notebook family {family!r}; expected one of {FAMILIES}")
+    explicit = output_dir is not None
+    flat = Path(output_dir) if explicit else None
+    theory = flat if explicit else THEORY_NOTEBOOKS
+    completion = flat if explicit else COMPLETION_NOTEBOOKS
+    if family in ("all", "correction_audit", "information_ablation"):
+        theory.mkdir(parents=True, exist_ok=True)
+        (theory / "validation.ipynb").write_text(
+            json.dumps(notebook(validation=True), indent=1), encoding="utf-8")
+        (theory / "controlled_mechanics.ipynb").write_text(
+            json.dumps(controlled_mechanics_notebook(), indent=1), encoding="utf-8")
+    if family in ("all", "correction_audit"):
+        _write_shards(theory, "correction_audit")
+        for pilot_name in ("correction", "oracle"):
+            (theory / f"{pilot_name}_bcf_pilot.ipynb").write_text(
+                json.dumps(notebook(pilot=pilot_name), indent=1), encoding="utf-8")
+    if family in ("all", "information_ablation"):
+        _write_shards(theory, "information_ablation")
+        (theory / "information_bcf_pilot.ipynb").write_text(
+            json.dumps(notebook(pilot="information"), indent=1), encoding="utf-8")
+    if family in ("all", "correction_completion"):
+        completion.mkdir(parents=True, exist_ok=True)
+        _write_shards(completion, "correction_completion")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output-dir", default=str(Path(__file__).parents[1] / "notebooks"))
-    generate(parser.parse_args().output_dir)
+    parser.add_argument("--output-dir", default=None,
+                        help="collect the selected notebooks flat in this directory")
+    parser.add_argument("--family", default="all", choices=FAMILIES)
+    args = parser.parse_args()
+    generate(args.output_dir, args.family)

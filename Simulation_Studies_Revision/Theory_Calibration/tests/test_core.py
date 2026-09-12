@@ -367,7 +367,9 @@ def test_multiwave_manifest_bundle_allocation_is_complete_and_disjoint():
 
 
 def test_notebooks_are_valid_and_download_one_zip():
-    root = Path(__file__).parents[1] / "notebooks"
+    revision = Path(__file__).parents[2]
+    root = revision / "DiD_BCF" / "Theory_Calibration"
+    completion = revision / "DiD_BCF" / "Correction_Completion"
     books = sorted(root.glob("*.ipynb"))
     assert len(books) == 101
     for path in books:
@@ -375,11 +377,13 @@ def test_notebooks_are_valid_and_download_one_zip():
         assert obj["nbformat"] == 4
         code = "\n".join("".join(c.get("source", [])) for c in obj["cells"]
                           if c["cell_type"] == "code")
-        assert "git" in code and "experiments/theory-calibration-colab" in code
+        assert "git" in code and "hugogobato/DiD-BCF.git" in code
+        assert "BRANCH = 'main'" in code
         assert "output_file = " in code
         assert "files.download(output_file)" in code
         assert "print(\"Downloaded:\", output_file)" in code
         assert "Not on Colab / download skipped" in code
+        compile(code, str(path), "exec")
     compute_code = "\n".join("".join(c.get("source", [])) for c in
                                json.loads((root / "correction_audit_shard_00.ipynb").read_text())["cells"])
     assert "num_gfr': 50" in compute_code and "num_mcmc': 500" in compute_code
@@ -425,6 +429,25 @@ def test_notebooks_are_valid_and_download_one_zip():
     assert "exact m0_oracle" in mechanics_code
     assert "not a theorem proof" in mechanics_code
     assert "ETE_MECH_REPS" in mechanics_code and "ETE_MECH_DRAWS" in mechanics_code
+
+    completion_books = sorted(completion.glob("*.ipynb"))
+    assert len(completion_books) == 48
+    for path in completion_books:
+        obj = json.loads(path.read_text())
+        assert obj["nbformat"] == 4
+        code = "\n".join("".join(c.get("source", [])) for c in obj["cells"]
+                          if c["cell_type"] == "code")
+        assert "FAMILY = 'correction_completion'" in code
+        assert "N_SHARDS = 48" in code
+        assert "n_shards=N_SHARDS" in code and "bcf_params=BCF_PARAMS" in code
+        assert "num_gfr': 50" in code and "num_mcmc': 500" in code
+        assert "ETE_N_WAVES" in code and "ETE_WAVE_ID" in code
+        assert "wave_id=WAVE_ID" in code and "n_waves=N_WAVES" in code
+        assert "_wave_" in code and '"wave_id": WAVE_ID' in code
+        assert "ETE_REPS" in code
+        assert "BRANCH = 'main'" in code
+        assert "files.download(output_file)" in code
+        compile(code, str(path), "exec")
 
 
 def test_archive_aggregation_deduplicates_and_reports_metrics(tmp_path):
@@ -500,3 +523,156 @@ def test_archive_aggregation_reports_missing_waves(tmp_path):
     assert report["observed_waves"] == [0]
     assert report["missing_waves"] == [1]
     assert report["missing_wave_shards"] == [{"wave_id": 1, "shard": 0}]
+
+
+def test_legacy_families_keep_seeds_hashes_and_shards():
+    from extra_theory_experiments.manifest import _config_hash, _load_config
+    assert _config_hash(_load_config("correction_audit")) == "1d4ec075e86f013d"
+    assert _config_hash(_load_config("information_ablation")) == "7999df0eb8c5fe6a"
+    first = build_manifest("correction_audit", reps=1, n_shards=4, shard_id=1)[0]
+    assert first.seed == 4081262023
+    assert (first.shard, first.n_shards, first.wave_id, first.n_waves) == (1, 4, 0, 1)
+    assert first.dgp_params == {}
+    info = build_manifest("information_ablation", reps=1, n_shards=4, shard_id=1)[0]
+    assert info.seed == 1597900271 and info.dgp_params == {}
+
+
+def test_correction_completion_manifest_covers_cells_and_params():
+    tasks = build_manifest("correction_completion", n_shards=1)
+    assert len(tasks) == 15200
+    assert {t.estimator for t in tasks} == {
+        "raw_structured", "reference_fold_convolution_rf"}
+    assert len({t.design for t in tasks}) == 21
+    pt_designs = {"PT_hold", "PT_conditional", "PT_violation_g05",
+                  "PT_violation_g10", "PT_violation_g20", "PT_violation_g40",
+                  "PT_violation_het10", "PT_violation_het20",
+                  "PT_violation_het40", "PT_violation_a20"}
+    assert {t.design for t in tasks if t.design.startswith("PT_")} == pt_designs
+    assert {t.rep for t in tasks if t.design == "null"} == set(range(200))
+    assert {t.rep for t in tasks if t.design == "PT_hold"} == set(range(200))
+    assert {t.rep for t in tasks if t.design == "baseline"} == set(range(100))
+    cells = {(t.design, t.degree, t.N) for t in tasks}
+    for required in (
+        ("baseline", 3, 200), ("serial", 3, 200), ("null", 3, 200),
+        ("strong_confounder", 1, 200), ("strong_confounder", 2, 200),
+        ("strong_confounder", 3, 200), ("selection_obs", 2, 200),
+        ("selection_both", 2, 200), ("staggered", 3, 200),
+        ("baseline_sweep", 1, 50), ("baseline_sweep", 2, 400),
+        ("baseline_sweep_d3", 3, 800), ("serial_sweep", 1, 100),
+        ("serial_sweep_d3", 3, 50),
+    ):
+        assert required in cells
+    # No duplication of correction_audit's degree 1-2, N=200/800 sweep cells.
+    assert ("baseline_sweep", 1, 200) not in cells
+    assert ("baseline_sweep", 2, 800) not in cells
+    assert ("serial_sweep", 2, 200) not in cells
+
+    from extra_theory_experiments.runner import _dgp
+    strong = next(t for t in tasks if t.design == "strong_confounder" and t.degree == 1)
+    params = _dgp(strong).attrs["params"]
+    assert params["alpha_sd"] == 2.0 and params["conf_strength"] == 1.5
+    pt = next(t for t in tasks if t.design == "PT_violation_g20" and t.degree == 3)
+    assert _dgp(pt).attrs["params"]["group_trend"] == 0.2
+    sel = next(t for t in tasks if t.design == "selection_obs" and t.degree == 2)
+    assert _dgp(sel).attrs["params"]["selection"] == "observable"
+    stag = next(t for t in tasks if t.design == "staggered" and t.degree == 1)
+    stag_df = _dgp(stag)
+    assert stag_df.attrs["dgp"] == "staggered"
+    assert stag_df.attrs["params"]["dynamic_ramp"] == 0.4
+
+
+def _pretrend_panel(n_units=60, n_draws=7, seed=0):
+    from did_bcf_revision.pretrend import PretrendFit
+    rng = np.random.default_rng(seed)
+    rows = []
+    for unit in range(n_units):
+        cohort = 4.0 if unit < n_units // 2 else np.inf
+        x = {"X1": float(unit % 2), "X2": float(rng.normal()),
+             "X3": float(rng.normal()), "X4": float(rng.normal()),
+             "X5": float(rng.uniform(-1, 1))}
+        for t in range(8):
+            rows.append({"unit_id": unit, "time": t, "cohort": cohort,
+                         "D": int(cohort == 4 and t >= 4),
+                         "eventually_treated": int(cohort == 4),
+                         "event_time": (float(t - 4) if cohort == 4 else np.nan),
+                         **x, "Y": float(t)})
+    df = pd.DataFrame(rows).sort_values(["unit_id", "time"]).reset_index(drop=True)
+    row_of = {(int(u), int(t)): i for i, (u, t) in enumerate(
+        zip(df.unit_id, df.time))}
+    tau = rng.normal(size=(len(df), n_draws))
+    return PretrendFit(df=df, tau_draws=tau, row_of=row_of, ref_k=-1)
+
+
+def test_raw_pretrend_reproduces_published_point_summaries():
+    from did_bcf_revision.pretrend import pretrend_estimands
+    from extra_theory_experiments.pretrend_fold import raw_pretrend_estimands
+
+    fit = _pretrend_panel()
+    published = pretrend_estimands(fit)
+    local = raw_pretrend_estimands(fit)
+    assert set(local["estimand_type"]) == {"PRE", "PRE_SUB", "PRE_SUBC"}
+    assert not {"any", "any_bonf"} & set(local["estimand_id"])
+    joined = published.merge(local, on=["estimand_type", "estimand_id"],
+                             suffixes=("_pub", "_loc"))
+    assert len(joined) == len(local) > 0
+    for col in ("post_mean", "sd", "q025", "q05", "q95", "q975"):
+        np.testing.assert_allclose(joined[f"{col}_pub"], joined[f"{col}_loc"],
+                                   atol=1e-12)
+    np.testing.assert_allclose(joined["p_bayes_pub"],
+                               joined["p_bayes_tail_min"], atol=1e-12)
+
+
+def test_fold_pretrend_runs_smoke_and_pools_fold_draws():
+    tasks = build_manifest("correction_completion", reps=1, n_shards=1)
+    for estimator, method in (("raw_structured", "pretrend"),
+                              ("reference_fold_convolution_rf",
+                               "reference_fold_pretrend")):
+        task = next(t for t in tasks if t.design == "PT_violation_het20"
+                    and t.degree == 1 and t.estimator == estimator)
+        out = runner.run_task(task, smoke=True)
+        assert not out.empty
+        assert set(out["method"]) == {method}
+        assert {"PRE", "PRE_SUB", "PRE_SUBC"}.issubset(set(out["estimand_type"]))
+        assert out["true"].notna().all()
+    het = next(t for t in tasks if t.design == "PT_violation_het20"
+               and t.degree == 1 and t.estimator == "raw_structured")
+    truth = runner._dgp(het)
+    from did_bcf_revision.pretrend import true_pretrend
+    tp = true_pretrend(truth)
+    slope = tp[(tp.estimand_type == "PRE") & (tp.estimand_id == "slope")]
+    contrast = tp[(tp.estimand_type == "PRE_SUBC") &
+                  (tp.estimand_id == "X1_slope")]
+    # The aggregate differential slope cancels to Monte-Carlo error while the
+    # X1 contrast carries the full 2*kappa = 0.4 violation.
+    assert abs(float(slope["true"].iloc[0])) < 0.1
+    assert np.isclose(float(contrast["true"].iloc[0]), 0.4, atol=1e-12)
+
+
+def test_completion_smoke_aggregation(tmp_path):
+    sys.path.insert(0, str(Path(__file__).parents[1] / "scripts"))
+    from aggregate_archives import aggregate_archives
+    from extra_theory_experiments.manifest import manifest_frame
+    from extra_theory_experiments.runner import run_tasks
+    tasks = build_manifest("correction_completion", reps=1, n_shards=1)
+    wanted = {("baseline", 3, 200), ("strong_confounder", 1, 200),
+              ("staggered", 1, 200), ("PT_hold", 1, 200)}
+    subset = [t for t in tasks if (t.design, t.degree, t.N) in wanted]
+    manifest_path = tmp_path / "manifest.csv"
+    manifest_frame(subset).to_csv(manifest_path, index=False)
+    summary = run_tasks(subset, out_dir=tmp_path / "checkpoints", smoke=True,
+                        resume=False)
+    summary_path = tmp_path / "summary.csv"
+    summary.to_csv(summary_path, index=False)
+    archive_path = tmp_path / "completion.zip"
+    with zipfile.ZipFile(archive_path, "w") as archive:
+        archive.write(manifest_path, arcname="manifest.csv")
+        archive.write(summary_path, arcname="summary.csv")
+    report, combined, metrics = aggregate_archives(
+        [archive_path], output_dir=tmp_path / "aggregated",
+        family="correction_completion", n_shards=1)
+    assert report["missing_shards"] == []
+    assert report["missing_task_bundles"] == []
+    assert report["config_hashes"]
+    assert not combined.empty and not metrics.empty
+    assert set(metrics["point_summary"]) == {"mean", "median"}
+

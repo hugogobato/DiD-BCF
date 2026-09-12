@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 import hashlib
 import json
 from pathlib import Path
@@ -11,6 +11,15 @@ from typing import Any, Iterable
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CONFIG_DIR = PACKAGE_ROOT / "configs"
+
+# Family name -> shipped config file.  Unknown families keep the historical
+# fallback (load information_ablation.json and fail the family check) so the
+# existing error behaviour is unchanged.
+CONFIG_FILES = {
+    "correction_audit": "correction_audit.json",
+    "information_ablation": "information_ablation.json",
+    "correction_completion": "correction_completion.json",
+}
 
 
 def deterministic_seed(*parts: object, base_seed: int = 20260829) -> int:
@@ -34,6 +43,10 @@ class ExperimentTask:
     oracle_available: bool = False
     config_hash: str = ""
     base_seed: int = 20260829
+    # Per-design DGP overrides from the family JSON.  The field defaults to an
+    # empty mapping so every pre-existing family keeps the exact same seeds,
+    # config hashes, and shard allocation as before this field existed.
+    dgp_params: dict[str, Any] = field(default_factory=dict)
 
     @property
     def seed(self) -> int:
@@ -52,9 +65,8 @@ class ExperimentTask:
 
 def _load_config(family: str, config_path: str | Path | None = None) -> dict[str, Any]:
     if config_path is None:
-        config_path = DEFAULT_CONFIG_DIR / (
-            "correction_audit.json" if family == "correction_audit"
-            else "information_ablation.json")
+        config_path = DEFAULT_CONFIG_DIR / CONFIG_FILES.get(
+            family, "information_ablation.json")
     with open(config_path, encoding="utf-8") as handle:
         config = json.load(handle)
     if config.get("family") != family:
@@ -115,6 +127,7 @@ def build_manifest(
         design = str(design_spec["name"])
         degrees = [int(x) for x in design_spec["degrees"]]
         Ns = [int(x) for x in design_spec["N"]]
+        dgp_params = dict(design_spec.get("dgp_params", {}) or {})
         n_rep = int(design_spec.get("reps", config.get("reps", 100)))
         if reps is not None:
             n_rep = int(reps)
@@ -131,6 +144,7 @@ def build_manifest(
                             family=family, design=design, degree=degree, N=N,
                             rep=rep, estimator=estimator, oracle_available=available,
                             config_hash=config_hash, base_seed=base_seed,
+                            dgp_params=dgp_params,
                         ))
     out.sort(key=lambda t: (t.design, t.degree, t.N, t.rep, t.estimator))
     # Keep every estimator for one generated panel in the same shard.  This is
@@ -153,6 +167,7 @@ def build_manifest(
             n_waves=n_waves,
             oracle_available=task.oracle_available,
             config_hash=task.config_hash, base_seed=task.base_seed,
+            dgp_params=task.dgp_params,
         )
         for task in out
         if bundle_location[(task.design, task.degree, task.N, task.rep)] ==

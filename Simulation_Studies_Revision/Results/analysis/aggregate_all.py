@@ -5,13 +5,22 @@ the Workstream B, C and D analysis.
 
 Sources
 -------
-DiD_BCF/summaries_*.csv                     plain + corrected DiD-BCF
+DiD_BCF_old_generation/summaries_*.csv      plain + corrected DiD-BCF (old
+                                            generation; moved out of the tracked
+                                            tree to the local legacy folder, see
+                                            the note below)
 Pretrend/summaries_pretrend_*.csv           DiD-BCF pre-trend diagnostic + TWFE
                                             event-study placebo, 200 reps, at
                                             linearity degrees 1 and 3
 Results/summaries_twfe_*.csv                TWFE / OLS
 R_code/*_datasets/**/summaries_*.csv        did_dr, did2s, synthdid
 Results/_staging/**/summaries_*.csv         wang (grf-DiD), doubleml  [unzipped Colab runs]
+
+The committed ``Results/aggregated/`` files remain the published copy of the
+old-generation runs.  Rebuilding them requires the legacy summaries that sit on
+disk under ``Old_Simulation_Studies/_moved_from_repo/Simulation_Studies_Revision/DiD_BCF_old_generation/``
+(that folder is intentionally outside the tracked tree); without it the rebuild
+simply omits the old-generation rows.
 """
 from __future__ import annotations
 
@@ -27,9 +36,15 @@ sys.path.insert(0, ROOT)
 from did_bcf_revision.metrics import compute_metrics, surface_metrics, sqrt_n_summary  # noqa: E402
 
 OUT = os.path.join(ROOT, "Results", "aggregated")
+# The old-generation DiD-BCF notebooks and summaries were moved out of the
+# tracked tree; they stay on disk under the repo-level legacy folder
+# (Old_Simulation_Studies/, gitignored).
+LEGACY_OLD_GENERATION = os.path.join(
+    os.path.dirname(ROOT), "Old_Simulation_Studies", "_moved_from_repo",
+    "Simulation_Studies_Revision", "DiD_BCF_old_generation")
 
 PATTERNS = [
-    os.path.join(ROOT, "DiD_BCF", "summaries_*.csv"),
+    os.path.join(LEGACY_OLD_GENERATION, "summaries_*.csv"),
     os.path.join(ROOT, "Results", "summaries_twfe_*.csv"),
     os.path.join(ROOT, "Results", "summaries_pretrend_*.csv"),
     # The PT_* diagnostic runs were split into rep blocks and land in Pretrend/;
