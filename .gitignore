@@ -84,3 +84,8 @@ Simulation_Studies_Revision/R_code/*_datasets/*.xlsx
 Old_Simulation_Studies/
 
 Simulation_Studies_Revision/Pretrend/_retired/
+
+# Python and pytest caches; caches are not experiment results.
+__pycache__/
+*.py[cod]
+.pytest_cache/

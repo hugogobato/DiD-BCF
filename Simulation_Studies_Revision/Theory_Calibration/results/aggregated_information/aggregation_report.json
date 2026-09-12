@@ -1,0 +1,374 @@
+{
+  "archives_read": [
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_00_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_01_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_02_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_03_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_04_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_05_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_06_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_07_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_08_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_09_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_10_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_11_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_12_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_13_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_14_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_15_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_16_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_17_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_18_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_19_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_20_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_21_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_22_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_23_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_24_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_25_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_26_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_27_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_28_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_29_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_30_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_31_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_32_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_33_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_34_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_35_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_36_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_37_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_38_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_39_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_40_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_41_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_42_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_43_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_44_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_45_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_46_wave_00_of_01.zip",
+    "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/Theory_Calibration/results/extra_theory_information_ablation_shard_47_wave_00_of_01.zip"
+  ],
+  "family": "information_ablation",
+  "expected_shards": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47
+  ],
+  "observed_shards": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47
+  ],
+  "missing_shards": [],
+  "wave_fields_present": true,
+  "expected_n_waves": 1,
+  "expected_waves": [
+    0
+  ],
+  "observed_waves": [
+    0
+  ],
+  "missing_waves": [],
+  "observed_wave_shards": [
+    {
+      "wave_id": 0,
+      "shard": 0
+    },
+    {
+      "wave_id": 0,
+      "shard": 1
+    },
+    {
+      "wave_id": 0,
+      "shard": 2
+    },
+    {
+      "wave_id": 0,
+      "shard": 3
+    },
+    {
+      "wave_id": 0,
+      "shard": 4
+    },
+    {
+      "wave_id": 0,
+      "shard": 5
+    },
+    {
+      "wave_id": 0,
+      "shard": 6
+    },
+    {
+      "wave_id": 0,
+      "shard": 7
+    },
+    {
+      "wave_id": 0,
+      "shard": 8
+    },
+    {
+      "wave_id": 0,
+      "shard": 9
+    },
+    {
+      "wave_id": 0,
+      "shard": 10
+    },
+    {
+      "wave_id": 0,
+      "shard": 11
+    },
+    {
+      "wave_id": 0,
+      "shard": 12
+    },
+    {
+      "wave_id": 0,
+      "shard": 13
+    },
+    {
+      "wave_id": 0,
+      "shard": 14
+    },
+    {
+      "wave_id": 0,
+      "shard": 15
+    },
+    {
+      "wave_id": 0,
+      "shard": 16
+    },
+    {
+      "wave_id": 0,
+      "shard": 17
+    },
+    {
+      "wave_id": 0,
+      "shard": 18
+    },
+    {
+      "wave_id": 0,
+      "shard": 19
+    },
+    {
+      "wave_id": 0,
+      "shard": 20
+    },
+    {
+      "wave_id": 0,
+      "shard": 21
+    },
+    {
+      "wave_id": 0,
+      "shard": 22
+    },
+    {
+      "wave_id": 0,
+      "shard": 23
+    },
+    {
+      "wave_id": 0,
+      "shard": 24
+    },
+    {
+      "wave_id": 0,
+      "shard": 25
+    },
+    {
+      "wave_id": 0,
+      "shard": 26
+    },
+    {
+      "wave_id": 0,
+      "shard": 27
+    },
+    {
+      "wave_id": 0,
+      "shard": 28
+    },
+    {
+      "wave_id": 0,
+      "shard": 29
+    },
+    {
+      "wave_id": 0,
+      "shard": 30
+    },
+    {
+      "wave_id": 0,
+      "shard": 31
+    },
+    {
+      "wave_id": 0,
+      "shard": 32
+    },
+    {
+      "wave_id": 0,
+      "shard": 33
+    },
+    {
+      "wave_id": 0,
+      "shard": 34
+    },
+    {
+      "wave_id": 0,
+      "shard": 35
+    },
+    {
+      "wave_id": 0,
+      "shard": 36
+    },
+    {
+      "wave_id": 0,
+      "shard": 37
+    },
+    {
+      "wave_id": 0,
+      "shard": 38
+    },
+    {
+      "wave_id": 0,
+      "shard": 39
+    },
+    {
+      "wave_id": 0,
+      "shard": 40
+    },
+    {
+      "wave_id": 0,
+      "shard": 41
+    },
+    {
+      "wave_id": 0,
+      "shard": 42
+    },
+    {
+      "wave_id": 0,
+      "shard": 43
+    },
+    {
+      "wave_id": 0,
+      "shard": 44
+    },
+    {
+      "wave_id": 0,
+      "shard": 45
+    },
+    {
+      "wave_id": 0,
+      "shard": 46
+    },
+    {
+      "wave_id": 0,
+      "shard": 47
+    }
+  ],
+  "missing_wave_shards": [],
+  "backward_compatible_one_wave": false,
+  "inconsistent_n_shards": [
+    48
+  ],
+  "config_hashes": [
+    "7999df0eb8c5fe6a"
+  ],
+  "duplicate_manifest_tasks": 0,
+  "duplicate_summary_rows": 0,
+  "manifest_tasks": 3600,
+  "summary_task_bundles": 3600,
+  "missing_task_bundles": [],
+  "unavailable_task_bundles": [],
+  "unavailable_rows_without_task_key": 0,
+  "oracle_unavailable_not_failed": true,
+  "metrics_rows": 648
+}
