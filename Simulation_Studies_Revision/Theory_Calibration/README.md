@@ -168,17 +168,22 @@ declares its exact `dgp_params` overrides in the JSON, which the manifest
 carries per task and the runner passes to `generate_canonical_did` /
 `generate_staggered_did`; old families declare none, so their seeds and config
 hashes are unchanged. The family expands to 15,200 task rows (7,600 paired
-bundles) and is emitted as one single wave of 384 shard notebooks,
-`correction_completion_shard_000.ipynb` through `_383.ipynb`, under
-`Simulation_Studies_Revision/DiD_BCF/Correction_Completion/`. Each notebook is
-run exactly once with no `ETE_N_WAVES`/`ETE_WAVE_ID` setup (`N_WAVES = 1`,
-`WAVE_ID = 0`); the file name is the whole schedule. The average notebook
-carries about 20 paired bundles and roughly 60 sampler fits (about 24,000 fits
-in total: three per canonical bundle, seven per staggered bundle, and three per
-pre-trend bundle), which is 4 to 7 hours per notebook at five minutes per
-nonlinear fit. Time a `PT_*` and a `staggered` notebook first and only then
-launch the rest. Null and pre-trend designs are the only rows at 200
-replications; everything else follows the family default of 100.
+bundles in total: about 24,000 sampler fits, three per canonical bundle, seven
+per staggered bundle, and three per pre-trend bundle). It is emitted as one
+single wave of 219 notebooks under
+`Simulation_Studies_Revision/DiD_BCF/Correction_Completion/`, with no
+`ETE_N_WAVES`/`ETE_WAVE_ID` setup (`N_WAVES = 1`, `WAVE_ID = 0` hardcoded).
+Notebooks `_000` through `_053` run one original shard each (roughly 3 hours);
+notebooks `_054` through `_218` each run two original shards sequentially,
+`2*j - 54` and `2*j - 53`, into their original
+`results/extra_theory_correction_completion_shard_XXX` output directories
+(roughly 6 hours). The union of outputs is still all 384 `shard_XXX`
+directories, so aggregation is unchanged: point
+`aggregate_archives.py --family correction_completion` at the download
+directory and it still expects `--n-shards 384`. Time a `PT_*` and a
+`staggered` notebook first and only then launch the rest. Null and pre-trend
+designs are the only rows at 200 replications; everything else follows the
+family default of 100.
 
 The pre-trend arm is a diagnostic. For `PT_*` designs the raw estimator runs the
 published unconstrained `fit_pretrend` diagnostic and reproduces its point

@@ -431,9 +431,11 @@ def test_notebooks_are_valid_and_download_one_zip():
     assert "ETE_MECH_REPS" in mechanics_code and "ETE_MECH_DRAWS" in mechanics_code
 
     completion_books = sorted(completion.glob("*.ipynb"))
-    assert len(completion_books) == 384
+    assert len(completion_books) == 219
     assert completion_books[0].name == "correction_completion_shard_000.ipynb"
-    assert completion_books[-1].name == "correction_completion_shard_383.ipynb"
+    assert completion_books[53].name == "correction_completion_shard_053.ipynb"
+    assert completion_books[54].name == "correction_completion_shard_054.ipynb"
+    assert completion_books[-1].name == "correction_completion_shard_218.ipynb"
     for index, path in enumerate(completion_books):
         obj = json.loads(path.read_text())
         assert obj["nbformat"] == 4
@@ -441,7 +443,6 @@ def test_notebooks_are_valid_and_download_one_zip():
                           if c["cell_type"] == "code")
         assert "FAMILY = 'correction_completion'" in code
         assert "N_SHARDS = 384" in code
-        assert f"SHARD_ID = {index}\n" in code
         assert "N_WAVES = 1" in code and "WAVE_ID = 0" in code
         assert "ETE_N_WAVES" not in code and "ETE_WAVE_ID" not in code
         assert "n_shards=N_SHARDS" in code and "bcf_params=BCF_PARAMS" in code
@@ -452,6 +453,30 @@ def test_notebooks_are_valid_and_download_one_zip():
         assert "BRANCH = 'main'" in code
         assert "files.download(output_file)" in code
         compile(code, str(path), "exec")
+        if index < 54:
+            assert f"SHARD_ID = {index}\n" in code
+            assert "SHARD_GROUP" not in code
+            assert f"extra_theory_correction_completion_shard_{index:03d}" in code
+        else:
+            first, second = 2 * index - 54, 2 * index - 53
+            assert f"SHARD_GROUP = ({first}, {second})" in code
+            assert "SHARD_IDS = list(SHARD_GROUP)" in code
+            assert "for SHARD_ID in SHARD_IDS:" in code
+            assert "extra_theory_correction_completion_shard_{SHARD_ID:03d}" in code
+            assert "SHARD_ID = " not in code.replace(
+                "for SHARD_ID in SHARD_IDS:", "")
+
+
+def test_completion_pairing_formula_covers_original_shards():
+    sys.path.insert(0, str(Path(__file__).parents[1] / "scripts"))
+    import generate_notebooks as gn
+    assert gn.completion_shard_group(54) == (54, 55)
+    assert gn.completion_shard_group(55) == (56, 57)
+    assert gn.completion_shard_group(218) == (382, 383)
+    groups = [gn.completion_shard_group(j) for j in range(54, 219)]
+    covered = [shard for group in groups for shard in group]
+    assert covered == list(range(54, 384))
+    assert len(set(covered)) == 330 and len(groups) == 165
 
 
 def test_theory_notebook_regeneration_is_byte_identical(tmp_path):
@@ -465,6 +490,16 @@ def test_theory_notebook_regeneration_is_byte_identical(tmp_path):
     mismatches = [p.name for p in produced
                   if (committed / p.name).read_bytes() != p.read_bytes()]
     assert mismatches == []
+
+    committed_completion = Path(__file__).parents[2] / "DiD_BCF" / "Correction_Completion"
+    completion_out = tmp_path / "completion"
+    gn.generate(completion_out, "correction_completion")
+    produced_completion = sorted(completion_out.glob("*.ipynb"))
+    assert len(produced_completion) == 219
+    mismatches_completion = [p.name for p in produced_completion
+                             if (committed_completion / p.name).read_bytes()
+                             != p.read_bytes()]
+    assert mismatches_completion == []
 
 
 def test_completion_single_wave_manifest_is_one_wave():

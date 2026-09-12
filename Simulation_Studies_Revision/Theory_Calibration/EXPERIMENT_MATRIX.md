@@ -7,7 +7,7 @@ multipliers and the scheduling assumptions.
 |---|---|---|---|---:|---|
 | correction audit | 4 designs x 2 degrees x 2 N | 1 raw, 5 current pilots, 3 reference propensity variants, 2 oracle variants (oracle_canonical available; production DGP rows unavailable) | 3 unique sampler fits after cache (1 full + 2 cohort-fold fits), with oracle rows using the same cached fits | 48 shards per family |
 | information ablation | 3 designs x selected degrees x 2 N | full (1), pooled (1), reduced (4 cells for canonical, 9 for staggered) | 6 to 11 fits | 48 shards per family |
-| correction completion | 21 designs x selected degrees x N=200 (sweeps vary N); degrees 1-3 | raw (1) plus reference per cohort-fold (2 canonical, 6 staggered); pre-trend designs use the unconstrained diagnostic (1 raw + 2 fold fits) | 3 per canonical bundle, 7 per staggered bundle | 384 single-wave shards |
+| correction completion | 21 designs x selected degrees x N=200 (sweeps vary N); degrees 1-3 | raw (1) plus reference per cohort-fold (2 canonical, 6 staggered); pre-trend designs use the unconstrained diagnostic (1 raw + 2 fold fits) | 3 per canonical bundle, 7 per staggered bundle | 219 single-wave notebooks: `_000`-`_053` one shard, `_054`-`_218` two shards |
 
 The correction audit has 17,600 attempted task rows: 800 oracle-canonical oracle
 rows run, while 2,400 oracle rows for the production DGPs are explicitly
@@ -30,14 +30,16 @@ notebook, and aggregate all waves together. Bundle allocation is deterministic
 over the wave-shard Cartesian product, so no replication is split across
 methods or duplicated across waves.
 
-The completion family has no wave configuration. It is one single wave of 384
-shards (`correction_completion_shard_000.ipynb` ... `_383.ipynb`, each with
-`N_WAVES = 1` and `WAVE_ID = 0` hardcoded), so every notebook is simply run
-once and downloaded once. It is the largest family: 7,600 paired bundles and
-roughly 24,000 sampler fits, which averages about 20 bundles and about 60
-sampler fits per notebook, or 4 to 7 hours per notebook at five minutes per
-nonlinear fit. Time a `PT_*` notebook and a `staggered` notebook first, with
-the tiny budget, and only then launch the 384 production notebooks.
+The completion family has no wave configuration. It is one single wave of 219
+notebooks with `N_WAVES = 1` and `WAVE_ID = 0` hardcoded. Notebooks `_000`
+through `_053` run one original shard each, about 3 hours. Notebooks `_054`
+through `_218` each run two original shards sequentially, `2*j - 54` and
+`2*j - 53`, into their original `shard_XXX` output directories, about 6 hours.
+Because the outputs keep their original shard numbers, the union is still all
+384 `shard_XXX` directories and `aggregate_archives.py --n-shards 384` needs no
+change. In total the family carries 7,600 paired bundles and roughly 24,000
+sampler fits; time a `PT_*` notebook and a `staggered` notebook first, with the
+tiny budget, and only then launch the production notebooks.
 
 Completion designs carry their exact DGP overrides in the JSON `dgp_params`
 field; the manifest records them per task and the runner applies them to

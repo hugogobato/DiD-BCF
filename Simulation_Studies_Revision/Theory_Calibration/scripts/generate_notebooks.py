@@ -252,6 +252,129 @@ except Exception as e:
             "colab": {"name": title}}, "nbformat": 4, "nbformat_minor": 5}
 
 
+def completion_pair_notebook(group) -> dict:
+    """One single-wave notebook that runs two original completion shards.
+
+    The user already ran shards 0-53 as single-shard notebooks.  From shard 54
+    on, each notebook runs two original shards sequentially into their original
+    ``..._shard_XXX`` output directories, so the union of outputs is still all
+    384 shard directories and ``aggregate_archives.py --n-shards 384`` needs no
+    change.
+    """
+    first, second = int(group[0]), int(group[-1])
+    n_shards = FAMILY_SHARDS["correction_completion"]
+    title = (f"Extra Theory Experiments | correction_completion | "
+             f"shards {first:03d}+{second:03d}/{n_shards}")
+    setup = f"""# Colab bootstrap: branch is pinned so this notebook is self-contained.
+import os, sys, pathlib, subprocess
+REPO_URL = {REPO_URL!r}
+BRANCH = {BRANCH!r}
+TARGET = pathlib.Path("DiD-BCF")
+if not (TARGET / ".git").exists():
+    subprocess.run(["git", "clone", "--depth", "1", "--branch", BRANCH,
+                    REPO_URL, str(TARGET)], check=True)
+else:
+    # Refresh an existing disposable clone so reruns cannot keep stale code.
+    subprocess.run(["git", "-C", str(TARGET), "fetch", "--depth", "1", "origin", BRANCH], check=True)
+    subprocess.run(["git", "-C", str(TARGET), "reset", "--hard", f"origin/{BRANCH}"], check=True)
+subprocess.run([sys.executable, "-m", "pip", "install", "-q", "-r",
+                str(TARGET / "Simulation_Studies_Revision" / "Theory_Calibration" / "requirements-colab.txt")], check=True)
+sys.path.insert(0, str(TARGET))
+sys.path.insert(0, str(TARGET / "Simulation_Studies_Revision" / "Theory_Calibration" / "src"))
+os.environ.setdefault("OMP_NUM_THREADS", "2")
+os.environ.setdefault("MKL_NUM_THREADS", "2")
+print("Using clone:", TARGET.resolve(), "| max workers: 2, default workers: 1")
+"""
+    run_template = """from extra_theory_experiments.manifest import build_manifest, manifest_frame
+from extra_theory_experiments.runner import run_tasks, write_provenance
+import json, os, zipfile
+
+import pandas as pd
+
+FAMILY = 'correction_completion'
+SHARD_GROUP = __SHARD_GROUP__
+SHARD_IDS = list(SHARD_GROUP)
+N_SHARDS = __N_SHARDS__
+N_WAVES = 1
+WAVE_ID = 0
+REPS = int(os.environ['ETE_REPS']) if os.environ.get('ETE_REPS', '').strip() not in ('', '0') else None
+SMOKE = os.environ.get("ETE_SMOKE", "0") == "1"
+BCF_PARAMS = {'num_gfr': 50, 'num_mcmc': 500, 'keep_every': 5, 'num_chains': 3}
+
+RESULTS_ROOT = TARGET / "Simulation_Studies_Revision" / "Theory_Calibration" / "results"
+RESULTS_ROOT.mkdir(parents=True, exist_ok=True)
+ARCHIVES = []
+SUMMARIES = []
+for SHARD_ID in SHARD_IDS:
+    print(f"[correction_completion] running original shard {SHARD_ID:03d}/{N_SHARDS:03d}", flush=True)
+    OUT = str(RESULTS_ROOT / f"extra_theory_correction_completion_shard_{SHARD_ID:03d}")
+    os.makedirs(OUT, exist_ok=True)
+    tasks = build_manifest(FAMILY, reps=REPS, n_shards=N_SHARDS, shard_id=SHARD_ID,
+                           wave_id=WAVE_ID, n_waves=N_WAVES)
+    manifest_frame(tasks).to_csv(os.path.join(OUT, "manifest.csv"), index=False)
+    summary = run_tasks(tasks, out_dir=os.path.join(OUT, "checkpoints"),
+                        bcf_params=BCF_PARAMS, smoke=SMOKE, resume=True)
+    summary.to_csv(os.path.join(OUT, "summary.csv"), index=False)
+    try:
+        summary.to_parquet(os.path.join(OUT, "summary.parquet"), index=False)
+    except Exception as exc:
+        print("Parquet skipped:", exc)
+    write_provenance(os.path.join(OUT, "provenance.json"), tasks=tasks,
+                     repo_root=str(TARGET), smoke=SMOKE,
+                     bcf_params=BCF_PARAMS,
+                     config={"family": FAMILY, "reps": REPS, "shard": SHARD_ID,
+                             "n_shards": N_SHARDS, "wave_id": WAVE_ID,
+                             "n_waves": N_WAVES, "K": 2, "workers": 1,
+                             "pilot": None})
+    with open(os.path.join(OUT, "README_run.txt"), "w", encoding="utf-8") as handle:
+        handle.write("Family=" + FAMILY + "; shard=" + str(SHARD_ID) + "/" + str(N_SHARDS) +
+                     "; wave=" + str(WAVE_ID) + "/" + str(N_WAVES) + "; reps=" + str(REPS) +
+                     "; smoke=" + str(SMOKE) + "\\n")
+    archive_path = OUT + ".zip"
+    with zipfile.ZipFile(archive_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        for root, _, names in os.walk(OUT):
+            for name in names:
+                path = os.path.join(root, name)
+                archive.write(path, arcname=os.path.relpath(path, OUT))
+    print("Wrote archive:", archive_path)
+    ARCHIVES.append(archive_path)
+    SUMMARIES.append(summary)
+combined = pd.concat(SUMMARIES, ignore_index=True) if SUMMARIES else pd.DataFrame()
+combined_path = str(RESULTS_ROOT /
+                    f"extra_theory_correction_completion_shards_{SHARD_IDS[0]:03d}_{SHARD_IDS[-1]:03d}_summary.csv")
+combined.to_csv(combined_path, index=False)
+print("Wrote combined summary:", combined_path)
+OUTPUT_FILES = ARCHIVES + [combined_path]
+"""
+    run = (run_template
+           .replace("__SHARD_GROUP__", repr(tuple(int(x) for x in group)))
+           .replace("__N_SHARDS__", str(n_shards)))
+    download = """try:
+    from google.colab import files
+    for output_file in OUTPUT_FILES:
+        files.download(output_file)
+        print("Downloaded:", output_file)
+except Exception as e:
+    print("(Not on Colab / download skipped):", e)
+"""
+    cells = [
+        cell("markdown", f"# {title}\n\nUse at most two workers on a 12 GB Colab session; "
+                         "default is one. This single-wave notebook runs two original shards "
+                         f"sequentially ({first:03d} then {second:03d}), each into its own "
+                         "original shard output directory, so aggregation with "
+                         "--n-shards 384 is unchanged and each notebook downloads its shard "
+                         "archives plus one combined summary. Run the notebook once; no "
+                         "ETE_N_WAVES or ETE_WAVE_ID configuration is needed. Replication "
+                         "counts follow each design's config value (ETE_REPS overrides)."),
+        cell("code", setup),
+        cell("code", run),
+        cell("code", download),
+    ]
+    return {"cells": cells, "metadata": {"kernelspec": {"display_name": "Python 3",
+            "language": "python", "name": "python3"},
+            "colab": {"name": title}}, "nbformat": 4, "nbformat_minor": 5}
+
+
 def controlled_mechanics_notebook():
     """Notebook for the no-BCF exact-m0 special-case mechanics audit."""
     setup = f"""# Controlled special-case mechanics diagnostic; no BCF training.
@@ -312,6 +435,11 @@ FAMILY_SHARDS = {
     # notebook needs ETE_N_WAVES/ETE_WAVE_ID edits.
     "correction_completion": 384,
 }
+# Shards 0..53 already ran as one notebook per shard.  From shard 54 on each
+# notebook runs a pair of original shards sequentially; notebook j covers
+# 2*j - 54 and 2*j - 53, for 54 <= j <= 218.
+COMPLETION_SINGLE_SHARDS = 54
+COMPLETION_PAIRED_LAST = 218
 FAMILIES = ("all", "correction_audit", "information_ablation",
             "correction_completion")
 # The generated notebooks live with the final revision artifacts.  The package
@@ -320,6 +448,16 @@ FAMILIES = ("all", "correction_audit", "information_ablation",
 NOTEBOOK_ROOT = Path(__file__).resolve().parents[2] / "DiD_BCF"
 THEORY_NOTEBOOKS = NOTEBOOK_ROOT / "Theory_Calibration"
 COMPLETION_NOTEBOOKS = NOTEBOOK_ROOT / "Correction_Completion"
+
+
+def completion_shard_group(notebook_index: int) -> tuple[int, int]:
+    """Original shard pair run by completion notebook ``notebook_index``."""
+    index = int(notebook_index)
+    if not COMPLETION_SINGLE_SHARDS <= index <= COMPLETION_PAIRED_LAST:
+        raise ValueError(
+            f"paired completion notebook index must lie in "
+            f"[{COMPLETION_SINGLE_SHARDS}, {COMPLETION_PAIRED_LAST}], got {index}")
+    return (2 * index - 54, 2 * index - 53)
 
 
 def _write_shards(out: Path, family: str) -> None:
@@ -331,6 +469,22 @@ def _write_shards(out: Path, family: str) -> None:
         (out / name).write_text(
             json.dumps(notebook(family=family, shard=shard, n_shards=n_shards,
                                 single_wave=single_wave), indent=1),
+            encoding="utf-8")
+
+
+def _write_completion_shards(out: Path) -> None:
+    n_shards = FAMILY_SHARDS["correction_completion"]
+    for shard in range(COMPLETION_SINGLE_SHARDS):
+        name = f"correction_completion_shard_{shard:03d}.ipynb"
+        (out / name).write_text(
+            json.dumps(notebook(family="correction_completion", shard=shard,
+                                n_shards=n_shards, single_wave=True), indent=1),
+            encoding="utf-8")
+    for index in range(COMPLETION_SINGLE_SHARDS, COMPLETION_PAIRED_LAST + 1):
+        name = f"correction_completion_shard_{index:03d}.ipynb"
+        (out / name).write_text(
+            json.dumps(completion_pair_notebook(completion_shard_group(index)),
+                       indent=1),
             encoding="utf-8")
 
 
@@ -366,7 +520,7 @@ def generate(output_dir: str | Path | None = None, family: str = "all"):
             json.dumps(notebook(pilot="information"), indent=1), encoding="utf-8")
     if family in ("all", "correction_completion"):
         completion.mkdir(parents=True, exist_ok=True)
-        _write_shards(completion, "correction_completion")
+        _write_completion_shards(completion)
 
 
 if __name__ == "__main__":
