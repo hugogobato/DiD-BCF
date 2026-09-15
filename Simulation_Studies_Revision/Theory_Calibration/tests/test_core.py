@@ -369,7 +369,7 @@ def test_multiwave_manifest_bundle_allocation_is_complete_and_disjoint():
 def test_notebooks_are_valid_and_download_one_zip():
     revision = Path(__file__).parents[2]
     root = revision / "DiD_BCF" / "Theory_Calibration"
-    completion = revision / "DiD_BCF" / "Correction_Completion"
+    completion = revision / "DiD_BCF" / "Correction_Completion_Notebooks"
     books = sorted(root.glob("*.ipynb"))
     assert len(books) == 101
     for path in books:
@@ -491,7 +491,7 @@ def test_theory_notebook_regeneration_is_byte_identical(tmp_path):
                   if (committed / p.name).read_bytes() != p.read_bytes()]
     assert mismatches == []
 
-    committed_completion = Path(__file__).parents[2] / "DiD_BCF" / "Correction_Completion"
+    committed_completion = Path(__file__).parents[2] / "DiD_BCF" / "Correction_Completion_Notebooks"
     completion_out = tmp_path / "completion"
     gn.generate(completion_out, "correction_completion")
     produced_completion = sorted(completion_out.glob("*.ipynb"))

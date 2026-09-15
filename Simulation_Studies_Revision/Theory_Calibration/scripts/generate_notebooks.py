@@ -447,7 +447,7 @@ FAMILIES = ("all", "correction_audit", "information_ablation",
 # Theory_Calibration/; only the uploadable notebooks moved.
 NOTEBOOK_ROOT = Path(__file__).resolve().parents[2] / "DiD_BCF"
 THEORY_NOTEBOOKS = NOTEBOOK_ROOT / "Theory_Calibration"
-COMPLETION_NOTEBOOKS = NOTEBOOK_ROOT / "Correction_Completion"
+COMPLETION_NOTEBOOKS = NOTEBOOK_ROOT / "Correction_Completion_Notebooks"
 
 
 def completion_shard_group(notebook_index: int) -> tuple[int, int]:
@@ -493,7 +493,7 @@ def generate(output_dir: str | Path | None = None, family: str = "all"):
 
     Without ``output_dir`` the theory notebooks land in
     ``Simulation_Studies_Revision/DiD_BCF/Theory_Calibration`` and the
-    completion shards in ``Simulation_Studies_Revision/DiD_BCF/Correction_Completion``.
+    completion shards in ``Simulation_Studies_Revision/DiD_BCF/Correction_Completion_Notebooks``.
     A caller-supplied ``output_dir`` collects the selected notebooks flat in
     that directory.
     """

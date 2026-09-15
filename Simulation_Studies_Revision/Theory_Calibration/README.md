@@ -171,7 +171,7 @@ hashes are unchanged. The family expands to 15,200 task rows (7,600 paired
 bundles in total: about 24,000 sampler fits, three per canonical bundle, seven
 per staggered bundle, and three per pre-trend bundle). It is emitted as one
 single wave of 219 notebooks under
-`Simulation_Studies_Revision/DiD_BCF/Correction_Completion/`, with no
+`Simulation_Studies_Revision/DiD_BCF/Correction_Completion_Notebooks/`, with no
 `ETE_N_WAVES`/`ETE_WAVE_ID` setup (`N_WAVES = 1`, `WAVE_ID = 0` hardcoded).
 Notebooks `_000` through `_053` run one original shard each (roughly 3 hours);
 notebooks `_054` through `_218` each run two original shards sequentially,

@@ -65,7 +65,7 @@ original `../Simulation_Studies/`, adapted to the revision DGPs:
 
 ```
 1. (Colab, slow)   DiD_BCF/Theory_Calibration/*.ipynb   -> Theory_Calibration/results/*.zip
-                   DiD_BCF/Correction_Completion/*.ipynb -> Theory_Calibration/results/*.zip
+                   DiD_BCF/Correction_Completion_Notebooks/*.ipynb -> Theory_Calibration/results/*.zip
                    (the old-generation DiD_BCF/<scen>_lin_<d>.ipynb notebooks and
                    their summaries now live in the local legacy tree)
 1b.(Colab, slow)   Pretrend/Pretrend_<PT>_lin_<d>.ipynb -> Results/summaries_pretrend_<PT>_lin_<d>.csv
@@ -146,7 +146,7 @@ so the 54 notebooks cannot drift apart — regenerate them all from
 Mirrors `../Simulation_Studies/`: per-scenario data-creation scripts under
 `DGPs/`, the final-generation DiD-BCF Colab notebooks under `DiD_BCF/`
 (`Theory_Calibration/` for the correction and information families,
-`Correction_Completion/` for the completion cells) and the TWFE notebooks under
+`Correction_Completion_Notebooks/` for the completion cells) and the TWFE notebooks under
 `TWFE/`, per-scenario R benchmarks under `R_code/`, and a `Results/` sink, with
 a shared engine package so nothing is duplicated. The old-generation
 `DiD_BCF/<scenario>_lin_<d>.ipynb` notebooks and their summary CSVs were moved
@@ -188,8 +188,7 @@ Simulation_Studies_Revision/
 ├── DiD_BCF/                       # DiD-BCF Colab notebooks (final generation)
 │   ├── Theory_Calibration/        # correction-audit + information-ablation shards (96),
 │   │                              #   three BCF pilots, validation, controlled mechanics
-│   └── Correction_Completion/     # 48 shards for the completion cells (strong confounder,
-│                                  #   selection, staggered, d=3, N sweeps, pre-trend)
+│   └── Correction_Completion_Notebooks/  # 219 notebooks (54 single-shard, 165 paired) for the completion cells
 ├── TWFE/                          # OLS benchmark: one notebook per scenario × linearity (32; PC)
 │   ├── OLS_B1_baseline_lin_1.ipynb ... OLS_D_contamination_lin_3.ipynb
 ├── Pretrend/                      # PT diagnostic: one notebook per PT scenario × linearity (20)

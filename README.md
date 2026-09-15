@@ -18,7 +18,7 @@ Final simulation suite for the paper. Its own `README.md` documents the full wor
 
 | path | contents |
 |---|---|
-| `DiD_BCF/` | DiD-BCF run notebooks: `DiD_BCF/Theory_Calibration/` (correction-audit, information-ablation and pilot notebooks) and `DiD_BCF/Correction_Completion/` (strong-confounder, selection, staggered, d=3, sample-size and pre-trend completion shards). The old-generation per-scenario notebooks and summaries moved to the local legacy tree |
+| `DiD_BCF/` | DiD-BCF run notebooks: `DiD_BCF/Theory_Calibration/` (correction-audit, information-ablation and pilot notebooks) and `DiD_BCF/Correction_Completion_Notebooks/` (strong-confounder, selection, staggered, d=3, sample-size and pre-trend completion shards). The old-generation per-scenario notebooks and summaries moved to the local legacy tree |
 | `Pretrend/` | pre-trend diagnostic notebooks and per-replication summaries |
 | `TWFE/` | TWFE/OLS benchmark notebooks |
 | `R_code/` | Callaway-Sant'Anna (`did`), Gardner (`did2s`), DoubleML and synthetic DiD benchmark scripts with dataset-generation scaffolds; generated panels are local-only and gitignored |
@@ -44,7 +44,7 @@ All final outputs are committed, so the paper numbers can be inspected directly.
 2. `python3 Simulation_Studies_Revision/Results/analysis/make_analysis.py` regenerates the LaTeX fragments in `Results/tables/` and the vector PDFs in `Results/figures/` from the aggregated files.
 3. The correction experiments are aggregated and reconciled with the published tables via `python Simulation_Studies_Revision/Theory_Calibration/scripts/make_reconciliation_tables.py`; the resulting fragments live in `Theory_Calibration/reconciliation/tables/`. When the JBES submission sources are available next to this repository, `python Simulation_Studies_Revision/Theory_Calibration/scripts/verify_jbes_corrected_numbers.py` checks every corrected-estimator number against them.
 
-The expensive BCF fits run in the Colab notebooks under `Simulation_Studies_Revision/DiD_BCF/Theory_Calibration/`, `Simulation_Studies_Revision/DiD_BCF/Correction_Completion/` and `Simulation_Studies_Revision/Pretrend/`. Benchmark summaries from `DoubleML_Colab/` and `CFFE_Wang_Colab/` are unpacked locally into `Simulation_Studies_Revision/Results/_staging/` before step 1; that staging directory is not tracked. R benchmark summaries are regenerated locally from `R_code/`. See `Simulation_Studies_Revision/README.md` and `Simulation_Studies_Revision/Theory_Calibration/README.md` for the full assignment and wall-time guidance, including how to run and aggregate the completion family.
+The expensive BCF fits run in the Colab notebooks under `Simulation_Studies_Revision/DiD_BCF/Theory_Calibration/`, `Simulation_Studies_Revision/DiD_BCF/Correction_Completion_Notebooks/` and `Simulation_Studies_Revision/Pretrend/`. Benchmark summaries from `DoubleML_Colab/` and `CFFE_Wang_Colab/` are unpacked locally into `Simulation_Studies_Revision/Results/_staging/` before step 1; that staging directory is not tracked. R benchmark summaries are regenerated locally from `R_code/`. See `Simulation_Studies_Revision/README.md` and `Simulation_Studies_Revision/Theory_Calibration/README.md` for the full assignment and wall-time guidance, including how to run and aggregate the completion family.
 
 ## Citation
 
