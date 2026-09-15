@@ -50,6 +50,13 @@ def fi(x) -> str:
         return "--"
 
 
+def mcse_rate(r, n) -> float:
+    try:
+        return float(np.sqrt(float(r) * (1.0 - float(r)) / int(n)))
+    except (TypeError, ValueError, ZeroDivisionError):
+        return float("nan")
+
+
 # ---------------------------------------------------------------------------
 # 1. Aggregate the new runs.
 # ---------------------------------------------------------------------------
@@ -520,6 +527,365 @@ for design, degrees in (("baseline", (1, 2)), ("serial", (1, 2)), ("staggered", 
                     store(f"info_{design}_d{degree}_N{N}_{variant}",
                           bias=m["bias"], rmse=m["rmse"], cov95=m["cover95"],
                           len95=m["len95"], n=m["n_reps"])
+
+# ---------------------------------------------------------------------------
+# 5. Completion family: the cells that still used the same-sample correction.
+# ---------------------------------------------------------------------------
+COMP_AGG = ETE / "results" / "aggregated_completion"
+comp_metrics = pd.read_csv(COMP_AGG / "metrics_mean_median.csv",
+                           keep_default_na=False, na_values=[])
+comp_summary = pd.read_csv(COMP_AGG / "combined_per_replication.csv",
+                           engine="python", keep_default_na=False,
+                           na_values=[], on_bad_lines="skip")
+
+COMP_SETTING = {
+    "strong_confounder": "B1_strong_confounder",
+    "selection_obs": "B1_selection_obs",
+    "selection_both": "B1_selection_both",
+    "baseline": "B1_baseline",
+    "serial": "B1_serial_corr",
+    "null": "B1_null",
+    "baseline_sweep": "B2_sweep",
+    "baseline_sweep_d3": "B2_sweep",
+    "serial_sweep": "B2_sweep_serial",
+    "serial_sweep_d3": "B2_sweep_serial",
+    "staggered": "D_staggered",
+}
+COMP_PRETTY = {
+    "strong_confounder": "strong confounder",
+    "selection_obs": "selection on observables",
+    "selection_both": "selection on both",
+    "baseline": "baseline",
+    "serial": "serial correlation",
+    "null": "sharp null",
+    "baseline_sweep": "baseline sweep",
+    "baseline_sweep_d3": "baseline sweep",
+    "serial_sweep": "serial sweep",
+    "serial_sweep_d3": "serial sweep",
+    "staggered": "staggered",
+}
+# (task_estimator, method) pairs in the completion archive.
+COMP_RAW = ("raw_structured", "raw_structured")
+COMP_REF = ("reference_fold_convolution_rf", "reference_fold_convolution")
+COMP_RAW_PT = ("raw_structured", "pretrend")
+COMP_REF_PT = ("reference_fold_convolution_rf", "reference_fold_pretrend")
+
+
+def comp_cell(design, degree, N, estimator, method, etype, eid,
+              summary="mean"):
+    sub = comp_metrics[(comp_metrics["design"] == design)
+                       & (comp_metrics["degree"] == int(degree))
+                       & (comp_metrics["N"] == int(N))
+                       & (comp_metrics["task_estimator"] == estimator)
+                       & (comp_metrics["method"] == method)
+                       & (comp_metrics["point_summary"] == summary)
+                       & (comp_metrics["estimand_type"] == etype)
+                       & (comp_metrics["estimand_id"] == eid)]
+    return sub.iloc[0].to_dict() if len(sub) else {}
+
+
+def old_cell_metrics(setting, method, N, degree, etype, eid):
+    """Published-run metrics recomputed from the archived per-rep summaries."""
+    sub = old[(old["setting"] == setting) & (old["method"] == method)
+              & (old["N"] == int(N))
+              & (old["linearity_degree"] == int(degree))
+              & (old["estimand_type"] == etype)
+              & (old["estimand_id"] == eid)]
+    if sub.empty:
+        return {}
+    return scalar_metrics(sub["post_mean"], sub["true"],
+                          posterior_sd=sub["sd"], q05=sub["q05"],
+                          q95=sub["q95"], q025=sub["q025"], q975=sub["q975"])
+
+
+def _comp_row(label, m):
+    return (f"\\quad {label} & {f3(m['bias'])} & {f3(m['emp_sd'])} & "
+            f"{f3(m['rmse'])} & {f3(m['cover95'])} & {f3(m['len95'])} & "
+            f"{f3(m['sd_ratio'])} & {fi(m['n_reps'])} \\\\")
+
+
+COMP_HEAD = (r"Estimator & Bias & SD(err) & RMSE & Cov.95 & Len.95 & "
+             r"$\overline{\mathrm{sd}}/\mathrm{SD}$ & $n$ \\")
+
+
+def _comp_longtable(name, caption, label, body):
+    lines = [r"{\footnotesize", r"\begin{longtable}{lrrrrrrr}",
+             r"\caption{" + caption + r"}\label{" + label + r"}\\",
+             r"\toprule", COMP_HEAD, r"\midrule",
+             r"\endfirsthead", COMP_HEAD, r"\midrule",
+             r"\endhead", r"\bottomrule", r"\endlastfoot"]
+    lines += body
+    lines += [r"\end{longtable}", "}"]
+    (TAB / name).write_text("\n".join(lines) + "\n")
+    print("  ->", name)
+
+
+def completion_b1_table():
+    """ATT at N=200 for every newly rerun canonical design and degree."""
+    body = []
+    for design, degrees in (("strong_confounder", (1, 2, 3)),
+                            ("selection_obs", (1, 2, 3)),
+                            ("selection_both", (1, 2, 3)),
+                            ("baseline", (3,)), ("serial", (3,)),
+                            ("null", (3,))):
+        body.append(r"\multicolumn{8}{l}{\textit{" + design.replace("_", r"\_")
+                    + r"}} \\")
+        setting = COMP_SETTING[design]
+        for degree in degrees:
+            body.append(r"\multicolumn{8}{l}{\textit{degree $d=" + str(degree)
+                        + r"$}} \\")
+            for label, (est, meth) in (
+                    ("New raw structured", COMP_RAW),
+                    ("New reference fold, RF", COMP_REF),
+                    ("Published corrected (same-sample)", (None, "corrected"))):
+                if est is None:
+                    m = old_cell_metrics(setting, meth, 200, degree,
+                                         "ATT", "ATT")
+                else:
+                    m = comp_cell(design, degree, 200, est, meth,
+                                  "ATT", "ATT")
+                if m:
+                    body.append(_comp_row(label, m))
+            body.append(r"\addlinespace")
+    _comp_longtable(
+        "tab_completion_b1.tex",
+        r"Pooled ATT, $N=200$: the newly rerun canonical cells (strong "
+        r"confounder, selection designs, and degree $d=3$) with the published "
+        r"same-sample correction alongside for contrast.",
+        "tab:completion_b1", body)
+
+
+def completion_sweep_table():
+    """GATT(4,4) sweeps: the N=50,100,400 and d=3 cells the audit skipped."""
+    body = []
+    for design, degrees, Ns in (("baseline_sweep", (1, 2), (50, 100, 400)),
+                                ("baseline_sweep_d3", (3,),
+                                 (50, 100, 400, 800)),
+                                ("serial_sweep", (1, 2), (50, 100, 400)),
+                                ("serial_sweep_d3", (3,),
+                                 (50, 100, 400, 800))):
+        body.append(r"\multicolumn{8}{l}{\textit{" + design.replace("_", r"\_")
+                    + r"}} \\")
+        setting = COMP_SETTING[design]
+        for degree in degrees:
+            for N in Ns:
+                body.append(r"\multicolumn{8}{l}{\textit{$N=" + str(N)
+                            + r"$, degree $d=" + str(degree) + r"$}} \\")
+                for label, (est, meth) in (
+                        ("New raw structured", COMP_RAW),
+                        ("New reference fold, RF", COMP_REF),
+                        ("Published corrected (same-sample)",
+                         (None, "corrected"))):
+                    if est is None:
+                        m = old_cell_metrics(setting, meth, N, degree,
+                                             "GATT", "g=4_t=4")
+                    else:
+                        m = comp_cell(design, degree, N, est, meth,
+                                      "GATT", "g=4_t=4")
+                    if m:
+                        body.append(_comp_row(label, m))
+                body.append(r"\addlinespace")
+    _comp_longtable(
+        "tab_completion_sweep.tex",
+        r"$\mathrm{GATT}(g{=}4,t{=}4)$ sweeps: every cell the correction-audit "
+        r"family skipped, with the published same-sample correction alongside "
+        r"for contrast.",
+        "tab:completion_sweep", body)
+
+
+def completion_staggered_table():
+    """Staggered ES/ATT/GATT cells at all three degrees."""
+    body = []
+    for degree in (1, 2, 3):
+        body.append(r"\multicolumn{8}{l}{\textit{degree $d=" + str(degree)
+                    + r"$}} \\")
+        for etype, eid in ([("ES", f"k={k}") for k in (0, 1, 2, 3)]
+                           + [("ATT", "ATT")]):
+            body.append(r"\multicolumn{8}{l}{\textit{" + etype + ", "
+                        + eid.replace("_", r"\_").replace("=", "$=$")
+                        + r"}} \\")
+            for label, (est, meth) in (
+                    ("New raw structured", COMP_RAW),
+                    ("New reference fold, RF", COMP_REF),
+                    ("Published corrected (same-sample)", (None, "corrected"))):
+                if est is None:
+                    m = old_cell_metrics("D_staggered", meth, 200, degree,
+                                         etype, eid)
+                else:
+                    m = comp_cell("staggered", degree, 200, est, meth,
+                                  etype, eid)
+                if m:
+                    body.append(_comp_row(label, m))
+            body.append(r"\addlinespace")
+    _comp_longtable(
+        "tab_completion_staggered.tex",
+        r"Staggered event-study and pooled ATT cells at all three linearity "
+        r"degrees ($N=200$), with the published same-sample correction "
+        r"alongside for contrast.",
+        "tab:completion_staggered", body)
+
+
+def _comp_detect(design, degree, method, etype, eid):
+    sub = comp_summary[(comp_summary["design"] == design)
+                       & (comp_summary["degree"] == int(degree))
+                       & (comp_summary["method"] == method)
+                       & (comp_summary["estimand_type"] == etype)
+                       & (comp_summary["estimand_id"] == eid)]
+    p = pd.to_numeric(sub["p_bayes_tail_min"], errors="coerce")
+    p = p[p.notna()]
+    if len(p) == 0:
+        return float("nan"), 0
+    return float((p < 0.025).mean()), len(p)
+
+
+def _comp_anyk(design, degree, method):
+    sub = comp_summary[(comp_summary["design"] == design)
+                       & (comp_summary["degree"] == int(degree))
+                       & (comp_summary["method"] == method)
+                       & (comp_summary["estimand_type"] == "PRE")
+                       & (comp_summary["estimand_id"].str.startswith("k="))]
+    if sub.empty:
+        return float("nan"), 0
+    vals = pd.to_numeric(sub["p_bayes_tail_min"], errors="coerce")
+    sub = sub.assign(_p=vals.values).dropna(subset=["_p"])
+    if sub.empty:
+        return float("nan"), 0
+    per_rep = (sub.groupby("rep")["_p"].min() * 3.0).clip(upper=1.0)
+    return float((per_rep < 0.025).mean()), int(len(per_rep))
+
+
+PT_COMP_ORDER = ["PT_hold", "PT_conditional", "PT_violation_g05",
+                 "PT_violation_g10", "PT_violation_g20", "PT_violation_g40",
+                 "PT_violation_a20", "PT_violation_het10", "PT_violation_het20",
+                 "PT_violation_het40"]
+
+
+def completion_pt_table(degree, name, label):
+    body = []
+    for design in PT_COMP_ORDER:
+        body.append(r"\multicolumn{8}{l}{\textit{" + design.replace("_", r"\_")
+                    + r"}} \\")
+        for dlabel, (est, meth) in (("New raw diagnostic", COMP_RAW_PT),
+                                    ("New reference-fold diagnostic",
+                                     COMP_REF_PT)):
+            m = comp_cell(design, degree, 200, est, meth, "PRE", "slope")
+            if not m:
+                continue
+            sdet, _ = _comp_detect(design, degree, meth, "PRE", "slope")
+            cdet, _ = _comp_detect(design, degree, meth, "PRE_SUBC",
+                                   "X1_slope")
+            adet, _ = _comp_anyk(design, degree, meth)
+            body.append(
+                f"\\quad {dlabel} & {f3(sdet)} & {f3(cdet)} & {f3(adet)} & "
+                f"{f3(m['bias'])} & {f3(m['rmse'])} & {f3(m['cover95'])} & "
+                f"{fi(m['n_reps'])} \\\\")
+        body.append(r"\addlinespace")
+    lines = [r"{\footnotesize", r"\begin{longtable}{lrrrrrrr}",
+             r"\caption{Pre-trend diagnostic operating characteristics at "
+             r"degree $d=" + str(degree) + r"$: slope-rule, $X_1$-contrast, and "
+             r"any-$k$ detection rates with slope bias, RMSE, and coverage. "
+             r"The fold-pooled diagnostic is an exploratory aggregation, not a "
+             r"theorem-covered estimator.}\label{" + label + r"}\\",
+             r"\toprule",
+             (r"Diagnostic & Slope & Contrast & Any-$k$ & Bias & RMSE & "
+              r"Cov.95 & $n$ \\"),
+             r"\midrule", r"\endfirsthead",
+             (r"Diagnostic & Slope & Contrast & Any-$k$ & Bias & RMSE & "
+              r"Cov.95 & $n$ \\"),
+             r"\midrule", r"\endhead", r"\bottomrule", r"\endlastfoot"]
+    lines += body
+    lines += [r"\end{longtable}", "}"]
+    (TAB / name).write_text("\n".join(lines) + "\n")
+    print("  ->", name)
+
+
+def completion_null_table():
+    body = []
+    for etype, eid in (("ATT", "ATT"), ("ES", "k=0"), ("GATT", "g=4_t=4")):
+        body.append(r"\multicolumn{8}{l}{\textit{" + etype + ", "
+                    + eid.replace("_", r"\_").replace("=", "$=$") + r"}} \\")
+        for label, (est, meth) in (("New raw structured", COMP_RAW),
+                                   ("New reference fold, RF", COMP_REF)):
+            m = comp_cell("null", 3, 200, est, meth, etype, eid)
+            if not m:
+                continue
+            r, n = _comp_detect("null", 3, meth, etype, eid)
+            body.append(
+                f"\\quad {label} & {f3(m['bias'])} & {f3(m['emp_sd'])} & "
+                f"{f3(m['rmse'])} & {f3(m['cover95'])} & {f3(r)} & "
+                f"{f3(mcse_rate(r, n))} & {fi(m['n_reps'])} \\\\")
+        body.append(r"\addlinespace")
+    lines = [r"{\footnotesize", r"\begin{longtable}{lrrrrrrr}",
+             r"\caption{Sharp-null $d=3$ rerun ($N=200$, 200 replications): "
+             r"bias, dispersion, coverage, and the two-sided 5\% rejection "
+             r"rate with its Monte-Carlo standard error.}\label{"
+             r"tab:completion_null}\\",
+             r"\toprule",
+             (r"Estimator & Bias & SD(err) & RMSE & Cov.95 & Size (5\%) & "
+              r"MCSE & $n$ \\"),
+             r"\midrule", r"\endfirsthead",
+             (r"Estimator & Bias & SD(err) & RMSE & Cov.95 & Size (5\%) & "
+              r"MCSE & $n$ \\"),
+             r"\midrule", r"\endhead", r"\bottomrule", r"\endlastfoot"]
+    lines += body
+    lines += [r"\end{longtable}", "}"]
+    (TAB / "tab_completion_null.tex").write_text("\n".join(lines) + "\n")
+    print("  -> tab_completion_null.tex")
+
+
+completion_b1_table()
+completion_sweep_table()
+completion_staggered_table()
+completion_pt_table(1, "tab_completion_pt.tex", "tab:completion_pt")
+completion_pt_table(3, "tab_completion_pt_d3.tex", "tab:completion_pt_d3")
+completion_null_table()
+
+for design, degrees, N, etype, eid in (
+        ("strong_confounder", (1, 2, 3), 200, "ATT", "ATT"),
+        ("selection_obs", (1, 2, 3), 200, "ATT", "ATT"),
+        ("selection_both", (1, 2, 3), 200, "ATT", "ATT"),
+        ("baseline", (3,), 200, "ATT", "ATT"),
+        ("serial", (3,), 200, "ATT", "ATT"),
+        ("staggered", (1, 2, 3), 200, "ATT", "ATT"),
+        ("null", (3,), 200, "ATT", "ATT")):
+    for degree in degrees:
+        for est, meth in (COMP_RAW, COMP_REF):
+            m = comp_cell(design, degree, N, est, meth, etype, eid)
+            if m:
+                store(f"completion_{design}_d{degree}_{est}",
+                      bias=m["bias"], sd=m["emp_sd"], rmse=m["rmse"],
+                      cov95=m["cover95"], len95=m["len95"],
+                      ratio=m["sd_ratio"], n=m["n_reps"])
+for design, degrees, N in (("baseline_sweep", (1, 2), 50),
+                           ("baseline_sweep", (1, 2), 100),
+                           ("baseline_sweep", (1, 2), 400),
+                           ("serial_sweep", (1, 2), 50),
+                           ("serial_sweep", (1, 2), 100),
+                           ("serial_sweep", (1, 2), 400),
+                           ("baseline_sweep_d3", (3,), 50),
+                           ("baseline_sweep_d3", (3,), 100),
+                           ("baseline_sweep_d3", (3,), 400),
+                           ("baseline_sweep_d3", (3,), 800),
+                           ("serial_sweep_d3", (3,), 50),
+                           ("serial_sweep_d3", (3,), 100),
+                           ("serial_sweep_d3", (3,), 400),
+                           ("serial_sweep_d3", (3,), 800)):
+    for degree in degrees:
+        m = comp_cell(design, degree, N, *COMP_REF, "GATT", "g=4_t=4")
+        if m:
+            tag = design.replace("_d3", "")
+            store(f"completion_{tag}_d{degree}_N{N}_reference",
+                  bias=m["bias"], rmse=m["rmse"], cov95=m["cover95"],
+                  len95=m["len95"], ratio=m["sd_ratio"], n=m["n_reps"])
+for design in PT_COMP_ORDER:
+    for degree in (1, 3):
+        for est, meth in (COMP_RAW_PT, COMP_REF_PT):
+            m = comp_cell(design, degree, 200, est, meth, "PRE", "slope")
+            if m:
+                sdet, _ = _comp_detect(design, degree, meth, "PRE", "slope")
+                store(f"completion_{design}_d{degree}_{est}_slope",
+                      detect=sdet, bias=m["bias"], rmse=m["rmse"],
+                      cov95=m["cover95"], n=m["n_reps"])
 
 (OUT / "analysis_digest.json").write_text(json.dumps(digest, indent=2) + "\n")
 print(json.dumps({k: digest[k] for k in sorted(digest) if "outliers" in k}, indent=2))

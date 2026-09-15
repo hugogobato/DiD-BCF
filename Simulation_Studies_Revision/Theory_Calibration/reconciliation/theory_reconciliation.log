@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.5.13)  12 SEP 2026 08:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.5.13)  14 SEP 2026 22:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -507,32 +507,36 @@ Underfull \hbox (badness 3039) in paragraph at lines 95--99
 []|\OT1/cmr/m/n/9 (+20) The two cor-rec-tions run with ex-act
  []
 
-[2] [3] [4] [5] [6] [7] (./tables/tab_repro_baseline.tex)
-(./tables/tab_repro_serial.tex) (./tables/tab_repro_att.tex [8
+[2] [3] [4] [5] [6] [7] [8] [9] (./tables/tab_repro_baseline.tex)
+(./tables/tab_repro_serial.tex) (./tables/tab_repro_att.tex [10
 
 ])
-(./tables/tab_repro_sweep.tex [9]) (./tables/tab_oracle.tex [10])
-(./tables/tab_bench_gatt.tex [11]) (./tables/tab_bench_gatt_800.tex [12])
-(./tables/tab_bench_att.tex [13]) (./tables/tab_info_gatt.tex)
-(./tables/tab_info_att.tex [14]) (./tables/tab_null.tex)
-Overfull \hbox (2.06421pt too wide) in paragraph at lines 460--471
+(./tables/tab_repro_sweep.tex [11]) (./tables/tab_oracle.tex [12])
+(./tables/tab_bench_gatt.tex [13]) (./tables/tab_bench_gatt_800.tex [14])
+(./tables/tab_bench_att.tex [15]) (./tables/tab_info_gatt.tex)
+(./tables/tab_info_att.tex [16]) (./tables/tab_null.tex)
+(./tables/tab_completion_b1.tex [17]) (./tables/tab_completion_sweep.tex
+[18] [19]) (./tables/tab_completion_staggered.tex [20])
+(./tables/tab_completion_null.tex [21]) (./tables/tab_completion_pt.tex)
+(./tables/tab_completion_pt_d3.tex [22])
+Overfull \hbox (2.06421pt too wide) in paragraph at lines 556--567
  [][] 
  []
 
-[15] [16] (./theory_reconciliation.aux)
+[23] [24] (./theory_reconciliation.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
  ***********
 Package rerunfilecheck Info: File `theory_reconciliation.out' has not changed.
-(rerunfilecheck)             Checksum: 7DD2769215A10B9F616D4F8058769EB6;3076.
+(rerunfilecheck)             Checksum: C54DE4A012E6204D27BED07E88108487;3387.
  ) 
 Here is how much of TeX's memory you used:
- 13120 strings out of 476106
- 208208 string characters out of 5793933
- 1972975 words of memory out of 5000000
- 34749 multiletter control sequences out of 15000+600000
- 575563 words of font info for 173 fonts, out of 8000000 for 9000
+ 13211 strings out of 476106
+ 210296 string characters out of 5793933
+ 1989975 words of memory out of 5000000
+ 34793 multiletter control sequences out of 15000+600000
+ 575947 words of font info for 180 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
  75i,11n,79p,1018b,613s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
@@ -553,10 +557,10 @@ mf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dis
 t/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/share/texlive/texmf-dist/fonts
 /type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1
 /public/amsfonts/cm/cmtt9.pfb>
-Output written on theory_reconciliation.pdf (16 pages, 286656 bytes).
+Output written on theory_reconciliation.pdf (24 pages, 313021 bytes).
 PDF statistics:
- 272 PDF objects out of 1000 (max. 8388607)
- 213 compressed objects within 3 object streams
- 47 named destinations out of 1000 (max. 500000)
- 33377 words of extra memory for PDF output out of 35830 (max. 10000000)
+ 329 PDF objects out of 1000 (max. 8388607)
+ 262 compressed objects within 3 object streams
+ 62 named destinations out of 1000 (max. 500000)
+ 33385 words of extra memory for PDF output out of 35830 (max. 10000000)
 

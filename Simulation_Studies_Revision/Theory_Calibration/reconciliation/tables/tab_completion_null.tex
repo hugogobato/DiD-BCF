@@ -1,0 +1,26 @@
+{\footnotesize
+\begin{longtable}{lrrrrrrr}
+\caption{Sharp-null $d=3$ rerun ($N=200$, 200 replications): bias, dispersion, coverage, and the two-sided 5\% rejection rate with its Monte-Carlo standard error.}\label{tab:completion_null}\\
+\toprule
+Estimator & Bias & SD(err) & RMSE & Cov.95 & Size (5\%) & MCSE & $n$ \\
+\midrule
+\endfirsthead
+Estimator & Bias & SD(err) & RMSE & Cov.95 & Size (5\%) & MCSE & $n$ \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\multicolumn{8}{l}{\textit{ATT, ATT}} \\
+\quad New raw structured & -0.001 & 0.122 & 0.122 & 0.945 & 0.050 & 0.015 & 200 \\
+\quad New reference fold, RF & -0.012 & 0.232 & 0.231 & 0.870 & 0.130 & 0.024 & 200 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{ES, k$=$0}} \\
+\quad New raw structured & -0.001 & 0.132 & 0.132 & 0.970 & 0.030 & 0.012 & 200 \\
+\quad New reference fold, RF & -0.009 & 0.264 & 0.264 & 0.900 & 0.100 & 0.021 & 200 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{GATT, g$=$4\_t$=$4}} \\
+\quad New raw structured & -0.001 & 0.132 & 0.132 & 0.970 & 0.030 & 0.012 & 200 \\
+\quad New reference fold, RF & -0.009 & 0.264 & 0.264 & 0.900 & 0.100 & 0.021 & 200 \\
+\addlinespace
+\end{longtable}
+}

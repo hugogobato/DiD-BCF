@@ -42,7 +42,7 @@ makes no root-$n$ coverage claim for the raw summary, and the raw intervals unde
 under serial correlation at every sample size, which is exactly the failure the
 correction repairs.
 All numbers come from the now complete calibration archives (48 of 48 correction shards,
-48 of 48 information shards) and the published revision summaries, through a single
+48 of 48 information shards, and all 384 completion shards) and the published revision summaries, through a single
 reproducible script.
 \end{abstract}
 
@@ -115,9 +115,13 @@ scale; bias, $\mathrm{SD(err)}$, $\mathrm{RMSE}$, coverage, and length reproduce
 published tables exactly. Rejection rates use the two-sided $5\%$ rule that generated
 the published null table, namely $\min\{P(\tau>0),P(\tau\le0)\}<0.025$.
 
-Both families are now complete. The correction family has all $48$ shards and the
-information family has all $48$ shards, so every cell has $100$ replications; the
-$2{,}400$ oracle requests on the production DGPs remain explicitly ``unavailable'' by
+The correction family has all $48$ shards and the information family has all $48$
+shards. The completion family, which covers the cells the first two families
+skipped (strong confounding, selection designs, staggered adoption, degree $d=3$,
+the $N=50,100,400$ sweep cells, and the ten pre-trend designs), has all $384$
+single-wave shards, so every one of its bundles has $100$ replications ($200$ for
+the sharp null and the pre-trend designs); the $2{,}400$ oracle requests on the
+production DGPs remain explicitly ``unavailable'' by
 design, as they should, because those DGPs do not expose exact nuisances. Monte-Carlo
 standard errors on a bias of magnitude $0.1$ with $\mathrm{SD(err)}\approx0.1$ are about
 $0.010$, rising to $0.025$ when $\mathrm{SD(err)}=0.25$; coverage rates have Monte-Carlo
@@ -220,6 +224,75 @@ inherits the tail described in Section~\ref{sec:tail}. The practical recommendat
 to pair the theorem-aligned fold construction with a pilot that respects overlap, which
 the random-forest pilot does out of the box in these runs, or to report clipping
 explicitly as an exploratory stabilization.
+
+\section{Completion grid: the cells the first runs skipped}
+\label{sec:completion}
+
+Tables~\ref{tab:completion_b1}, \ref{tab:completion_sweep},
+\ref{tab:completion_staggered}, \ref{tab:completion_null},
+\ref{tab:completion_pt}, and \ref{tab:completion_pt_d3} report the completion
+family: the strong-confounder, selection, staggered, degree $d=3$, small-$N$
+sweep, sharp-null $d=3$, and pre-trend cells that the correction-audit family
+did not cover, each with the new raw fit, the new reference-fold fit, and the
+published same-sample correction alongside for contrast. The pattern from the
+old cells carries over, with two honest qualifications. First, where the
+same-sample correction already had no tail, the reference fold pays a modest
+efficiency cost for the fold split: at baseline $d=1$, $N=400$, the published
+corrected RMSE is $0.154$ against $0.189$ for the reference, and under serial
+correlation $0.090$ against $0.125$; at $N=50$, where the old run did have a
+tail, the reference wins ($0.532$ against $0.707$ at baseline $d=1$), while at
+$N=100$ the two are close ($0.410$ against $0.342$). The reference
+removes tails; it does not dominate point estimation where no tail existed.
+Second, the reference-fold pre-trend diagnostic is oversized:
+its slope rule rejects $0.105$ of the time at $d=1$ under \texttt{PT\_hold}
+($0.135$ at $d=3$) against $0.015$ ($0.040$) for the raw diagnostic, so the raw
+diagnostic remains the testing instrument and the fold version an exploratory
+sensitivity.
+
+Strong confounding is now a clean win. At $d=1$ the reference ATT has bias
+$0.005$, RMSE $0.184$, coverage $0.98$, side by side with the published
+$0.008$, $0.176$, $0.99$; at $d=2$, $-0.009$, $0.221$, $0.95$,
+against $0.037$, $0.359$, $0.96$ for the published correction; at $d=3$,
+$0.033$, $0.192$, $0.97$ against $0.033$, $0.361$, $0.97$. Selection on
+observables behaves the same way at $d=2$ and $d=3$ ($0.240$ and $0.259$
+against $1.338$ and $1.361$), while at $d=1$, where the same-sample fit never
+had a tail, the two are side by side ($0.232$ against $0.244$). Selection on
+both observables and unobservables, a scenario the paper never ran, is
+controlled at every degree ($0.195$, $0.244$, $0.258$ with coverage $0.96$,
+$0.92$, $0.94$). The $d=3$ baseline and serial cells, where the old run blew up
+to RMSE $1.096$ and $0.601$, are now $0.219$ and $0.198$ with coverage $0.94$
+and $0.90$.
+
+Staggered adoption is controlled at every degree. The reference event-study
+biases at $d=1$ are $-0.046$, $-0.023$, $-0.001$, $-0.031$ across $k=0,\dots,3$
+with coverage $0.96$ to $0.98$; the nine cohort-time cells hold coverage $0.96$
+to $1.00$ with biases under $0.061$ in absolute value, including the late
+cohorts where the raw fit degrades. At $d=2$ and $d=3$ the same picture holds
+(Table~\ref{tab:completion_staggered}): the $3.455$ and $3.461$ cell-averaged
+RMSEs of the old $d=2,3$ runs become $0.366$ and $0.365$.
+
+The sharp-null $d=3$ rerun (Table~\ref{tab:completion_null}, $200$
+replications) is the one place where the reference fit overshoots: it rejects
+$0.130$ of ATT tests, $0.100$ of event-study tests, and $0.100$ of cohort-time
+tests at nominal $5\%$, against $0.050$, $0.030$, $0.030$ for the raw fit. With
+$200$ replications the Monte-Carlo standard error at $p=0.13$ is $0.024$, so
+$0.13$ is about three standard errors above nominal: a genuine mild
+oversizing, not noise, and it is reported as such in the paper. Coverage tells
+the same story ($0.87$, $0.90$, $0.90$). It remains far from the grf-DiD
+distortion, and the $d=1,2$ null cells stay at $0.04$ to $0.09$.
+
+The pre-trend diagnostic comparison (Tables~\ref{tab:completion_pt} and
+\ref{tab:completion_pt_d3}) confirms the raw diagnostic and bounds the fold
+version. The raw slope rule reproduces the published operating characteristics
+on fresh replication panels (hold size $0.015$ at $d=1$, power $0.130$,
+$0.385$, $0.855$, $1.000$ at slopes $0.05$ through $0.40$), and the $X_1$
+contrast carries the heterogeneous violations ($1.000$ at $\kappa=0.4$ for both
+versions) while staying quiet elsewhere. The fold version detects more at every
+magnitude but pays for it in size, as noted above, and its slope intervals
+undercover ($0.89$ at hold, $0.73$ under \texttt{PT\_conditional}). The
+discrimination property belongs to the raw diagnostic: it rejects $0.060$
+under \texttt{PT\_conditional} where the marginal event study rejects $0.755$,
+while the fold version rejects $0.275$.
 
 \section{Is the theory-aligned estimator better than the old corrected one?}
 \label{sec:oldnew}
@@ -378,16 +451,32 @@ Monte-Carlo standard error is $0.030$. The correction therefore neither restores
 size nor destroys it: it trades some of the raw fit's conservativeness for better
 interval calibration, at nominal size.
 
+The $d=3$ sharp-null rerun ($200$ replications, Table~\ref{tab:completion_null})
+is the one cell where that trade goes too far. The raw fit stays conservative
+(rejection $0.050$, $0.030$, $0.030$ on ATT, event-study, and cohort-time cells),
+while the reference fold rejects $0.130$, $0.100$, $0.100$, with coverage $0.87$,
+$0.90$, $0.90$. At $n=200$ the Monte-Carlo standard error at $p=0.13$ is $0.024$,
+so the ATT rejection rate is about three standard errors above nominal: a genuine
+mild oversizing at $d=3$, reported as such, not hidden inside the $d=1,2$ range.
+It is still far from the grf-DiD distortion, and it does not overturn the
+calibration story elsewhere, but a reader who needs exact size at $d=3$ should
+not rely on the corrected intervals alone.
+
 \section{What the reconciliation establishes}
 \label{sec:conclusion}
 
-With all correction shards in hand the account is complete. The published plain and
+With all correction shards in hand the account is complete, including the
+completion grid that the first runs skipped. The published plain and
 corrected central behavior is reproduced with the current structured sampler; the
 published instability of the corrected estimator at $d\ge2$ is reproduced and localized
 to a small-replication tail caused by inverse odds under logistic separation; the tail
 exists equally in the theorem-aligned reference construction when that construction is
 handed the same pilot, and disappears with the random-forest, intercept, or clipped
-pilots, and by construction on the oracle design. The theory-aligned construction fixes
+pilots, and by construction on the oracle design. The completion rerun extends the
+same verdict to strong confounding, selection designs, staggered adoption, degree
+$d=3$, and the small-$N$ sweep cells, with the two documented qualifications: a
+modest efficiency cost where the old run had no tail, and a mildly oversized
+$d=3$ sharp-null test and an oversized fold-pooled pre-trend diagnostic. The theory-aligned construction fixes
 the independence and weighting structure of the correction, while the overlap conditions
 remain an empirical obligation on the pilot. The paper's advice to report both fits side
 by side remains correct, with the amendment that the corrected fit should name its pilot
@@ -395,7 +484,7 @@ and that a logit pilot on transformed covariates with $10^{-3}$ clipping should 
 the default.
 
 The experiments here do not establish any theorem. They do not cover the contracted
-posterior rate, they do not have degree $d=3$ in the correction grid, they use finite
+posterior rate, they use finite
 posterior and bootstrap draw budgets, and the oracle design is deliberately idealized
 (bounded propensity and iid row errors). They are calibration evidence about which
 implementation of the theory behaves as advertised.
@@ -403,7 +492,8 @@ implementation of the theory behaves as advertised.
 \section{Limitations}
 \label{sec:limitations}
 
-All calibration cells now have $100$ replications, and the published and new runs use
+Most calibration cells have $100$ replications; the completion sharp-null and
+pre-trend reruns use $200$. The published and new runs use
 different replication panels, so the exact magnitudes of tail-driven quantities are
 replication-specific; this is why Section~\ref{sec:tail} emphasizes the diagnostic and
 the trimmed RMSE rather than the raw RMSE. The benchmark comparison in
@@ -428,6 +518,12 @@ not as a theorem-covered default.
 \input{tables/tab_info_gatt}
 \input{tables/tab_info_att}
 \input{tables/tab_null}
+\input{tables/tab_completion_b1}
+\input{tables/tab_completion_sweep}
+\input{tables/tab_completion_staggered}
+\input{tables/tab_completion_null}
+\input{tables/tab_completion_pt}
+\input{tables/tab_completion_pt_d3}
 
 \begin{table}[htbp]
 \centering

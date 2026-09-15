@@ -1,0 +1,80 @@
+{\footnotesize
+\begin{longtable}{lrrrrrrr}
+\caption{Pooled ATT, $N=200$: the newly rerun canonical cells (strong confounder, selection designs, and degree $d=3$) with the published same-sample correction alongside for contrast.}\label{tab:completion_b1}\\
+\toprule
+Estimator & Bias & SD(err) & RMSE & Cov.95 & Len.95 & $\overline{\mathrm{sd}}/\mathrm{SD}$ & $n$ \\
+\midrule
+\endfirsthead
+Estimator & Bias & SD(err) & RMSE & Cov.95 & Len.95 & $\overline{\mathrm{sd}}/\mathrm{SD}$ & $n$ \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\multicolumn{8}{l}{\textit{strong\_confounder}} \\
+\multicolumn{8}{l}{\textit{degree $d=1$}} \\
+\quad New raw structured & -0.010 & 0.117 & 0.116 & 0.940 & 0.428 & 0.940 & 100 \\
+\quad New reference fold, RF & 0.005 & 0.184 & 0.184 & 0.980 & 0.796 & 1.100 & 100 \\
+\quad Published corrected (same-sample) & 0.008 & 0.177 & 0.176 & 0.990 & 0.819 & 1.182 & 100 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{degree $d=2$}} \\
+\quad New raw structured & 0.010 & 0.124 & 0.124 & 0.920 & 0.440 & 0.906 & 100 \\
+\quad New reference fold, RF & -0.009 & 0.222 & 0.221 & 0.950 & 0.828 & 0.947 & 100 \\
+\quad Published corrected (same-sample) & 0.037 & 0.359 & 0.359 & 0.960 & 1.112 & 0.789 & 100 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{degree $d=3$}} \\
+\quad New raw structured & -0.008 & 0.129 & 0.128 & 0.900 & 0.448 & 0.893 & 100 \\
+\quad New reference fold, RF & 0.033 & 0.190 & 0.192 & 0.970 & 0.811 & 1.085 & 100 \\
+\quad Published corrected (same-sample) & 0.033 & 0.361 & 0.361 & 0.970 & 1.114 & 0.786 & 100 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{selection\_obs}} \\
+\multicolumn{8}{l}{\textit{degree $d=1$}} \\
+\quad New raw structured & 0.049 & 0.120 & 0.129 & 0.920 & 0.472 & 1.009 & 100 \\
+\quad New reference fold, RF & 0.096 & 0.212 & 0.232 & 0.920 & 0.799 & 0.962 & 100 \\
+\quad Published corrected (same-sample) & 0.002 & 0.245 & 0.244 & 0.970 & 1.012 & 1.051 & 100 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{degree $d=2$}} \\
+\quad New raw structured & 0.070 & 0.137 & 0.154 & 0.880 & 0.485 & 0.907 & 100 \\
+\quad New reference fold, RF & 0.097 & 0.221 & 0.240 & 0.880 & 0.822 & 0.947 & 100 \\
+\quad Published corrected (same-sample) & 0.165 & 1.334 & 1.338 & 0.970 & 2.407 & 0.464 & 100 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{degree $d=3$}} \\
+\quad New raw structured & 0.047 & 0.135 & 0.142 & 0.920 & 0.500 & 0.950 & 100 \\
+\quad New reference fold, RF & 0.102 & 0.239 & 0.259 & 0.880 & 0.832 & 0.884 & 100 \\
+\quad Published corrected (same-sample) & 0.163 & 1.359 & 1.361 & 0.980 & 2.371 & 0.460 & 100 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{selection\_both}} \\
+\multicolumn{8}{l}{\textit{degree $d=1$}} \\
+\quad New raw structured & 0.047 & 0.106 & 0.116 & 0.950 & 0.455 & 1.107 & 100 \\
+\quad New reference fold, RF & 0.027 & 0.195 & 0.195 & 0.960 & 0.796 & 1.045 & 100 \\
+\quad Published corrected (same-sample) & -0.014 & 0.177 & 0.177 & 0.980 & 0.909 & 1.300 & 100 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{degree $d=2$}} \\
+\quad New raw structured & 0.050 & 0.134 & 0.142 & 0.890 & 0.471 & 0.906 & 100 \\
+\quad New reference fold, RF & 0.053 & 0.239 & 0.244 & 0.920 & 0.832 & 0.885 & 100 \\
+\quad Published corrected (same-sample) & -0.015 & 0.558 & 0.555 & 1.000 & 1.794 & 0.823 & 100 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{degree $d=3$}} \\
+\quad New raw structured & 0.026 & 0.133 & 0.135 & 0.940 & 0.475 & 0.918 & 100 \\
+\quad New reference fold, RF & 0.055 & 0.253 & 0.258 & 0.940 & 0.841 & 0.844 & 100 \\
+\quad Published corrected (same-sample) & -0.020 & 0.528 & 0.526 & 0.980 & 1.779 & 0.861 & 100 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{baseline}} \\
+\multicolumn{8}{l}{\textit{degree $d=3$}} \\
+\quad New raw structured & 0.006 & 0.116 & 0.115 & 0.940 & 0.445 & 0.985 & 100 \\
+\quad New reference fold, RF & 0.009 & 0.220 & 0.219 & 0.940 & 0.806 & 0.935 & 100 \\
+\quad Published corrected (same-sample) & 0.112 & 1.096 & 1.096 & 0.970 & 1.520 & 0.353 & 100 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{serial}} \\
+\multicolumn{8}{l}{\textit{degree $d=3$}} \\
+\quad New raw structured & 0.015 & 0.172 & 0.172 & 0.710 & 0.382 & 0.568 & 100 \\
+\quad New reference fold, RF & 0.027 & 0.197 & 0.198 & 0.900 & 0.696 & 0.901 & 100 \\
+\quad Published corrected (same-sample) & 0.078 & 0.599 & 0.601 & 0.960 & 1.268 & 0.538 & 100 \\
+\addlinespace
+\multicolumn{8}{l}{\textit{null}} \\
+\multicolumn{8}{l}{\textit{degree $d=3$}} \\
+\quad New raw structured & -0.001 & 0.122 & 0.122 & 0.945 & 0.438 & 0.919 & 200 \\
+\quad New reference fold, RF & -0.012 & 0.232 & 0.231 & 0.870 & 0.724 & 0.795 & 200 \\
+\quad Published corrected (same-sample) & 0.123 & 1.092 & 1.094 & 0.960 & 1.409 & 0.331 & 100 \\
+\addlinespace
+\end{longtable}
+}
