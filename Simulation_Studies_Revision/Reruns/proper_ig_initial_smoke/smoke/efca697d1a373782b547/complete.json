@@ -1,0 +1,49 @@
+{
+  "identity": {
+    "job": {
+      "kind": "application_pretrend",
+      "phase": "application",
+      "setting": "mpdta",
+      "rep": 0,
+      "spec": "diagnostic_rfx_unit",
+      "sigma2_shape": 2.0,
+      "sigma2_rate": 1.0,
+      "id": "efca697d1a373782b547",
+      "shard": 46
+    },
+    "manifest_hash": "b48f6cc3cb2bf419199ba9f77a50fdbf094300c90f7fd29944df180457c6c128",
+    "smoke": true
+  },
+  "method_version": "0.2.0-proper-ig",
+  "prior": {
+    "variance_prior_scale": "standardized_outcome",
+    "sigma2_shape": 2.0,
+    "sigma2_rate": 1.0
+  },
+  "actual_sampler": {
+    "num_gfr": 3,
+    "num_burnin": 0,
+    "num_mcmc": 4,
+    "keep_every": 1,
+    "num_chains": 2,
+    "sigma2_shape": 2.0,
+    "sigma2_rate": 1.0
+  },
+  "actual_units": 500,
+  "panel_hash": "c069c6dd9f85d3c53fd3737835ca91d3ca828c33a40a9a9202123852ac7b0691",
+  "seconds": 0.8591924740030663,
+  "dependencies": {
+    "stochtree": "0.4.4",
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "scipy": "1.18.0",
+    "scikit-learn": "1.9.0"
+  },
+  "python": "3.12.3",
+  "outputs": {
+    "started.json": "34a73ad8b7b70c45cf2b1443183f34cb6297e5ccd1a5a4784fbfe3b218227a80",
+    "panel.csv": "8fc1e8dc78c63b97f9f301a49be854b6ce94a124ecfaea5c580d2d578d9c0b3e",
+    "summaries.csv": "2865899ce3353d99bc6bb276eb2d0053ea6a37256cd0216257d7e5a53ee569f2",
+    "draws.npz": "369ffea36ba59af043b125aeb1e1875dd3e1a923cb07bbc9a096aa8044dcf674"
+  }
+}

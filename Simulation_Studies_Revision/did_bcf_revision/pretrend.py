@@ -182,6 +182,10 @@ def fit_pretrend(df: pd.DataFrame, bcf_params: dict | None = None,
     from stochtree import BCFModel
 
     p = {**DEFAULT_BCF_PARAMS, **(bcf_params or {})}
+    shape, rate = p.get("sigma2_shape", 2.0), p.get("sigma2_rate", 1.0)
+    if not np.isfinite([shape, rate]).all() or min(shape, rate) <= 0:
+        raise ValueError("Noise-variance prior shape and rate must be positive and finite")
+    p.update(sigma2_shape=shape, sigma2_rate=rate, method_version="0.2.0-proper-ig")
     prognostic_cols = list(prognostic_cols or PRETREND_PROGNOSTIC_COLS)
     treatment_cols = list(treatment_cols or PRETREND_TREATMENT_COLS)
     if "k_diag" not in treatment_cols:
@@ -200,7 +204,9 @@ def fit_pretrend(df: pd.DataFrame, bcf_params: dict | None = None,
     treat_idx = np.array([design_cols.index(c) for c in treatment_cols])
 
     general_params = {"keep_every": p["keep_every"], "num_chains": p["num_chains"],
-                      "propensity_covariate": "none"}
+                      "propensity_covariate": "none",
+                      "sigma2_global_shape": shape,
+                      "sigma2_global_scale": rate}
     if seed is not None:
         general_params["random_seed"] = stochtree_seed(seed)
 
@@ -212,6 +218,7 @@ def fit_pretrend(df: pd.DataFrame, bcf_params: dict | None = None,
     model = BCFModel()
     model.sample(X_train=X, Z_train=Z, y_train=y,
                  num_gfr=p["num_gfr"], num_mcmc=p["num_mcmc"],
+                 num_burnin=p.get("num_burnin", 0),
                  general_params=general_params,
                  prognostic_forest_params={"keep_vars": prog_idx},
                  treatment_effect_forest_params={"keep_vars": treat_idx},

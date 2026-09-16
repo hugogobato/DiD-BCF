@@ -260,4 +260,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit("Historical application writer is frozen after the prior repair. "
+                     "Use Proper_Prior_Rerun/campaign.py run --phase application.")

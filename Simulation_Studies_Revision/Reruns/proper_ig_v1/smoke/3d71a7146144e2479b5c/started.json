@@ -1,0 +1,15 @@
+{
+  "job": {
+    "kind": "application_pretrend",
+    "phase": "application",
+    "setting": "mpdta",
+    "rep": 0,
+    "spec": "pretrend_unit",
+    "sigma2_shape": 2.0,
+    "sigma2_rate": 1.0,
+    "id": "3d71a7146144e2479b5c",
+    "shard": 2
+  },
+  "manifest_hash": "105ee8510f99817b132d69869167ec5a724596ed37d8094f7ae430c958ad1ccc",
+  "smoke": true
+}

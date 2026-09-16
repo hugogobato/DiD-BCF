@@ -1,0 +1,70 @@
+{
+  "identity": {
+    "job": {
+      "kind": "pretrend",
+      "phase": "diagnostic",
+      "setting": "PT_hold",
+      "rep": 0,
+      "spec": "structured",
+      "sigma2_shape": 2.0,
+      "sigma2_rate": 1.0,
+      "dgp": "canonical",
+      "dgp_params": {
+        "n_units": 200,
+        "num_pre_periods": 4,
+        "num_post_periods": 4,
+        "linearity_degree": 1,
+        "base_effect": 3.0,
+        "effect_type": "heterogeneous",
+        "alpha_sd": 1.0,
+        "conf_strength": 1.0,
+        "selection": "unobservable",
+        "trend_heterogeneity": 0.3,
+        "ar1_rho": 0.0,
+        "epsilon_scale": 1.0,
+        "treated_share_target": 0.5,
+        "alpha_trend": 0.0,
+        "group_trend": 0.0,
+        "het_trend": 0.0
+      },
+      "N": 200,
+      "linearity_degree": 1,
+      "id": "f48eba939b79a5fbec9c",
+      "shard": 12
+    },
+    "manifest_hash": "b48f6cc3cb2bf419199ba9f77a50fdbf094300c90f7fd29944df180457c6c128",
+    "smoke": true
+  },
+  "method_version": "0.2.0-proper-ig",
+  "prior": {
+    "variance_prior_scale": "standardized_outcome",
+    "sigma2_shape": 2.0,
+    "sigma2_rate": 1.0
+  },
+  "actual_sampler": {
+    "num_gfr": 3,
+    "num_burnin": 0,
+    "num_mcmc": 4,
+    "keep_every": 1,
+    "num_chains": 2,
+    "sigma2_shape": 2.0,
+    "sigma2_rate": 1.0
+  },
+  "actual_units": 50,
+  "panel_hash": "c779fc3fbc93da53d0332f1a99c236a7dfeb084d7adecb55cb3279dcd7187071",
+  "seconds": 0.2621207779957331,
+  "dependencies": {
+    "stochtree": "0.4.4",
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "scipy": "1.18.0",
+    "scikit-learn": "1.9.0"
+  },
+  "python": "3.12.3",
+  "outputs": {
+    "started.json": "602dd6c5c412e7c13892c1e57e64e39634df2e8f4d1450eb2327f42ecc927749",
+    "panel.csv": "a51ec645a1751c2e2760a4297289d46d819c39ce63c7dee29831dbdc1fa3eeab",
+    "summaries.csv": "4160534ae97dc9a2a72053ed67733df8c32d6124969106589f38493d9dcb88e1",
+    "draws.npz": "c4905e14d3ebaaa5966dd0d4db31e9f889e4474765b47b1dab136de8b6ab222a"
+  }
+}

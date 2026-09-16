@@ -1,0 +1,59 @@
+{
+  "identity": {
+    "job": {
+      "kind": "application",
+      "phase": "application",
+      "setting": "mpdta",
+      "rep": 0,
+      "spec": "structured",
+      "sigma2_shape": 2.0,
+      "sigma2_rate": 1.0,
+      "id": "5e6cf4b70cbd92bbd07a",
+      "shard": 44
+    },
+    "manifest_hash": "b48f6cc3cb2bf419199ba9f77a50fdbf094300c90f7fd29944df180457c6c128",
+    "smoke": true
+  },
+  "method_version": "0.2.0-proper-ig",
+  "prior": {
+    "method_version": "0.2.0-proper-ig",
+    "global_prior": {
+      "sigma2_shape": 2.0,
+      "sigma2_rate": 1.0,
+      "sample_intercept": true,
+      "intercept_prior_var": null
+    },
+    "variance_prior_scale": "standardized_outcome",
+    "outcome_std": 1.5084793888938146,
+    "outcome_mean": 5.7725163264272314,
+    "effect_by_cohort": true
+  },
+  "actual_sampler": {
+    "num_gfr": 3,
+    "num_burnin": 0,
+    "num_mcmc": 4,
+    "keep_every": 1,
+    "num_chains": 2,
+    "sigma2_shape": 2.0,
+    "sigma2_rate": 1.0
+  },
+  "actual_units": 500,
+  "panel_hash": "c069c6dd9f85d3c53fd3737835ca91d3ca828c33a40a9a9202123852ac7b0691",
+  "seconds": 0.903697549001663,
+  "dependencies": {
+    "stochtree": "0.4.4",
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "scipy": "1.18.0",
+    "scikit-learn": "1.9.0"
+  },
+  "python": "3.12.3",
+  "outputs": {
+    "contrasts.csv": "a0d1e2c1553e38e210a43d3293217c7b047260fea81407406a88d691c2ea9b7d",
+    "started.json": "d91b0e9a823c11b06e1a44faf68e3dc50105c4d909e36e1e322fe943be102f31",
+    "panel.csv": "d9b83aac3f7c61da2dc1a3983dcedd9091482f5c187b23064b6dd56c0b102ced",
+    "catt.csv": "9bc27c05538fa7bce6de6e41771d0ac10ffdfc31ff4ef60b921075dd65a27713",
+    "summaries.csv": "371b182d6f0dfba75f2c54af0bc9ae847b2411ac28dbd8730264817a36b06e94",
+    "draws.npz": "78c7180255298aad8c06a93c41643a06e83c50157d3133a13e8b6a5712f053b4"
+  }
+}

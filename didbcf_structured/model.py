@@ -200,7 +200,9 @@ class StructuredDiDBCF:
         self.level_prior = level_prior or LEVEL_PRIOR
         self.trend_prior = trend_prior or TREND_PRIOR
         self.effect_prior = effect_prior or EFFECT_PRIOR
-        self.global_prior = global_prior or GLOBAL_PRIOR
+        from dataclasses import replace
+        self.global_prior = replace(global_prior or GLOBAL_PRIOR)
+        self.global_prior.validate()
         if rfx not in ("none", "unit", "group"):
             raise ValueError("rfx must be one of 'none', 'unit', 'group'")
         self.rfx = rfx
@@ -223,6 +225,7 @@ class StructuredDiDBCF:
         """
         from .design import DEFAULT_COVARIATES, DEFAULT_EFFECT_MODIFIERS
 
+        self.global_prior.validate()
         cols = cols or PanelColumns()
         df = df.sort_values([cols.unit, cols.time]).reset_index(drop=True)
         # ``None`` means use the package defaults; an explicit empty list is
@@ -242,6 +245,17 @@ class StructuredDiDBCF:
         self.design = dm
         self.y_bar = float(np.mean(dm.y))
         self.y_std = float(np.std(dm.y))
+        if not np.isfinite(dm.y).all() or not np.isfinite(self.y_std) or self.y_std <= 0:
+            raise ValueError("Outcome must be finite and have positive variance")
+        from dataclasses import asdict
+        self.prior_metadata = {
+            "method_version": "0.2.0-proper-ig",
+            "global_prior": asdict(self.global_prior),
+            "variance_prior_scale": "standardized_outcome",
+            "outcome_std": self.y_std,
+            "outcome_mean": self.y_bar,
+            "effect_by_cohort": bool(effect_by_cohort),
+        }
         resid0 = (dm.y - self.y_bar) / self.y_std
 
         rfx_ids = None

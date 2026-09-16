@@ -76,17 +76,31 @@ class ForestPrior:
 class GlobalPrior:
     """Prior on the error variance and on the global treatment-effect intercept.
 
-    ``shape = rate = 0`` is stochtree's default improper ``IG`` on ``sigma^2``.
-    ``sample_intercept`` reproduces the ``tau_0`` term of ``BCFModel``: a global
-    treatment-effect level with a normal prior, so the shrinkage prior on the
-    treatment forest does not pull the *average* effect toward zero.  ``tau_0``
-    multiplies ``D_it`` and so is a group-by-time term; it is identified in the
-    structured model for exactly the reason ``tau`` is.
+    On the standardized outcome, v = sigma^2 has density proportional to
+    v**(-shape-1) * exp(-rate/v). The proper IG(2, 1) default has mean 1
+    and infinite variance. It is a substantive scale choice, not a flat prior.
+    Both parameters must be strictly positive: the former IG(0, 0) default
+    admits improper joint posteriors for supported saturated forest designs.
+    ``sample_intercept`` adds a normally regularized global effect level.
+    Only its sum with the effect forest is identified; their constant
+    components are not separately identified by the likelihood.
     """
-    sigma2_shape: float = 0.0
-    sigma2_rate: float = 0.0
+    sigma2_shape: float = 2.0
+    sigma2_rate: float = 1.0
     sample_intercept: bool = True
     intercept_prior_var: float | None = None    # defaults to var(resid)
+
+    def __post_init__(self):
+        self.validate()
+
+    def validate(self):
+        """Reject improper or nonfinite priors, including mutated instances."""
+        for name in ("sigma2_shape", "sigma2_rate", "intercept_prior_var"):
+            value = getattr(self, name)
+            if name == "intercept_prior_var" and value is None:
+                continue
+            if not np.isfinite(value) or value <= 0:
+                raise ValueError(f"{name} must be finite and strictly positive")
 
 
 LEVEL_PRIOR = ForestPrior(num_trees=125, alpha=0.95, beta=2.0, max_depth=10,

@@ -129,9 +129,8 @@ def test_three_forests_share_one_residual(rfx):
     samplers write to.  If any block's contribution were not being subtracted
     from that shared residual, the ``sigma^2`` C++ returns would not match the
     residual implied by the blocks' own returned predictions.  Reconstruct
-    ``r_s = y - mu_s - tau_s D_it`` per retained draw and compare ``mean(r_s^2)``
-    with ``sigma2_s``; under the improper ``IG(0,0)`` prior they agree to within
-    Gibbs noise of order ``sqrt(2/n)``.
+    ``r_s = y - mu_s - tau_s D_it`` per retained draw and compare the proper
+    inverse-gamma conditional mean with ``sigma2_s``.
     """
     panel = make_panel(n_units=120)
     model = StructuredDiDBCF(rfx=rfx).sample(
@@ -140,11 +139,19 @@ def test_three_forests_share_one_residual(rfx):
     y = model.design.y[:, None]
     Z = model.design.Z[:, None]
     implied = ((y - model.mu_draws - model.tau_draws * Z) ** 2).mean(axis=0)
+    a = model.global_prior.sigma2_shape + model.design.n / 2
+    implied = (model.global_prior.sigma2_rate * model.y_std**2
+               + model.design.n * implied / 2) / (a - 1)
     sampled = model.sigma2_draws
 
-    noise = np.sqrt(2.0 / model.design.n)
+    noise = 1 / np.sqrt(a - 2)
     assert np.abs(sampled - implied).mean() / implied.mean() < 3 * noise
-    assert np.corrcoef(sampled, implied)[0, 1] > 0.7
+    # Correlation depends on how much the conditional mean varies and has no
+    # universal lower bound. The normalized conditional draw has mean one
+    # and known variance, regardless of changes in the residual scale.
+    ratio = sampled / implied
+    assert abs(ratio.mean() - 1) < 4 * noise / np.sqrt(len(ratio))
+    assert .5 < ratio.std(ddof=1) / noise < 1.5
 
     # The check has teeth: drop the trend block and the agreement collapses.
     a_only = model.level_trend_draws()[0]

@@ -34,7 +34,7 @@ from .model import StructuredDiDBCF
 from .priors import (EFFECT_PRIOR, GLOBAL_PRIOR, LEVEL_PRIOR, TREND_PRIOR,
                      ForestPrior, GlobalPrior)
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "StructuredDiDBCF",

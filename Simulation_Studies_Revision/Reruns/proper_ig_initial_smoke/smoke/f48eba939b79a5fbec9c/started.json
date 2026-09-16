@@ -1,0 +1,36 @@
+{
+  "job": {
+    "kind": "pretrend",
+    "phase": "diagnostic",
+    "setting": "PT_hold",
+    "rep": 0,
+    "spec": "structured",
+    "sigma2_shape": 2.0,
+    "sigma2_rate": 1.0,
+    "dgp": "canonical",
+    "dgp_params": {
+      "n_units": 200,
+      "num_pre_periods": 4,
+      "num_post_periods": 4,
+      "linearity_degree": 1,
+      "base_effect": 3.0,
+      "effect_type": "heterogeneous",
+      "alpha_sd": 1.0,
+      "conf_strength": 1.0,
+      "selection": "unobservable",
+      "trend_heterogeneity": 0.3,
+      "ar1_rho": 0.0,
+      "epsilon_scale": 1.0,
+      "treated_share_target": 0.5,
+      "alpha_trend": 0.0,
+      "group_trend": 0.0,
+      "het_trend": 0.0
+    },
+    "N": 200,
+    "linearity_degree": 1,
+    "id": "f48eba939b79a5fbec9c",
+    "shard": 12
+  },
+  "manifest_hash": "b48f6cc3cb2bf419199ba9f77a50fdbf094300c90f7fd29944df180457c6c128",
+  "smoke": true
+}

@@ -1,4 +1,4 @@
-"""Corrected DiD-BCF: the structured, two-way-restricted estimator.
+"""DiD-BCF: the structured, two-way-restricted estimator.
 
 Thin adapter over the :mod:`didbcf_structured` package, which lives one level up
 (next to ``stochtree-main``) because it is a general estimator rather than part
@@ -78,15 +78,21 @@ def fit_structured(df: pd.DataFrame, bcf_params: dict | None = None,
     the sampling budget fixed across all of them.
     """
     StructuredDiDBCF = _import_package()
+    from didbcf_structured import GlobalPrior
 
     if spec not in STRUCTURED_SPECS:
         raise KeyError(f"Unknown structured spec {spec!r}. "
                        f"Available: {sorted(STRUCTURED_SPECS)}")
     p = {**DEFAULT_BCF_PARAMS, **(bcf_params or {})}
+    prior = GlobalPrior(sigma2_shape=p.get("sigma2_shape", 2.0),
+                        sigma2_rate=p.get("sigma2_rate", 1.0))
+    p.update(sigma2_shape=prior.sigma2_shape, sigma2_rate=prior.sigma2_rate,
+             method_version="0.2.0-proper-ig", effect_by_cohort=effect_by_cohort)
     df = df.sort_values(["unit_id", "time"]).reset_index(drop=True)
 
-    model = StructuredDiDBCF(rfx=STRUCTURED_SPECS[spec]).sample(
+    model = StructuredDiDBCF(rfx=STRUCTURED_SPECS[spec], global_prior=prior).sample(
         df, num_gfr=p["num_gfr"], num_mcmc=p["num_mcmc"],
+        num_burnin=p.get("num_burnin", 0), effect_by_cohort=effect_by_cohort,
         keep_every=p["keep_every"], num_chains=p["num_chains"], seed=seed)
 
     fit = FitResult(df=model.df,

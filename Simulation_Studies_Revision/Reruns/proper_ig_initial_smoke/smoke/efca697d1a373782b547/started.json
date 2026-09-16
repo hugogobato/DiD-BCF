@@ -1,0 +1,15 @@
+{
+  "job": {
+    "kind": "application_pretrend",
+    "phase": "application",
+    "setting": "mpdta",
+    "rep": 0,
+    "spec": "diagnostic_rfx_unit",
+    "sigma2_shape": 2.0,
+    "sigma2_rate": 1.0,
+    "id": "efca697d1a373782b547",
+    "shard": 46
+  },
+  "manifest_hash": "b48f6cc3cb2bf419199ba9f77a50fdbf094300c90f7fd29944df180457c6c128",
+  "smoke": true
+}

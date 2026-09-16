@@ -93,6 +93,9 @@ def run_experiment(exp: "cfg.Experiment", bcf_params: dict | None = None,
     file and de-duplicates on ``rep``.
     """
     out_dir = out_dir or RESULTS_DIR
+    if save and os.path.commonpath([os.path.abspath(out_dir), os.path.abspath(RESULTS_DIR)]) == os.path.abspath(RESULTS_DIR):
+        raise ValueError("Historical Results/ is frozen after the variance-prior repair. "
+                         "Use Proper_Prior_Rerun/campaign.py for versioned raw-only results.")
     params = dict(exp.dgp_params)
     suffix = ""
     if linearity_degree is not None:

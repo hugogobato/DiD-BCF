@@ -1,0 +1,15 @@
+{
+  "job": {
+    "kind": "application",
+    "phase": "application",
+    "setting": "mpdta",
+    "rep": 0,
+    "spec": "structured_rfx_unit",
+    "sigma2_shape": 2.0,
+    "sigma2_rate": 1.0,
+    "id": "2fb3f12d0a581d8b98e4",
+    "shard": 1
+  },
+  "manifest_hash": "105ee8510f99817b132d69869167ec5a724596ed37d8094f7ae430c958ad1ccc",
+  "smoke": true
+}

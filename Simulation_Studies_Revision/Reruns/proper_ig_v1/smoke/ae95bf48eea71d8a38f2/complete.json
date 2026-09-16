@@ -1,0 +1,77 @@
+{
+  "identity": {
+    "job": {
+      "kind": "effect",
+      "phase": "main",
+      "setting": "B1_baseline",
+      "rep": 0,
+      "spec": "structured",
+      "sigma2_shape": 2.0,
+      "sigma2_rate": 1.0,
+      "dgp": "canonical",
+      "dgp_params": {
+        "n_units": 200,
+        "num_pre_periods": 4,
+        "num_post_periods": 4,
+        "linearity_degree": 1,
+        "base_effect": 3.0,
+        "effect_type": "heterogeneous",
+        "alpha_sd": 1.0,
+        "conf_strength": 1.0,
+        "selection": "unobservable",
+        "trend_heterogeneity": 0.3,
+        "ar1_rho": 0.0,
+        "epsilon_scale": 1.0,
+        "treated_share_target": 0.5,
+        "alpha_trend": 0.0,
+        "group_trend": 0.0,
+        "het_trend": 0.0
+      },
+      "N": 200,
+      "linearity_degree": 1,
+      "id": "ae95bf48eea71d8a38f2",
+      "shard": 0
+    },
+    "manifest_hash": "105ee8510f99817b132d69869167ec5a724596ed37d8094f7ae430c958ad1ccc",
+    "smoke": true
+  },
+  "method_version": "0.2.0-proper-ig",
+  "prior": {
+    "method_version": "0.2.0-proper-ig",
+    "global_prior": {
+      "sigma2_shape": 2.0,
+      "sigma2_rate": 1.0,
+      "sample_intercept": true,
+      "intercept_prior_var": null
+    },
+    "variance_prior_scale": "standardized_outcome",
+    "outcome_std": 3.0413077284111023,
+    "outcome_mean": 0.6637731318095456,
+    "effect_by_cohort": true
+  },
+  "actual_sampler": {
+    "num_gfr": 3,
+    "num_burnin": 0,
+    "num_mcmc": 4,
+    "keep_every": 1,
+    "num_chains": 2,
+    "sigma2_shape": 2.0,
+    "sigma2_rate": 1.0
+  },
+  "actual_units": 50,
+  "panel_hash": "c779fc3fbc93da53d0332f1a99c236a7dfeb084d7adecb55cb3279dcd7187071",
+  "seconds": 2.674833625998872,
+  "dependencies": {
+    "stochtree": "0.4.4",
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "scipy": "1.18.0",
+    "scikit-learn": "1.9.0"
+  },
+  "python": "3.12.3",
+  "outputs": {
+    "started.json": "80251a30a9750f71c872f8c2b901d0a93a134a09e6c22882739cd82cecf26d65",
+    "summaries.csv": "47436c26d40e3f7cc77a0234cf868785d8e5780c7140b25a7fa59e6be210b6bc",
+    "draws.npz": "b454072e9dfd2b66fa715868dfc4cf365551849e182f0e9204e1c0c74b6c46e2"
+  }
+}

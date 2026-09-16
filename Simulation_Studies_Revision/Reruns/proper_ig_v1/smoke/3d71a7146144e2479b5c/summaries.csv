@@ -1,0 +1,19 @@
+estimand_type,estimand_id,g,t,k,method,post_mean,sd,q025,q05,q95,q975,p_bayes,setting,rep,spec,sigma2_shape,sigma2_rate,method_version,smoke_only,method_label
+PRE,k=-4,,,-4.0,pretrend,-0.08609728627281463,0.036467218544638066,-0.15278631127281883,-0.14347041165682967,-0.05154945546257845,-0.04998733768236779,0.0,mpdta,0,pretrend_unit,2.0,1.0,0.2.0-proper-ig,True,DiD-BCF diagnostic
+PRE,k=-3,,,-3.0,pretrend,-0.012889350459952185,0.01875018981029213,-0.043952620773272624,-0.04078655390004905,0.0,0.0,0.0,mpdta,0,pretrend_unit,2.0,1.0,0.2.0-proper-ig,True,DiD-BCF diagnostic
+PRE,k=-2,,,-2.0,pretrend,-0.0033711548863449743,0.009535065922258786,-0.02224962224987683,-0.017530005408993868,0.0,0.0,0.0,mpdta,0,pretrend_unit,2.0,1.0,0.2.0-proper-ig,True,DiD-BCF diagnostic
+PRE,slope,,,,pretrend,0.02053155104462094,0.009881815447627099,0.010711572360507383,0.011046311884838237,0.03515451188020667,0.0383109705100825,0.0,mpdta,0,pretrend_unit,2.0,1.0,0.2.0-proper-ig,True,DiD-BCF diagnostic
+PRE,any,,,,pretrend,,,,,,,0.0,mpdta,0,pretrend_unit,2.0,1.0,0.2.0-proper-ig,True,DiD-BCF diagnostic
+PRE,any_bonf,,,,pretrend,,,,,,,0.0,mpdta,0,pretrend_unit,2.0,1.0,0.2.0-proper-ig,True,DiD-BCF diagnostic
+PRE_SUB,lpop=low_k=-4,,,-4.0,pretrend,-0.08609728627281463,0.036467218544638094,-0.15278631127281903,-0.14347041165682975,-0.051549455462578525,-0.04998733768236786,0.0,mpdta,0,pretrend_unit,2.0,1.0,0.2.0-proper-ig,True,DiD-BCF diagnostic
+PRE_SUB,lpop=low_k=-3,,,-3.0,pretrend,-0.012889350459952174,0.0187501898102921,-0.043952620773272534,-0.040786553900049004,0.0,0.0,0.0,mpdta,0,pretrend_unit,2.0,1.0,0.2.0-proper-ig,True,DiD-BCF diagnostic
+PRE_SUB,lpop=low_k=-2,,,-2.0,pretrend,-0.003371154886344966,0.009535065922258761,-0.022249622249876776,-0.017530005408993823,0.0,0.0,0.0,mpdta,0,pretrend_unit,2.0,1.0,0.2.0-proper-ig,True,DiD-BCF diagnostic
+PRE_SUB,lpop=high_k=-4,,,-4.0,pretrend,-0.08609728627281464,0.036467218544638094,-0.15278631127281905,-0.14347041165682978,-0.05154945546257855,-0.0499873376823679,0.0,mpdta,0,pretrend_unit,2.0,1.0,0.2.0-proper-ig,True,DiD-BCF diagnostic
+PRE_SUB,lpop=high_k=-3,,,-3.0,pretrend,-0.012889350459952174,0.018750189810292105,-0.043952620773272555,-0.040786553900049025,0.0,0.0,0.0,mpdta,0,pretrend_unit,2.0,1.0,0.2.0-proper-ig,True,DiD-BCF diagnostic
+PRE_SUB,lpop=high_k=-2,,,-2.0,pretrend,-0.0033711548863449626,0.00953506592225875,-0.022249622249876755,-0.017530005408993805,0.0,0.0,0.0,mpdta,0,pretrend_unit,2.0,1.0,0.2.0-proper-ig,True,DiD-BCF diagnostic
+PRE_SUBC,lpop_k=-4,,,-4.0,pretrend,-6.071532165918825e-18,5.380439989124555e-17,-5.4296844798074063e-17,-5.30825383648903e-17,7.840950111415167e-17,8.083811398051921e-17,0.25,mpdta,0,pretrend_unit,2.0,1.0,0.2.0-proper-ig,True,DiD-BCF diagnostic
+PRE_SUBC,lpop_k=-3,,,-3.0,pretrend,4.336808689942018e-19,1.4886601765600966e-17,-2.2898349882893852e-17,-1.804112415015879e-17,1.9255430583342546e-17,2.350550309948574e-17,0.125,mpdta,0,pretrend_unit,2.0,1.0,0.2.0-proper-ig,True,DiD-BCF diagnostic
+PRE_SUBC,lpop_k=-2,,,-2.0,pretrend,3.469446951953614e-18,9.813077866773595e-18,0.0,0.0,1.804112415015878e-17,2.289834988289386e-17,0.0,mpdta,0,pretrend_unit,2.0,1.0,0.2.0-proper-ig,True,DiD-BCF diagnostic
+PRE_SUBC,lpop_slope,,,,pretrend,9.91270557701033e-19,1.2533092079280933e-17,-1.773135210087722e-17,-1.712419888428534e-17,1.395213309964203e-17,1.490623101142928e-17,0.375,mpdta,0,pretrend_unit,2.0,1.0,0.2.0-proper-ig,True,DiD-BCF diagnostic
+PRE_SUBC,lpop_any,,,,pretrend,,,,,,,0.0,mpdta,0,pretrend_unit,2.0,1.0,0.2.0-proper-ig,True,DiD-BCF diagnostic
+PRE_SUBC,lpop_any_bonf,,,,pretrend,,,,,,,0.0,mpdta,0,pretrend_unit,2.0,1.0,0.2.0-proper-ig,True,DiD-BCF diagnostic
