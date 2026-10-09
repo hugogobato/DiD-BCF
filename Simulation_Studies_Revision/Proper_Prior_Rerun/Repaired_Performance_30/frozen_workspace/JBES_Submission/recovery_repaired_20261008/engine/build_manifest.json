@@ -1,0 +1,108 @@
+{
+  "archives": {
+    "boost_math": {
+      "filename": "boost_math_434a017db4c7abc115d8a8ae08a446b70feb34f2.tar.gz",
+      "repository": "boostorg/math",
+      "revision": "434a017db4c7abc115d8a8ae08a446b70feb34f2",
+      "sha256": "9c712659fb947ec87bd41a0d25a620598b7964965c6858b097f55c1bfc5897b0",
+      "urls": [
+        "https://api.github.com/repos/boostorg/math/tarball/434a017db4c7abc115d8a8ae08a446b70feb34f2",
+        "https://codeload.github.com/boostorg/math/legacy.tar.gz/434a017db4c7abc115d8a8ae08a446b70feb34f2"
+      ]
+    },
+    "eigen": {
+      "filename": "eigen_9df21dc8b4b576a7aa5c0094daa8d7e8b8be60f0.tar.gz",
+      "repository": "eigenteam/eigen-git-mirror",
+      "revision": "9df21dc8b4b576a7aa5c0094daa8d7e8b8be60f0",
+      "sha256": "348e54987bbfac329d26acc626325febdc85982fd7a7087b968054cea79714ab",
+      "urls": [
+        "https://api.github.com/repos/eigenteam/eigen-git-mirror/tarball/9df21dc8b4b576a7aa5c0094daa8d7e8b8be60f0",
+        "https://codeload.github.com/eigenteam/eigen-git-mirror/legacy.tar.gz/9df21dc8b4b576a7aa5c0094daa8d7e8b8be60f0"
+      ]
+    },
+    "fast_double_parser": {
+      "filename": "fast_double_parser_252029ddac664370bdda3f0761675785d92a1573.tar.gz",
+      "repository": "lemire/fast_double_parser",
+      "revision": "252029ddac664370bdda3f0761675785d92a1573",
+      "sha256": "6ee728d641a12dbe2f4fe7c3ae2044fddc671a144ca9fa56e9171514251475a9",
+      "urls": [
+        "https://api.github.com/repos/lemire/fast_double_parser/tarball/252029ddac664370bdda3f0761675785d92a1573",
+        "https://codeload.github.com/lemire/fast_double_parser/legacy.tar.gz/252029ddac664370bdda3f0761675785d92a1573"
+      ]
+    },
+    "fmt": {
+      "filename": "fmt_c00149f5e2928eb1b659909e523c4eccde4106a2.tar.gz",
+      "repository": "fmtlib/fmt",
+      "revision": "c00149f5e2928eb1b659909e523c4eccde4106a2",
+      "sha256": "9c62261229fe117c5b7fc5a104dbe0cd920b84a69436deb58bb3f91e5fc762af",
+      "urls": [
+        "https://api.github.com/repos/fmtlib/fmt/tarball/c00149f5e2928eb1b659909e523c4eccde4106a2",
+        "https://codeload.github.com/fmtlib/fmt/legacy.tar.gz/c00149f5e2928eb1b659909e523c4eccde4106a2"
+      ]
+    },
+    "pybind11": {
+      "filename": "pybind11_45fab4087eaaff234227a10cf7845e8b07f28a98.tar.gz",
+      "repository": "pybind/pybind11",
+      "revision": "45fab4087eaaff234227a10cf7845e8b07f28a98",
+      "sha256": "92d91803e06e8c3b06371700ad9afa06b0835020a9910f2123740961551c1acd",
+      "urls": [
+        "https://api.github.com/repos/pybind/pybind11/tarball/45fab4087eaaff234227a10cf7845e8b07f28a98",
+        "https://codeload.github.com/pybind/pybind11/legacy.tar.gz/45fab4087eaaff234227a10cf7845e8b07f28a98"
+      ]
+    },
+    "stochtree": {
+      "filename": "stochtree_85becbd.tar.gz",
+      "repository": "StochasticTree/stochtree",
+      "revision": "85becbd",
+      "sha256": "9ad59b427d8552c12c05daf2aa4212fe089a337f0282c448e57f9223e77e6a8b",
+      "urls": [
+        "https://api.github.com/repos/StochasticTree/stochtree/tarball/85becbd",
+        "https://codeload.github.com/StochasticTree/stochtree/legacy.tar.gz/85becbd"
+      ]
+    }
+  },
+  "changed_sources": [
+    "include/stochtree/tree_sampler.h",
+    "src/cutpoint_candidates.cpp"
+  ],
+  "dependencies": [
+    "boost_math",
+    "fast_double_parser",
+    "fmt",
+    "pybind11",
+    "eigen"
+  ],
+  "engine_reference": "original means a new isolated unpatched source build, not the saved historical binary",
+  "historical_mutations": 0,
+  "original_source_hashes": {
+    "include/stochtree/tree_sampler.h": "e0dc014f87a1bbac08f44c07a9f52516e715f4eabfe9f7da003028f4606f18d1",
+    "src/cutpoint_candidates.cpp": "1fa83c9a017bd7073132fd32a3f61248a17a4bfed162847f52b158ffd04a7300"
+  },
+  "patch": {
+    "path": "native/stochtree-0.4.4-native-mcmc-repair.patch",
+    "sha256": "b18a0a97e3302496b439bf8825ec0b5eeaa5bdba1a67287b5b92d6b84566c118"
+  },
+  "pilot_model": "current StructuredDiDBCF, proper IG(2,1) standardized noise prior, same model and priors in both variants",
+  "pins": {
+    "cmake": "4.3.4",
+    "matplotlib": "3.11.0",
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.18.0"
+  },
+  "project_sources": {
+    "__init__.py": "76e30e242e4cd2662dce606d9889d4fe71399248dffd2e10334eda3c8d6e1cd6",
+    "design.py": "b2dc6a54a5315d2bee1c139b3c802c016ceda66306bc0c7c4d386a6c84a4c369",
+    "estimands.py": "f65636ca94912704892a088b93e81a6944371bbba25c9cdd7815fbedc74d897d",
+    "model.py": "300bf65cd6f58c617ede75535c3c6751e1b34b651875a1a05bbf8abd1b2c0404",
+    "priors.py": "3dfa7b02af0044833bc3bac60a476a4e0a359d8dbaa1c84288cfcc9f15ab7bc5"
+  },
+  "repaired_source_hashes": {
+    "include/stochtree/tree_sampler.h": "5e3375bf1bb0e23cd355d4c8d9b1b19e38dfcca0ca163f81996d96cfc4295319",
+    "src/cutpoint_candidates.cpp": "a60917dd01e468ea591ddd78878be72fc6701227b193cfeb8c5c1636dd8079e7"
+  },
+  "schema": "didbcf-native-repair-validation-v1",
+  "status": "proposed repair under validation",
+  "target_prior": "raw depth/split/feature/uniform-node-range prior globally restricted and normalized on minleaf/maxdepth-feasible numeric trees"
+}

@@ -1,0 +1,104 @@
+{
+  "status": "STOPPED_FOR_COLAB_TRANSFER",
+  "phase": "PRESERVING_COMPLETED_CHAINS",
+  "started_utc": "2026-10-09T11:28:01.123594+00:00",
+  "controller_pid": 3,
+  "manifest_hash": "aa9051ee7011de39ff09292ab984e358ff9ee852510be95ce3dec9579a65bbf7",
+  "expected_units": 1890,
+  "completed_units": 9,
+  "failed_units": 0,
+  "active_workers": [],
+  "full_production_started": false,
+  "previous_full_state_gate_passed": false,
+  "updated_utc": "2026-10-09T11:50:00.543543+00:00",
+  "worker_cap": 6,
+  "elapsed_hours": 0.16404139377388977,
+  "units": {
+    "f06da7c7a507d83a": {
+      "state": "COMPLETE",
+      "attempt": 0,
+      "seconds": 98.95883863999916,
+      "peak_rss_mb": 451.6171875
+    },
+    "48c97745f5475200": {
+      "state": "COMPLETE",
+      "attempt": 0,
+      "seconds": 98.42888641299214,
+      "peak_rss_mb": 451.78515625
+    },
+    "42cd8d3dc27db0a1": {
+      "state": "COMPLETE",
+      "attempt": 0,
+      "seconds": 98.16104534300393,
+      "peak_rss_mb": 449.28125
+    },
+    "6ceae71b7caef414": {
+      "state": "COMPLETE",
+      "attempt": 0,
+      "seconds": 468.0748434559937,
+      "peak_rss_mb": 1325.828125
+    },
+    "6864bbadc1b109a5": {
+      "state": "COMPLETE",
+      "attempt": 0,
+      "seconds": 468.051669819004,
+      "peak_rss_mb": 1325.21875
+    },
+    "61f042dc0998c650": {
+      "state": "COMPLETE",
+      "attempt": 0,
+      "seconds": 468.51477872399846,
+      "peak_rss_mb": 1322.03515625
+    },
+    "48c4424ad7d59798": {
+      "state": "INTERRUPTED_BY_USER",
+      "attempt": 0,
+      "pid": 26
+    },
+    "46c0cfa68e7b1ac8": {
+      "state": "COMPLETE",
+      "attempt": 0,
+      "seconds": 98.84748589500668,
+      "peak_rss_mb": 448.59375
+    },
+    "7968f2c57c325d89": {
+      "state": "COMPLETE",
+      "attempt": 0,
+      "seconds": 99.68810924500576,
+      "peak_rss_mb": 450.453125
+    },
+    "fcfcfacccfc05b36": {
+      "state": "COMPLETE",
+      "attempt": 0,
+      "seconds": 98.85422746399126,
+      "peak_rss_mb": 450.1171875
+    },
+    "e2b380ae321b8149": {
+      "state": "INTERRUPTED_BY_USER",
+      "attempt": 0,
+      "pid": 33
+    },
+    "1fb07de2c76cf097": {
+      "state": "INTERRUPTED_BY_USER",
+      "attempt": 0,
+      "pid": 36
+    },
+    "00448b99ae51d7a1": {
+      "state": "INTERRUPTED_BY_USER",
+      "attempt": 0,
+      "pid": 38
+    },
+    "9084bfb103859ab0": {
+      "state": "INTERRUPTED_BY_USER",
+      "attempt": 0,
+      "pid": 39
+    },
+    "ac945aa345d8d516": {
+      "state": "INTERRUPTED_BY_USER",
+      "attempt": 0,
+      "pid": 40
+    }
+  },
+  "stop_reason": "User requested stopping local sampling and transferring only remaining units to 48 Colab notebooks.",
+  "controller_lock_released": true
+}

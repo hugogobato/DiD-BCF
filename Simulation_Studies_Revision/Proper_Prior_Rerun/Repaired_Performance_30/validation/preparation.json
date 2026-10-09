@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "local_run_stopped": true,
+  "controller_lock_released": true,
+  "local_verified_units": 9,
+  "remaining_units": 1881,
+  "notebooks": 48,
+  "unique_dataset_groups": 270,
+  "preserved_frozen_files": 66,
+  "unchanged_statistical_manifest": "aa9051ee7011de39ff09292ab984e358ff9ee852510be95ce3dec9579a65bbf7",
+  "no_new_sampling": true,
+  "notebook_estimated_cpu_hours_min": 6.327242670812479,
+  "notebook_estimated_cpu_hours_max": 6.7466085317119155,
+  "total_remaining_estimated_cpu_hours": 318.0111039617801,
+  "transfer_hash": "9b2ba9ee4b2c8660f1b8538076ff1e4aae6f63f7d39bbe4f7c4f5ed7ae079496"
+}

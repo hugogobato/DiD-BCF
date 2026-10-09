@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "statistical_manifest_hash": "aa9051ee7011de39ff09292ab984e358ff9ee852510be95ce3dec9579a65bbf7",
+  "transfer_hash": "9b2ba9ee4b2c8660f1b8538076ff1e4aae6f63f7d39bbe4f7c4f5ed7ae079496",
+  "original_unit_objects_identical": true,
+  "complete_disjoint_coverage": true,
+  "remaining_units": 1881,
+  "local_units": 9,
+  "all_dataset_arms_kept_together": true,
+  "new_mcmc_fits_run": 0,
+  "local_complete_pairs": 2,
+  "collector_validates_local_archive": true,
+  "duplicate_completions_detected": true,
+  "changed_seed_rejected": true,
+  "changed_draw_checksum_rejected": true,
+  "partial_collection_code": 2,
+  "partial_collection_does_not_emit_full_report": true,
+  "runner_dry_run": {
+    "status": "DRY_RUN_ONLY_NO_SAMPLING",
+    "units": 42,
+    "workers": 2,
+    "memory_pool_GiB": 18.333637237548828,
+    "worker_ceiling_GiB": 3,
+    "numeric_threads_per_worker": 1,
+    "accessible_cpus": 8
+  },
+  "archived_engine_reuse_and_native_controls": "PASS"
+}

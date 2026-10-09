@@ -1,0 +1,3053 @@
+{
+  "recovery_version": "0.2.0-repaired-20261008",
+  "purpose": "replicated_performance_colab_transfer",
+  "parent_manifest": "105ee8510f99817b132d69869167ec5a724596ed37d8094f7ae430c958ad1ccc",
+  "manifest_hash": "aa9051ee7011de39ff09292ab984e358ff9ee852510be95ce3dec9579a65bbf7",
+  "model_spec": {
+    "estimator": "didbcf_structured.StructuredDiDBCF",
+    "diagnostic_estimator": "stochtree.BCFModel via fit_pretrend",
+    "diagnostic_defaults": {
+      "bcf_python_sha256": "379cb7715e6ca5d2933af8d6f769c225bf8ce7b4f9745e9788201ffa1fcf4124",
+      "defaults": {
+        "general_params_default": {
+          "cutpoint_grid_size": 100,
+          "standardize": true,
+          "sample_sigma2_global": true,
+          "sigma2_global_init": null,
+          "sigma2_global_shape": 0,
+          "sigma2_global_scale": 0,
+          "variable_weights": null,
+          "propensity_covariate": "prognostic",
+          "adaptive_coding": false,
+          "control_coding_init": -0.5,
+          "treated_coding_init": 0.5,
+          "random_seed": null,
+          "keep_burnin": false,
+          "keep_gfr": false,
+          "keep_every": 1,
+          "num_chains": 1,
+          "outcome_model": {
+            "fixed_source_expression": "OutcomeModel(outcome='continuous', link='identity')"
+          },
+          "probit_outcome_model": false,
+          "num_threads": 1
+        },
+        "prognostic_forest_params_default": {
+          "num_trees": 250,
+          "alpha": 0.95,
+          "beta": 2.0,
+          "min_samples_leaf": 5,
+          "max_depth": 10,
+          "sample_sigma2_leaf": true,
+          "sigma2_leaf_init": null,
+          "sigma2_leaf_shape": 3,
+          "sigma2_leaf_scale": null,
+          "keep_vars": null,
+          "drop_vars": null,
+          "num_features_subsample": null
+        },
+        "treatment_effect_forest_params_default": {
+          "num_trees": 100,
+          "alpha": 0.25,
+          "beta": 3.0,
+          "min_samples_leaf": 5,
+          "max_depth": 5,
+          "sample_sigma2_leaf": false,
+          "sigma2_leaf_init": null,
+          "sigma2_leaf_shape": 3,
+          "sigma2_leaf_scale": null,
+          "delta_max": 0.9,
+          "keep_vars": null,
+          "drop_vars": null,
+          "num_features_subsample": null,
+          "sample_intercept": true,
+          "tau_0_prior_var": null
+        },
+        "variance_forest_params_default": {
+          "num_trees": 0,
+          "alpha": 0.95,
+          "beta": 2.0,
+          "min_samples_leaf": 5,
+          "max_depth": 10,
+          "leaf_prior_calibration_param": 1.5,
+          "var_forest_leaf_init": null,
+          "var_forest_prior_shape": null,
+          "var_forest_prior_scale": null,
+          "keep_vars": null,
+          "drop_vars": null,
+          "num_features_subsample": null
+        },
+        "rfx_params_default": {
+          "model_spec": "custom",
+          "working_parameter_prior_mean": null,
+          "group_parameter_prior_mean": null,
+          "working_parameter_prior_cov": null,
+          "group_parameter_prior_cov": null,
+          "variance_prior_shape": 1.0,
+          "variance_prior_scale": 1.0
+        }
+      },
+      "note": "None fields retain pinned outcome-dependent calibration rules; general noise shape/rate 0 defaults are always overridden with the job proper prior."
+    },
+    "effect_by_cohort": true,
+    "outcome_standardization": "population_sd_ddof0",
+    "standardization_source": "np.std(y, ddof=0) of the job panel",
+    "global_prior": {
+      "sigma2_shape": 2.0,
+      "sigma2_rate": 1.0,
+      "sample_intercept": true,
+      "intercept_prior_var": null
+    },
+    "forest_priors": {
+      "level": {
+        "num_trees": 125,
+        "alpha": 0.95,
+        "beta": 2.0,
+        "min_samples_leaf": 5,
+        "max_depth": 10,
+        "cutpoint_grid_size": 100,
+        "sample_leaf_scale": true,
+        "leaf_scale_init": null,
+        "leaf_scale_shape": 3.0,
+        "leaf_scale_rate": null,
+        "calibration": "prognostic"
+      },
+      "trend": {
+        "num_trees": 125,
+        "alpha": 0.95,
+        "beta": 2.0,
+        "min_samples_leaf": 5,
+        "max_depth": 10,
+        "cutpoint_grid_size": 100,
+        "sample_leaf_scale": true,
+        "leaf_scale_init": null,
+        "leaf_scale_shape": 3.0,
+        "leaf_scale_rate": null,
+        "calibration": "prognostic"
+      },
+      "effect": {
+        "num_trees": 100,
+        "alpha": 0.25,
+        "beta": 3.0,
+        "min_samples_leaf": 5,
+        "max_depth": 5,
+        "cutpoint_grid_size": 100,
+        "sample_leaf_scale": false,
+        "leaf_scale_init": null,
+        "leaf_scale_shape": 3.0,
+        "leaf_scale_rate": null,
+        "calibration": "effect"
+      }
+    },
+    "features": {
+      "simulation_covariates": [
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X5"
+      ],
+      "simulation_effect_modifiers": [
+        "X1",
+        "X2"
+      ],
+      "application_covariates": [
+        "lpop"
+      ],
+      "application_effect_modifiers": [
+        "lpop"
+      ],
+      "diagnostic_prognostic_cols_simulation": null,
+      "diagnostic_treatment_cols_simulation": null,
+      "diagnostic_prognostic_cols_application": [
+        "lpop",
+        "time"
+      ],
+      "diagnostic_treatment_cols_application": [
+        "lpop",
+        "k_diag"
+      ]
+    },
+    "rfx": {
+      "simulation_effect": "none",
+      "application_structured": "none",
+      "application_structured_rfx_unit": "unit",
+      "diagnostic": "unit"
+    },
+    "seed_schedule": {
+      "chain_seed": "1000 * rep + chain_index",
+      "chain_index_start": 0,
+      "note": "unchanged from didbcf_structured/model.py; only the accepted budget, not the seed map, may change"
+    },
+    "raw_estimator": true,
+    "posterior_correction": "none"
+  },
+  "budgets": {
+    "earlier_budget_repaired": {
+      "num_gfr": 50,
+      "num_burnin": 0,
+      "num_mcmc": 500,
+      "keep_every": 5,
+      "num_chains": 3,
+      "label": "repaired engine at the earlier proper-prior budget"
+    },
+    "B3_warm2500_ret2000": {
+      "num_gfr": 50,
+      "num_burnin": 2500,
+      "num_mcmc": 2000,
+      "keep_every": 5,
+      "num_chains": 4,
+      "label": "independently more retained draws"
+    }
+  },
+  "dependencies": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "scipy": "1.18.0",
+    "scikit-learn": "1.9.0",
+    "cmake": "4.3.4",
+    "matplotlib": "3.11.0"
+  },
+  "engine_specification": {
+    "variant": "repaired",
+    "build_manifest_sha256": "12f509b5baff3657a246aea9f565ec042a624ed92a29fca2aa8ef4076a4e23be",
+    "patch_sha256": "b18a0a97e3302496b439bf8825ec0b5eeaa5bdba1a67287b5b92d6b84566c118",
+    "source_hashes": {
+      "include/stochtree/tree_sampler.h": "5e3375bf1bb0e23cd355d4c8d9b1b19e38dfcca0ca163f81996d96cfc4295319",
+      "src/cutpoint_candidates.cpp": "a60917dd01e468ea591ddd78878be72fc6701227b193cfeb8c5c1636dd8079e7"
+    },
+    "archives": {
+      "boost_math": "9c712659fb947ec87bd41a0d25a620598b7964965c6858b097f55c1bfc5897b0",
+      "eigen": "348e54987bbfac329d26acc626325febdc85982fd7a7087b968054cea79714ab",
+      "fast_double_parser": "6ee728d641a12dbe2f4fe7c3ae2044fddc671a144ca9fa56e9171514251475a9",
+      "fmt": "9c62261229fe117c5b7fc5a104dbe0cd920b84a69436deb58bb3f91e5fc762af",
+      "pybind11": "92d91803e06e8c3b06371700ad9afa06b0835020a9910f2123740961551c1acd",
+      "stochtree": "9ad59b427d8552c12c05daf2aa4212fe089a337f0282c448e57f9223e77e6a8b"
+    },
+    "target_prior": "raw depth/split/feature/uniform-node-range prior globally restricted and normalized on minleaf/maxdepth-feasible numeric trees"
+  },
+  "python_recorded": "3.12.3",
+  "required_python": null,
+  "source_hashes": {
+    "DiD-BCF/Empirical_Study/mpdta.csv": "2283bea1221a152420f98dfa20f633c5d054ea51d881115c8cd702a97bcd3167",
+    "DiD-BCF/Simulation_Studies_Revision/Proper_Prior_Rerun/campaign.py": "2f2ed03245538bc9a8fc95f858ed7f935f2464d89ae08e7983c0c2b207096662",
+    "DiD-BCF/Simulation_Studies_Revision/Proper_Prior_Rerun/manifest.json": "8d7e7f454c09ee206636d295704a77f520e3584d3fc848609af21df5fa1e67e0",
+    "DiD-BCF/Simulation_Studies_Revision/did_bcf_revision/__init__.py": "2614634082afa3947977a339a0edf435f7d6343fdedd796338477ea95e7ca14a",
+    "DiD-BCF/Simulation_Studies_Revision/did_bcf_revision/config.py": "0cc9c14748b97b8c6bfc7c2e510139c6c22700f23655bc0d0b10b6009d94f666",
+    "DiD-BCF/Simulation_Studies_Revision/did_bcf_revision/dgps.py": "4d2d87c192da5c4574fc08953a91a10be9dedb64785468405fd30dd16799e067",
+    "DiD-BCF/Simulation_Studies_Revision/did_bcf_revision/did_bcf.py": "97ef5737cfb35c67364e5dc59e3509c164349120a036f441234893981c058b91",
+    "DiD-BCF/Simulation_Studies_Revision/did_bcf_revision/exports.py": "2777e06da3ca2a2af8ddf6864b47bb6fccaa2781fd464a2524495150845f0740",
+    "DiD-BCF/Simulation_Studies_Revision/did_bcf_revision/goodman_bacon.py": "90977af0cc662d389b67baf9ba18bb86105f42a50a43c85ae8c74f80367578e1",
+    "DiD-BCF/Simulation_Studies_Revision/did_bcf_revision/metrics.py": "46a4a4359813b47d648db90a330537394550538c119928a984c3ab1d8348179c",
+    "DiD-BCF/Simulation_Studies_Revision/did_bcf_revision/posterior_correction.py": "5b129049400dab736e910f319d266c4187da8ce6d6beb67b48b7edebba92479a",
+    "DiD-BCF/Simulation_Studies_Revision/did_bcf_revision/pretrend.py": "d62ac6dacaa5b30fae64691bbe9243f3ffb0703b4d86dfce9106d60b6b1230e4",
+    "DiD-BCF/Simulation_Studies_Revision/did_bcf_revision/pretrend_runner.py": "e1a12ed03854e11633384d43beac5277a0ffde2cc325666f9c7bcc30bc4b7ded",
+    "DiD-BCF/Simulation_Studies_Revision/did_bcf_revision/runner.py": "4cf30f20a1a73c9365f9dfc66477706acb1779309c9331bf11d3c3eec2c41cf9",
+    "DiD-BCF/Simulation_Studies_Revision/did_bcf_revision/seeds.py": "f4b1236a878adb701e06626e1419084af3de1e8b888ec29049d5d900d6ba7835",
+    "DiD-BCF/Simulation_Studies_Revision/did_bcf_revision/structured.py": "3a340986d83fab9e72df3ae94777c3f24c123b6da55b2e46bd4c33704d1557a0",
+    "DiD-BCF/Simulation_Studies_Revision/did_bcf_revision/twfe.py": "e1d47d624eabe245762519b64c7fe33f16cb42ba2936aded8badfabe42f112f6",
+    "DiD-BCF/Simulation_Studies_Revision/did_bcf_revision/twfe_runner.py": "dead94c9d421c85fbd83c598872a73ad0753bfdc276858bb7bdc92b17e1432ba",
+    "DiD-BCF/Simulation_Studies_Revision/scripts/run_empirical_structured.py": "a70378d813a3143496f187e91940d5198ac7931a6b526ada1f34fdd1dfb92ea8",
+    "DiD-BCF/Simulation_Studies_Revision/scripts/run_pretrend_empirical.py": "57ad26ae474441e81d3a2b8f5f4dafeb4a0412b3ef17a5825d820fc8bc92911c",
+    "DiD-BCF/didbcf_structured/__init__.py": "76e30e242e4cd2662dce606d9889d4fe71399248dffd2e10334eda3c8d6e1cd6",
+    "DiD-BCF/didbcf_structured/design.py": "b2dc6a54a5315d2bee1c139b3c802c016ceda66306bc0c7c4d386a6c84a4c369",
+    "DiD-BCF/didbcf_structured/estimands.py": "f65636ca94912704892a088b93e81a6944371bbba25c9cdd7815fbedc74d897d",
+    "DiD-BCF/didbcf_structured/model.py": "300bf65cd6f58c617ede75535c3c6751e1b34b651875a1a05bbf8abd1b2c0404",
+    "DiD-BCF/didbcf_structured/priors.py": "3dfa7b02af0044833bc3bac60a476a4e0a359d8dbaa1c84288cfcc9f15ab7bc5",
+    "DiD-BCF/didbcf_structured/tests/test_proper_prior.py": "5eca476bec22c53e8ce95bc120f24bec6c82844b8828f1d055cb738923d25dc4",
+    "DiD-BCF/didbcf_structured/tests/test_structured.py": "feef1c8bb2e5fc22ff16a3bdd41dfd474832ff48fb4d93680bc60b76defd76d6",
+    "JBES_Submission/recovery_repaired_20261008/E0_inventory/job_seconds.csv": "62d17b287c3687e58c5dae73da4c9231a5318d2289f0bde05e308e45e535e0f0",
+    "JBES_Submission/recovery_repaired_20261008/engine/bcf_defaults.json": "19a35afae7129640c63036846192c74d60de2750121891197218b7334a21182d",
+    "JBES_Submission/recovery_repaired_20261008/engine/build_manifest.json": "12f509b5baff3657a246aea9f565ec042a624ed92a29fca2aa8ef4076a4e23be",
+    "JBES_Submission/recovery_repaired_20261008/engine/controls.py": "7e9b25ece32567a9dbf9be30468dfa153ccbc59677b6b11427ad205fe63b7668",
+    "JBES_Submission/recovery_repaired_20261008/engine/native/SOURCE_REPAIR_NOTES.md": "e2abf3d277df6abd02689579201c42a2d6f51aa44468aacc63a463514265b05a",
+    "JBES_Submission/recovery_repaired_20261008/engine/native/stochtree-0.4.4-native-mcmc-repair.patch": "b18a0a97e3302496b439bf8825ec0b5eeaa5bdba1a67287b5b92d6b84566c118",
+    "JBES_Submission/recovery_repaired_20261008/engine/tools/build_native.py": "c807a16d2510598a197715614e13d062570b080094ff105a416450472eae6577",
+    "JBES_Submission/recovery_repaired_20261008/pilot/pilot_protocol.md": "7e502598d99e5ff927526b7973bb5f6883d8300ee7b963fd540c6aa606c43302",
+    "JBES_Submission/recovery_repaired_20261008/tools/prepare_campaign.py": "5194a8089353e1670dbfca7aff965e8a1aa59f41b5e76d050a0e16c1341af1b7",
+    "JBES_Submission/recovery_repaired_20261008/tools/recovery_accept.py": "84c38f05511e6e0b3385cd5438a72c6db5ad37138ee3f3b991d522f0c82f9ada",
+    "JBES_Submission/recovery_repaired_20261008/tools/recovery_bcf_spec.py": "5eedb4e94852ed7d586b4ddc47ef68da202d7581fe47bce3a5d14cd521463c5c",
+    "JBES_Submission/recovery_repaired_20261008/tools/recovery_build_control_notebooks.py": "c5110849c3cb1d54db83b038cfe681fb6a7196ca773d5c64b9d93fa59dc7b782",
+    "JBES_Submission/recovery_repaired_20261008/tools/recovery_build_notebooks.py": "30edcec4eaa762fb4e2676de51a992c1185fc7c81bc280e0520dc20bdc09fdf3",
+    "JBES_Submission/recovery_repaired_20261008/tools/recovery_collect.py": "619a10dd59bed68402ade5c055ec351f224b1444a32cd460a27e8e91a5399b26",
+    "JBES_Submission/recovery_repaired_20261008/tools/recovery_common.py": "a32a1fa8e550f842a3d945d29d308e316fde4f15574148b7bfde22c547d3f274",
+    "JBES_Submission/recovery_repaired_20261008/tools/recovery_core.py": "3f49c493ede19bfda4f53253974ec5327ea3956c708feb20ddb04aad22f12c3b",
+    "JBES_Submission/recovery_repaired_20261008/tools/recovery_diagnostics.py": "d8cc3a63255afbbc130f58fd2b59108e0413ecd0f3ece87db82fdc8c029c8c40",
+    "JBES_Submission/recovery_repaired_20261008/tools/recovery_engine.py": "03b87a030e29f7d03dff45176731fd54712f2fa4eff21c09e1947ee8aa2ff643",
+    "JBES_Submission/recovery_repaired_20261008/tools/recovery_inventory.py": "c38a924c781fae3459af6d864421284b1c4674059da0c5ebe2699976fdfd7142",
+    "JBES_Submission/recovery_repaired_20261008/tools/recovery_plan.py": "5f77d9cb5b60f4d04d40b9c55c2f0f254d680131d5d69fd1f14fe2608ac9df9d",
+    "JBES_Submission/recovery_repaired_20261008/tools/recovery_report_pilot.py": "4ff683a6676bd9726a49cc5e0670318291286cf0934b6b376feacaff499bcf61",
+    "JBES_Submission/recovery_repaired_20261008/tools/recovery_runner.py": "c672cb712629824501c995e3e0fea1a35bd4326fb732bafd15362d07ac43c0d4",
+    "JBES_Submission/recovery_repaired_20261008/tools/recovery_schedule.py": "f6edbb749bc71ea8186f0c1a3a229c9d96507dc0d2231914fa60cf07cbb1399a",
+    "JBES_Submission/recovery_repaired_20261008/tools/recovery_setup.py": "765e11ac336776e20d6e7044f8e9eefa4e1901ad85a749ee31a160eee7614ecd",
+    "JBES_Submission/recovery_repaired_20261008/tools/recovery_validation.py": "60ff4af67aebe962c12f2b59f731aca69def2ad170da6b7d5d60ab9a29dedcdb",
+    "JBES_Submission/recovery_repaired_20261008/tools/recovery_weight_controls.py": "febe37f2bd3692dcb8f1ac4f9c1f54272783a95fd66843f36fdb1aa324c3a902",
+    "JBES_Submission/recovery_repaired_20261008/tools/recovery_worker.py": "851dc70508d19a5833f69d73bd7a1ffe706eacc715715e0d04a77e998903e553",
+    "JBES_Submission/recovery_repaired_20261008/tools/tests_recovery.py": "d47e23c6928837fea1e10b4473acb4209a7f42e25fffb6a6932a259868a64ed1"
+  },
+  "source_hashes_sha256": "bb0c640d64cb1ff4e4a6a5a745031f19c20a42aa091e08a51320364a115ba87d",
+  "output_schema": {
+    "structured_chain": {
+      "paths": [
+        "started.json",
+        "draws.npz",
+        "trace.npz (pilot only)",
+        "panel.csv (application only)",
+        "complete.json"
+      ],
+      "scalar_draw_keys": [
+        "ATT",
+        "sigma2",
+        "GATT_g=<g>_t=<t>",
+        "ES_k=<k>"
+      ],
+      "scalar_shapes": {
+        "per chain": [
+          1,
+          "num_mcmc"
+        ]
+      },
+      "tau_key": "every structured job: full (n_obs, num_mcmc) effect surface",
+      "completion": "complete.json published last, with output checksums"
+    },
+    "pretrend_atomic": {
+      "paths": [
+        "started.json",
+        "draws.npz",
+        "panel.csv",
+        "complete.json"
+      ],
+      "keys": [
+        "tau",
+        "global_var_samples",
+        "leaf_scale_mu_samples",
+        "tau_0_samples when exposed by stochtree.BCFModel"
+      ],
+      "tau_shape": [
+        "n_obs",
+        "num_chains * num_mcmc"
+      ],
+      "note": "atomic recovery unit: BCFModel per-chain state is not serialised, so an interrupted job restarts from its seed and is never appended to"
+    },
+    "assembly": "the collector concatenates chains in chain_index order, computes multi-chain diagnostics on the assembled draws and recomputes finite-sample truths from the regenerated panel"
+  },
+  "wave": 0,
+  "wave_count": 1,
+  "shard": 21,
+  "shard_count": 48,
+  "resource_estimate_note": "Same timing proxies as original study; 48 balanced dataset bundles, at most two memory-bounded single-thread sampling workers",
+  "estimated_seconds": 23954.694081209953,
+  "units": [
+    {
+      "run_id": "a38f2acb377f8d54",
+      "stat_job_id": "abf8065d59d80af7c1a6",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 0,
+      "chain_seed": 25000,
+      "trace": true,
+      "est_seconds": 2373.058548602996,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B2_sweep",
+        "rep": 25,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 800,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 800,
+        "linearity_degree": 1,
+        "id": "abf8065d59d80af7c1a6",
+        "shard": 17,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 6,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 630.7648082690002,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1742.12109375,
+      "measured_output_bytes": 40301460
+    },
+    {
+      "run_id": "ee22d201480f87f5",
+      "stat_job_id": "abf8065d59d80af7c1a6",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 1,
+      "chain_seed": 25001,
+      "trace": true,
+      "est_seconds": 2373.058548602996,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B2_sweep",
+        "rep": 25,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 800,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 800,
+        "linearity_degree": 1,
+        "id": "abf8065d59d80af7c1a6",
+        "shard": 17,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 6,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 630.7648082690002,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1742.12109375,
+      "measured_output_bytes": 40301460
+    },
+    {
+      "run_id": "f088b04a0694af33",
+      "stat_job_id": "abf8065d59d80af7c1a6",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 2,
+      "chain_seed": 25002,
+      "trace": true,
+      "est_seconds": 2373.058548602996,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B2_sweep",
+        "rep": 25,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 800,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 800,
+        "linearity_degree": 1,
+        "id": "abf8065d59d80af7c1a6",
+        "shard": 17,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 6,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 630.7648082690002,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1742.12109375,
+      "measured_output_bytes": 40301460
+    },
+    {
+      "run_id": "90ad45ad41248b00",
+      "stat_job_id": "abf8065d59d80af7c1a6",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 3,
+      "chain_seed": 25003,
+      "trace": true,
+      "est_seconds": 2373.058548602996,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B2_sweep",
+        "rep": 25,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 800,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 800,
+        "linearity_degree": 1,
+        "id": "abf8065d59d80af7c1a6",
+        "shard": 17,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 6,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 630.7648082690002,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1742.12109375,
+      "measured_output_bytes": 40301460
+    },
+    {
+      "run_id": "3d07c53524061b7b",
+      "stat_job_id": "abf8065d59d80af7c1a6",
+      "budget_key": "earlier_budget_repaired",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "chain_index": 0,
+      "chain_seed": 25000,
+      "trace": true,
+      "est_seconds": 210.25493608966676,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B2_sweep",
+        "rep": 25,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 800,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 800,
+        "linearity_degree": 1,
+        "id": "abf8065d59d80af7c1a6",
+        "shard": 17,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 6,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 630.7648082690002,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": null,
+      "measured_output_bytes": null
+    },
+    {
+      "run_id": "e34efb4d528eb9a2",
+      "stat_job_id": "abf8065d59d80af7c1a6",
+      "budget_key": "earlier_budget_repaired",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "chain_index": 1,
+      "chain_seed": 25001,
+      "trace": true,
+      "est_seconds": 210.25493608966676,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B2_sweep",
+        "rep": 25,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 800,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 800,
+        "linearity_degree": 1,
+        "id": "abf8065d59d80af7c1a6",
+        "shard": 17,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 6,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 630.7648082690002,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": null,
+      "measured_output_bytes": null
+    },
+    {
+      "run_id": "e34cbe094906cee4",
+      "stat_job_id": "abf8065d59d80af7c1a6",
+      "budget_key": "earlier_budget_repaired",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "chain_index": 2,
+      "chain_seed": 25002,
+      "trace": true,
+      "est_seconds": 210.25493608966676,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B2_sweep",
+        "rep": 25,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 800,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 800,
+        "linearity_degree": 1,
+        "id": "abf8065d59d80af7c1a6",
+        "shard": 17,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 6,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 630.7648082690002,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": null,
+      "measured_output_bytes": null
+    },
+    {
+      "run_id": "b47496c5eb24dccf",
+      "stat_job_id": "eb5418327b1c2e4f5851",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 0,
+      "chain_seed": 19000,
+      "trace": true,
+      "est_seconds": 651.3931011719978,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_null",
+        "rep": 19,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 0.0,
+          "effect_type": "homogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "eb5418327b1c2e4f5851",
+        "shard": 19,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 2,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 193.12424752600052,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1343.48046875,
+      "measured_output_bytes": 15704296
+    },
+    {
+      "run_id": "aa4ce9dedf8b9d5b",
+      "stat_job_id": "eb5418327b1c2e4f5851",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 1,
+      "chain_seed": 19001,
+      "trace": true,
+      "est_seconds": 651.3931011719978,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_null",
+        "rep": 19,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 0.0,
+          "effect_type": "homogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "eb5418327b1c2e4f5851",
+        "shard": 19,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 2,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 193.12424752600052,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1343.48046875,
+      "measured_output_bytes": 15704296
+    },
+    {
+      "run_id": "a4857898838a78b9",
+      "stat_job_id": "eb5418327b1c2e4f5851",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 2,
+      "chain_seed": 19002,
+      "trace": true,
+      "est_seconds": 651.3931011719978,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_null",
+        "rep": 19,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 0.0,
+          "effect_type": "homogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "eb5418327b1c2e4f5851",
+        "shard": 19,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 2,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 193.12424752600052,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1343.48046875,
+      "measured_output_bytes": 15704296
+    },
+    {
+      "run_id": "bf6938e06060ae2e",
+      "stat_job_id": "eb5418327b1c2e4f5851",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 3,
+      "chain_seed": 19003,
+      "trace": true,
+      "est_seconds": 651.3931011719978,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_null",
+        "rep": 19,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 0.0,
+          "effect_type": "homogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "eb5418327b1c2e4f5851",
+        "shard": 19,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 2,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 193.12424752600052,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1343.48046875,
+      "measured_output_bytes": 15704296
+    },
+    {
+      "run_id": "34a32e0dc3dfeefa",
+      "stat_job_id": "eb5418327b1c2e4f5851",
+      "budget_key": "earlier_budget_repaired",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "chain_index": 0,
+      "chain_seed": 19000,
+      "trace": true,
+      "est_seconds": 64.3747491753335,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_null",
+        "rep": 19,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 0.0,
+          "effect_type": "homogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "eb5418327b1c2e4f5851",
+        "shard": 19,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 2,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 193.12424752600052,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": null,
+      "measured_output_bytes": null
+    },
+    {
+      "run_id": "32ca3b242a828e64",
+      "stat_job_id": "eb5418327b1c2e4f5851",
+      "budget_key": "earlier_budget_repaired",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "chain_index": 1,
+      "chain_seed": 19001,
+      "trace": true,
+      "est_seconds": 64.3747491753335,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_null",
+        "rep": 19,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 0.0,
+          "effect_type": "homogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "eb5418327b1c2e4f5851",
+        "shard": 19,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 2,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 193.12424752600052,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": null,
+      "measured_output_bytes": null
+    },
+    {
+      "run_id": "273d3d897637137b",
+      "stat_job_id": "eb5418327b1c2e4f5851",
+      "budget_key": "earlier_budget_repaired",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "chain_index": 2,
+      "chain_seed": 19002,
+      "trace": true,
+      "est_seconds": 64.3747491753335,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_null",
+        "rep": 19,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 0.0,
+          "effect_type": "homogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "eb5418327b1c2e4f5851",
+        "shard": 19,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 2,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 193.12424752600052,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": null,
+      "measured_output_bytes": null
+    },
+    {
+      "run_id": "edaae7c472f43d47",
+      "stat_job_id": "432288baa2066444e9f3",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 0,
+      "chain_seed": 9000,
+      "trace": true,
+      "est_seconds": 651.3931011719978,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_selection_obs",
+        "rep": 9,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 0.0,
+          "selection": "observable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "432288baa2066444e9f3",
+        "shard": 45,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 3,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 176.0788078249998,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1343.48046875,
+      "measured_output_bytes": 15704296
+    },
+    {
+      "run_id": "3b9a524c2dbc79ba",
+      "stat_job_id": "432288baa2066444e9f3",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 1,
+      "chain_seed": 9001,
+      "trace": true,
+      "est_seconds": 651.3931011719978,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_selection_obs",
+        "rep": 9,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 0.0,
+          "selection": "observable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "432288baa2066444e9f3",
+        "shard": 45,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 3,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 176.0788078249998,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1343.48046875,
+      "measured_output_bytes": 15704296
+    },
+    {
+      "run_id": "9cf2ebdbd72facb0",
+      "stat_job_id": "432288baa2066444e9f3",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 2,
+      "chain_seed": 9002,
+      "trace": true,
+      "est_seconds": 651.3931011719978,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_selection_obs",
+        "rep": 9,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 0.0,
+          "selection": "observable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "432288baa2066444e9f3",
+        "shard": 45,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 3,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 176.0788078249998,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1343.48046875,
+      "measured_output_bytes": 15704296
+    },
+    {
+      "run_id": "f9102908655b4f73",
+      "stat_job_id": "432288baa2066444e9f3",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 3,
+      "chain_seed": 9003,
+      "trace": true,
+      "est_seconds": 651.3931011719978,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_selection_obs",
+        "rep": 9,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 0.0,
+          "selection": "observable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "432288baa2066444e9f3",
+        "shard": 45,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 3,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 176.0788078249998,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1343.48046875,
+      "measured_output_bytes": 15704296
+    },
+    {
+      "run_id": "8d804894960e5a10",
+      "stat_job_id": "432288baa2066444e9f3",
+      "budget_key": "earlier_budget_repaired",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "chain_index": 0,
+      "chain_seed": 9000,
+      "trace": true,
+      "est_seconds": 58.692935941666605,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_selection_obs",
+        "rep": 9,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 0.0,
+          "selection": "observable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "432288baa2066444e9f3",
+        "shard": 45,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 3,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 176.0788078249998,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": null,
+      "measured_output_bytes": null
+    },
+    {
+      "run_id": "994c045d23d87aa7",
+      "stat_job_id": "432288baa2066444e9f3",
+      "budget_key": "earlier_budget_repaired",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "chain_index": 1,
+      "chain_seed": 9001,
+      "trace": true,
+      "est_seconds": 58.692935941666605,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_selection_obs",
+        "rep": 9,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 0.0,
+          "selection": "observable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "432288baa2066444e9f3",
+        "shard": 45,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 3,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 176.0788078249998,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": null,
+      "measured_output_bytes": null
+    },
+    {
+      "run_id": "b9c326faee3056e9",
+      "stat_job_id": "432288baa2066444e9f3",
+      "budget_key": "earlier_budget_repaired",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "chain_index": 2,
+      "chain_seed": 9002,
+      "trace": true,
+      "est_seconds": 58.692935941666605,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_selection_obs",
+        "rep": 9,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 0.0,
+          "selection": "observable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "432288baa2066444e9f3",
+        "shard": 45,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 3,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 176.0788078249998,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": null,
+      "measured_output_bytes": null
+    },
+    {
+      "run_id": "58fa94ffa95b9361",
+      "stat_job_id": "2b7d9ddaba35fb447387",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 0,
+      "chain_seed": 13000,
+      "trace": true,
+      "est_seconds": 651.3931011719978,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_null",
+        "rep": 13,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 0.0,
+          "effect_type": "homogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "2b7d9ddaba35fb447387",
+        "shard": 13,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 2,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 172.48075764399982,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1343.48046875,
+      "measured_output_bytes": 15704296
+    },
+    {
+      "run_id": "14c6bc2a9369dacd",
+      "stat_job_id": "2b7d9ddaba35fb447387",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 1,
+      "chain_seed": 13001,
+      "trace": true,
+      "est_seconds": 651.3931011719978,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_null",
+        "rep": 13,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 0.0,
+          "effect_type": "homogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "2b7d9ddaba35fb447387",
+        "shard": 13,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 2,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 172.48075764399982,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1343.48046875,
+      "measured_output_bytes": 15704296
+    },
+    {
+      "run_id": "b423b500e819133c",
+      "stat_job_id": "2b7d9ddaba35fb447387",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 2,
+      "chain_seed": 13002,
+      "trace": true,
+      "est_seconds": 651.3931011719978,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_null",
+        "rep": 13,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 0.0,
+          "effect_type": "homogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "2b7d9ddaba35fb447387",
+        "shard": 13,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 2,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 172.48075764399982,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1343.48046875,
+      "measured_output_bytes": 15704296
+    },
+    {
+      "run_id": "ea56efe26a62d1f8",
+      "stat_job_id": "2b7d9ddaba35fb447387",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 3,
+      "chain_seed": 13003,
+      "trace": true,
+      "est_seconds": 651.3931011719978,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_null",
+        "rep": 13,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 0.0,
+          "effect_type": "homogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "2b7d9ddaba35fb447387",
+        "shard": 13,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 2,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 172.48075764399982,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1343.48046875,
+      "measured_output_bytes": 15704296
+    },
+    {
+      "run_id": "5bae9676b9bb388d",
+      "stat_job_id": "2b7d9ddaba35fb447387",
+      "budget_key": "earlier_budget_repaired",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "chain_index": 0,
+      "chain_seed": 13000,
+      "trace": true,
+      "est_seconds": 57.493585881333274,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_null",
+        "rep": 13,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 0.0,
+          "effect_type": "homogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "2b7d9ddaba35fb447387",
+        "shard": 13,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 2,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 172.48075764399982,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": null,
+      "measured_output_bytes": null
+    },
+    {
+      "run_id": "b80ee05e59431b52",
+      "stat_job_id": "2b7d9ddaba35fb447387",
+      "budget_key": "earlier_budget_repaired",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "chain_index": 1,
+      "chain_seed": 13001,
+      "trace": true,
+      "est_seconds": 57.493585881333274,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_null",
+        "rep": 13,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 0.0,
+          "effect_type": "homogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "2b7d9ddaba35fb447387",
+        "shard": 13,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 2,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 172.48075764399982,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": null,
+      "measured_output_bytes": null
+    },
+    {
+      "run_id": "374554a4459bacac",
+      "stat_job_id": "2b7d9ddaba35fb447387",
+      "budget_key": "earlier_budget_repaired",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "chain_index": 2,
+      "chain_seed": 13002,
+      "trace": true,
+      "est_seconds": 57.493585881333274,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_null",
+        "rep": 13,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 1,
+          "base_effect": 0.0,
+          "effect_type": "homogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "2b7d9ddaba35fb447387",
+        "shard": 13,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 2,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 172.48075764399982,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": null,
+      "measured_output_bytes": null
+    },
+    {
+      "run_id": "cd605792a2a79b08",
+      "stat_job_id": "0fd2ff6aa6cf84abdbe5",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 0,
+      "chain_seed": 4000,
+      "trace": true,
+      "est_seconds": 651.3931011719978,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "D_staggered",
+        "rep": 4,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "staggered",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "cohort_offsets": [
+            0,
+            1,
+            2
+          ],
+          "cohort_shares": [
+            0.25,
+            0.25,
+            0.25
+          ],
+          "linearity_degree": 1,
+          "effect_type": "heterogeneous",
+          "base_effect": 2.0,
+          "cohort_multipliers": [
+            1.0,
+            1.5,
+            2.0
+          ],
+          "dynamic_ramp": 0.4,
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "0fd2ff6aa6cf84abdbe5",
+        "shard": 4,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 5,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 163.70209693599827,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1343.48046875,
+      "measured_output_bytes": 15704296
+    },
+    {
+      "run_id": "908087c7ce305560",
+      "stat_job_id": "0fd2ff6aa6cf84abdbe5",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 1,
+      "chain_seed": 4001,
+      "trace": true,
+      "est_seconds": 651.3931011719978,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "D_staggered",
+        "rep": 4,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "staggered",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "cohort_offsets": [
+            0,
+            1,
+            2
+          ],
+          "cohort_shares": [
+            0.25,
+            0.25,
+            0.25
+          ],
+          "linearity_degree": 1,
+          "effect_type": "heterogeneous",
+          "base_effect": 2.0,
+          "cohort_multipliers": [
+            1.0,
+            1.5,
+            2.0
+          ],
+          "dynamic_ramp": 0.4,
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "0fd2ff6aa6cf84abdbe5",
+        "shard": 4,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 5,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 163.70209693599827,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1343.48046875,
+      "measured_output_bytes": 15704296
+    },
+    {
+      "run_id": "68ca44658078e40a",
+      "stat_job_id": "0fd2ff6aa6cf84abdbe5",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 2,
+      "chain_seed": 4002,
+      "trace": true,
+      "est_seconds": 651.3931011719978,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "D_staggered",
+        "rep": 4,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "staggered",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "cohort_offsets": [
+            0,
+            1,
+            2
+          ],
+          "cohort_shares": [
+            0.25,
+            0.25,
+            0.25
+          ],
+          "linearity_degree": 1,
+          "effect_type": "heterogeneous",
+          "base_effect": 2.0,
+          "cohort_multipliers": [
+            1.0,
+            1.5,
+            2.0
+          ],
+          "dynamic_ramp": 0.4,
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "0fd2ff6aa6cf84abdbe5",
+        "shard": 4,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 5,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 163.70209693599827,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1343.48046875,
+      "measured_output_bytes": 15704296
+    },
+    {
+      "run_id": "93d1278ccb6843ea",
+      "stat_job_id": "0fd2ff6aa6cf84abdbe5",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 3,
+      "chain_seed": 4003,
+      "trace": true,
+      "est_seconds": 651.3931011719978,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "D_staggered",
+        "rep": 4,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "staggered",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "cohort_offsets": [
+            0,
+            1,
+            2
+          ],
+          "cohort_shares": [
+            0.25,
+            0.25,
+            0.25
+          ],
+          "linearity_degree": 1,
+          "effect_type": "heterogeneous",
+          "base_effect": 2.0,
+          "cohort_multipliers": [
+            1.0,
+            1.5,
+            2.0
+          ],
+          "dynamic_ramp": 0.4,
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "0fd2ff6aa6cf84abdbe5",
+        "shard": 4,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 5,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 163.70209693599827,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1343.48046875,
+      "measured_output_bytes": 15704296
+    },
+    {
+      "run_id": "a100f9a9a81429d9",
+      "stat_job_id": "0fd2ff6aa6cf84abdbe5",
+      "budget_key": "earlier_budget_repaired",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "chain_index": 0,
+      "chain_seed": 4000,
+      "trace": true,
+      "est_seconds": 54.56736564533276,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "D_staggered",
+        "rep": 4,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "staggered",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "cohort_offsets": [
+            0,
+            1,
+            2
+          ],
+          "cohort_shares": [
+            0.25,
+            0.25,
+            0.25
+          ],
+          "linearity_degree": 1,
+          "effect_type": "heterogeneous",
+          "base_effect": 2.0,
+          "cohort_multipliers": [
+            1.0,
+            1.5,
+            2.0
+          ],
+          "dynamic_ramp": 0.4,
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "0fd2ff6aa6cf84abdbe5",
+        "shard": 4,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 5,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 163.70209693599827,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": null,
+      "measured_output_bytes": null
+    },
+    {
+      "run_id": "e8f235ac27e7b3d0",
+      "stat_job_id": "0fd2ff6aa6cf84abdbe5",
+      "budget_key": "earlier_budget_repaired",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "chain_index": 1,
+      "chain_seed": 4001,
+      "trace": true,
+      "est_seconds": 54.56736564533276,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "D_staggered",
+        "rep": 4,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "staggered",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "cohort_offsets": [
+            0,
+            1,
+            2
+          ],
+          "cohort_shares": [
+            0.25,
+            0.25,
+            0.25
+          ],
+          "linearity_degree": 1,
+          "effect_type": "heterogeneous",
+          "base_effect": 2.0,
+          "cohort_multipliers": [
+            1.0,
+            1.5,
+            2.0
+          ],
+          "dynamic_ramp": 0.4,
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "0fd2ff6aa6cf84abdbe5",
+        "shard": 4,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 5,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 163.70209693599827,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": null,
+      "measured_output_bytes": null
+    },
+    {
+      "run_id": "32d44a9794d40643",
+      "stat_job_id": "0fd2ff6aa6cf84abdbe5",
+      "budget_key": "earlier_budget_repaired",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "chain_index": 2,
+      "chain_seed": 4002,
+      "trace": true,
+      "est_seconds": 54.56736564533276,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "D_staggered",
+        "rep": 4,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "staggered",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "cohort_offsets": [
+            0,
+            1,
+            2
+          ],
+          "cohort_shares": [
+            0.25,
+            0.25,
+            0.25
+          ],
+          "linearity_degree": 1,
+          "effect_type": "heterogeneous",
+          "base_effect": 2.0,
+          "cohort_multipliers": [
+            1.0,
+            1.5,
+            2.0
+          ],
+          "dynamic_ramp": 0.4,
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 1,
+        "id": "0fd2ff6aa6cf84abdbe5",
+        "shard": 4,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 5,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 163.70209693599827,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": null,
+      "measured_output_bytes": null
+    },
+    {
+      "run_id": "9c7adae7d93b8dc1",
+      "stat_job_id": "6bd989d547d2d3e50238",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 0,
+      "chain_seed": 13000,
+      "trace": true,
+      "est_seconds": 646.5385516185015,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_baseline",
+        "rep": 13,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 3,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 3,
+        "id": "6bd989d547d2d3e50238",
+        "shard": 21,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 1,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 117.86534337199998,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1328.859375,
+      "measured_output_bytes": 11525575
+    },
+    {
+      "run_id": "fbdf4ec4bf1a63f2",
+      "stat_job_id": "6bd989d547d2d3e50238",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 1,
+      "chain_seed": 13001,
+      "trace": true,
+      "est_seconds": 646.5385516185015,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_baseline",
+        "rep": 13,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 3,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 3,
+        "id": "6bd989d547d2d3e50238",
+        "shard": 21,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 1,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 117.86534337199998,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1328.859375,
+      "measured_output_bytes": 11525575
+    },
+    {
+      "run_id": "3770d256965f658f",
+      "stat_job_id": "6bd989d547d2d3e50238",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 2,
+      "chain_seed": 13002,
+      "trace": true,
+      "est_seconds": 646.5385516185015,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_baseline",
+        "rep": 13,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 3,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 3,
+        "id": "6bd989d547d2d3e50238",
+        "shard": 21,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 1,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 117.86534337199998,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1328.859375,
+      "measured_output_bytes": 11525575
+    },
+    {
+      "run_id": "7b8d996cd8f2e156",
+      "stat_job_id": "6bd989d547d2d3e50238",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 3,
+      "chain_seed": 13003,
+      "trace": true,
+      "est_seconds": 646.5385516185015,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_baseline",
+        "rep": 13,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 3,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 3,
+        "id": "6bd989d547d2d3e50238",
+        "shard": 21,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 1,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 117.86534337199998,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": 1328.859375,
+      "measured_output_bytes": 11525575
+    },
+    {
+      "run_id": "744b8c3c20916a44",
+      "stat_job_id": "6bd989d547d2d3e50238",
+      "budget_key": "earlier_budget_repaired",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "chain_index": 0,
+      "chain_seed": 13000,
+      "trace": true,
+      "est_seconds": 39.28844779066666,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_baseline",
+        "rep": 13,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 3,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 3,
+        "id": "6bd989d547d2d3e50238",
+        "shard": 21,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 1,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 117.86534337199998,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": null,
+      "measured_output_bytes": null
+    },
+    {
+      "run_id": "fbe3ad267527a827",
+      "stat_job_id": "6bd989d547d2d3e50238",
+      "budget_key": "earlier_budget_repaired",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "chain_index": 1,
+      "chain_seed": 13001,
+      "trace": true,
+      "est_seconds": 39.28844779066666,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_baseline",
+        "rep": 13,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 3,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 3,
+        "id": "6bd989d547d2d3e50238",
+        "shard": 21,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 1,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 117.86534337199998,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": null,
+      "measured_output_bytes": null
+    },
+    {
+      "run_id": "b50c81c42a9378ea",
+      "stat_job_id": "6bd989d547d2d3e50238",
+      "budget_key": "earlier_budget_repaired",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "chain_index": 2,
+      "chain_seed": 13002,
+      "trace": true,
+      "est_seconds": 39.28844779066666,
+      "job": {
+        "kind": "effect",
+        "phase": "main",
+        "setting": "B1_baseline",
+        "rep": 13,
+        "spec": "structured",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0,
+        "dgp": "canonical",
+        "dgp_params": {
+          "n_units": 200,
+          "num_pre_periods": 4,
+          "num_post_periods": 4,
+          "linearity_degree": 3,
+          "base_effect": 3.0,
+          "effect_type": "heterogeneous",
+          "alpha_sd": 1.0,
+          "conf_strength": 1.0,
+          "selection": "unobservable",
+          "trend_heterogeneity": 0.3,
+          "ar1_rho": 0.0,
+          "epsilon_scale": 1.0,
+          "treated_share_target": 0.5,
+          "alpha_trend": 0.0,
+          "group_trend": 0.0,
+          "het_trend": 0.0
+        },
+        "N": 200,
+        "linearity_degree": 3,
+        "id": "6bd989d547d2d3e50238",
+        "shard": 21,
+        "recovery": {
+          "budget_keys": [
+            "earlier_budget_repaired",
+            "B3_warm2500_ret2000"
+          ],
+          "trace": true,
+          "cell_index": 1,
+          "diagnostic_only": false,
+          "reference_old_fit_seconds": 117.86534337199998,
+          "selection": "Fixed first 30 replication indices in the user-approved nine cells"
+        }
+      },
+      "measured_peak_rss_mb": null,
+      "measured_output_bytes": null
+    }
+  ],
+  "measured_output_bytes_sum": 458576876,
+  "assignment_hash": "f0771ed72d32de8f9e7ffd3f6f2d15a598122e2df1474df5d167b68d50025887"
+}

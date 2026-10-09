@@ -1,0 +1,578 @@
+--- a/include/stochtree/tree_sampler.h
++++ b/include/stochtree/tree_sampler.h
+@@ -13,7 +13,9 @@
+ #include <stochtree/partition_tracker.h>
+ #include <stochtree/prior.h>
+ 
++#include <algorithm>
+ #include <cmath>
++#include <limits>
+ #include <numeric>
+ #include <random>
+ #include <vector>
+@@ -47,7 +49,7 @@
+  */
+ static inline void VarSplitRange(ForestTracker& tracker, ForestDataset& dataset, int tree_num, int leaf_split, int feature_split, double& var_min, double& var_max) {
+   var_min = std::numeric_limits<double>::max();
+-  var_max = std::numeric_limits<double>::min();
++  var_max = std::numeric_limits<double>::lowest();
+   double feature_value;
+   
+   std::vector<data_size_t>::iterator node_begin_iter = tracker.UnsortedNodeBeginIterator(tree_num, leaf_split);
+@@ -58,95 +60,129 @@
+     feature_value = dataset.CovariateValue(idx, feature_split);
+     if (feature_value < var_min) {
+       var_min = feature_value;
+-    } else if (feature_value > var_max) {
++    }
++    if (feature_value > var_max) {
+       var_max = feature_value;
+     }
+   }
+ }
+ 
+-/*!
+- * \brief Determines whether a proposed split creates two leaf nodes with constant values for every feature (thus ensuring that the tree cannot split further).
+- * 
+- * \param dataset Data object containining training data, including covariates, leaf regression bases, and case weights.
+- * \param tracker Tracking data structures that speed up sampler operations.
+- * \param split Proposed split of tree `tree_num` at node `leaf_split`.
+- * \param tree_num Index of the tree for which a split is proposed.
+- * \param leaf_split Index of the leaf in `tree_num` for which a split is proposed.
+- * \param feature_split Index of the feature to which `split` will be applied
+- * \return `true` if `split` creates two nodes with constant values for every feature in `dataset`, `false` otherwise. 
+- */
+-static inline bool NodesNonConstantAfterSplit(ForestDataset& dataset, ForestTracker& tracker, TreeSplit& split, int tree_num, int leaf_split, int feature_split) {
++// Collect the current observations assigned to a node.
++static inline std::vector<data_size_t> NodeSampleIndices(ForestTracker& tracker, int tree_num, int node_id) {
++  auto begin = tracker.UnsortedNodeBeginIterator(tree_num, node_id);
++  auto end = tracker.UnsortedNodeEndIterator(tree_num, node_id);
++  return std::vector<data_size_t>(begin, end);
++}
++
++// MCMC grow draws a continuous threshold uniformly over the observed node
++// range and accepts only splits with both child counts at least min_samples_leaf.
++// A positive-measure set of valid thresholds exists exactly when the m-th and
++// (n-m+1)-th order statistics differ (using the native <= split convention).
++static inline bool HasPositiveMeasureNumericGrow(const std::vector<data_size_t>& sample_indices,
++                                                  ForestDataset& dataset,
++                                                  const std::vector<double>& variable_weights,
++                                                  int min_samples_leaf) {
++  std::size_t n = sample_indices.size();
++  if (n == 0 || n < 2 * static_cast<std::size_t>(std::max(0, min_samples_leaf))) return false;
+   int p = dataset.GetCovariates().cols();
+-  data_size_t idx;
+-  double feature_value;
+-  double split_feature_value;
+-  double var_max_left;
+-  double var_min_left;
+-  double var_max_right;
+-  double var_min_right;
+-  
++  CHECK_EQ(variable_weights.size(), p);
+   for (int j = 0; j < p; j++) {
+-    auto node_begin_iter = tracker.UnsortedNodeBeginIterator(tree_num, leaf_split);
+-    auto node_end_iter = tracker.UnsortedNodeEndIterator(tree_num, leaf_split);
+-    var_max_left = std::numeric_limits<double>::min();
+-    var_min_left = std::numeric_limits<double>::max();
+-    var_max_right = std::numeric_limits<double>::min();
+-    var_min_right = std::numeric_limits<double>::max();
+-
+-    for (auto i = node_begin_iter; i != node_end_iter; i++) {
+-      auto idx = *i;
+-      split_feature_value = dataset.CovariateValue(idx, feature_split);
+-      feature_value = dataset.CovariateValue(idx, j);
+-      if (split.SplitTrue(split_feature_value)) {
+-        if (var_max_left < feature_value) {
+-          var_max_left = feature_value;
+-        } else if (var_min_left > feature_value) {
+-          var_min_left = feature_value;
+-        }
+-      } else {
+-        if (var_max_right < feature_value) {
+-          var_max_right = feature_value;
+-        } else if (var_min_right > feature_value) {
+-          var_min_right = feature_value;
+-        }
+-      }
+-    }
+-    if ((var_max_left > var_min_left) && (var_max_right > var_min_right)) {
+-      return true;
+-    }
++    if (!(variable_weights[j] > 0.0)) continue;
++    std::vector<double> values;
++    values.reserve(n);
++    double value_min = std::numeric_limits<double>::max();
++    double value_max = std::numeric_limits<double>::lowest();
++    for (data_size_t sample_id : sample_indices) {
++      double value = dataset.CovariateValue(sample_id, j);
++      values.push_back(value);
++      value_min = std::min(value_min, value);
++      value_max = std::max(value_max, value);
++    }
++    if (!(value_max > value_min)) continue;
++    if (min_samples_leaf <= 0) return true;
++    if (n < 2 * static_cast<std::size_t>(min_samples_leaf)) continue;
++
++    auto lower = values.begin() + (min_samples_leaf - 1);
++    std::nth_element(values.begin(), lower, values.end());
++    auto upper = values.begin() + (n - static_cast<std::size_t>(min_samples_leaf));
++    std::nth_element(values.begin() + min_samples_leaf, upper, values.end());
++    if (*lower < *upper) return true;
+   }
+   return false;
+ }
+ 
+-static inline bool NodeNonConstant(ForestDataset& dataset, ForestTracker& tracker, int tree_num, int node_id) {
+-  int p = dataset.GetCovariates().cols();
+-  data_size_t idx;
+-  double feature_value;
+-  double var_max;
+-  double var_min;
+-  
+-  for (int j = 0; j < p; j++) {
+-    auto node_begin_iter = tracker.UnsortedNodeBeginIterator(tree_num, node_id);
+-    auto node_end_iter = tracker.UnsortedNodeEndIterator(tree_num, node_id);
+-    var_max = std::numeric_limits<double>::min();
+-    var_min = std::numeric_limits<double>::max();
+-
+-    for (auto i = node_begin_iter; i != node_end_iter; i++) {
+-      auto idx = *i;
+-      feature_value = dataset.CovariateValue(idx, j);
+-      if (var_max < feature_value) {
+-        var_max = feature_value;
+-      } else if (var_min > feature_value) {
+-        var_min = feature_value;
+-      }
+-    }
+-    if (var_max > var_min) {
+-      return true;
+-    }
++static inline bool NodeCanGrowAtDepth(const std::vector<data_size_t>& sample_indices,
++                                      int node_depth, ForestDataset& dataset,
++                                      TreePrior& tree_prior,
++                                      const std::vector<double>& variable_weights) {
++  int32_t max_depth = tree_prior.GetMaxDepth();
++  if ((max_depth != -1) && (node_depth >= max_depth)) return false;
++  return HasPositiveMeasureNumericGrow(sample_indices, dataset, variable_weights,
++                                       tree_prior.GetMinSamplesLeaf());
++}
++
++static inline bool AnyLeafCanGrow(Tree* tree, ForestTracker& tracker, ForestDataset& dataset,
++                                  TreePrior& tree_prior, const std::vector<double>& variable_weights,
++                                  int tree_num, int excluded_leaf_1 = Tree::kInvalidNodeId,
++                                  int excluded_leaf_2 = Tree::kInvalidNodeId) {
++  const std::vector<int>& leaves = tree->GetLeaves();
++  for (int leaf : leaves) {
++    if ((leaf == excluded_leaf_1) || (leaf == excluded_leaf_2)) continue;
++    int leaf_depth = tree->GetDepth(leaf);
++    std::vector<data_size_t> sample_indices = NodeSampleIndices(tracker, tree_num, leaf);
++    if (NodeCanGrowAtDepth(sample_indices, leaf_depth, dataset, tree_prior, variable_weights)) return true;
+   }
+   return false;
+ }
+ 
++static inline bool AnyLeafCanGrowAfterGrow(Tree* tree, ForestTracker& tracker, ForestDataset& dataset,
++                                           TreePrior& tree_prior, const std::vector<double>& variable_weights,
++                                           int tree_num, int split_leaf, int split_feature,
++                                           TreeSplit& split, int child_depth) {
++  if (AnyLeafCanGrow(tree, tracker, dataset, tree_prior, variable_weights, tree_num, split_leaf)) return true;
++  int32_t max_depth = tree_prior.GetMaxDepth();
++  if ((max_depth != -1) && (child_depth >= max_depth)) return false;
++  std::vector<data_size_t> parent_samples = NodeSampleIndices(tracker, tree_num, split_leaf);
++  std::vector<data_size_t> left_samples;
++  std::vector<data_size_t> right_samples;
++  left_samples.reserve(parent_samples.size());
++  right_samples.reserve(parent_samples.size());
++  for (data_size_t sample_id : parent_samples) {
++    if (split.SplitTrue(dataset.CovariateValue(sample_id, split_feature))) left_samples.push_back(sample_id);
++    else right_samples.push_back(sample_id);
++  }
++  return HasPositiveMeasureNumericGrow(left_samples, dataset, variable_weights, tree_prior.GetMinSamplesLeaf()) ||
++         HasPositiveMeasureNumericGrow(right_samples, dataset, variable_weights, tree_prior.GetMinSamplesLeaf());
++}
++
++static inline bool AnyLeafCanGrowAfterPrune(Tree* tree, ForestTracker& tracker, ForestDataset& dataset,
++                                            TreePrior& tree_prior, const std::vector<double>& variable_weights,
++                                            int tree_num, int leaf_parent, int left_node, int right_node) {
++  if (AnyLeafCanGrow(tree, tracker, dataset, tree_prior, variable_weights, tree_num, left_node, right_node)) return true;
++  std::vector<data_size_t> merged_samples = NodeSampleIndices(tracker, tree_num, leaf_parent);
++  return NodeCanGrowAtDepth(merged_samples, tree->GetDepth(leaf_parent), dataset,
++                            tree_prior, variable_weights);
++}
++
++static inline double LogGrowRuleDensity(const std::vector<double>& variable_weights,
++                                        int feature_index, double range_width) {
++  if (!(range_width > 0.0) || feature_index < 0 ||
++      feature_index >= static_cast<int>(variable_weights.size()) ||
++      !(variable_weights[feature_index] > 0.0)) {
++    return -std::numeric_limits<double>::infinity();
++  }
++  double total_weight = std::accumulate(variable_weights.begin(), variable_weights.end(), 0.0);
++  if (!(total_weight > 0.0)) return -std::numeric_limits<double>::infinity();
++  return std::log(variable_weights[feature_index]) - std::log(total_weight) - std::log(range_width);
++}
++
++static inline double TreeSplitProbability(TreePrior& tree_prior, int node_depth) {
++  // The target is the raw depth law restricted to the capped tree space.
++  // Terminal leaves at max_depth still contribute (1 - p_g(node_depth));
++  // max_depth only removes grow proposals from those leaves.
++  return tree_prior.GetAlpha() * std::pow(1 + node_depth, -tree_prior.GetBeta());
++}
++
+ static inline void AddSplitToModel(ForestTracker& tracker, ForestDataset& dataset, TreePrior& tree_prior, TreeSplit& split, std::mt19937& gen, Tree* tree, 
+                                    int tree_num, int leaf_node, int feature_split, bool keep_sorted = false, int num_threads = -1) {
+   // Use zeros as a "temporary" leaf values since we draw leaf parameters after tree sampling is complete
+@@ -860,239 +896,161 @@
+ }
+ 
+ template <typename LeafModel, typename LeafSuffStat, typename... LeafSuffStatConstructorArgs>
+-static inline void MCMCGrowTreeOneIter(Tree* tree, ForestTracker& tracker, LeafModel& leaf_model, ForestDataset& dataset, ColumnVector& residual, 
+-                                       TreePrior& tree_prior, std::mt19937& gen, int tree_num, std::vector<double>& variable_weights, 
++static inline void MCMCGrowTreeOneIter(Tree* tree, ForestTracker& tracker, LeafModel& leaf_model, ForestDataset& dataset, ColumnVector& residual,
++                                       TreePrior& tree_prior, std::mt19937& gen, int tree_num, std::vector<double>& variable_weights,
+                                        double global_variance, double prob_grow_old, int num_threads, LeafSuffStatConstructorArgs&... leaf_suff_stat_args) {
+-  // Extract dataset information
+-  data_size_t n = dataset.GetCovariates().rows();
+-
+-  // Choose a leaf node at random
++  // Choose a leaf node at random, matching the forward proposal probability.
+   int num_leaves = tree->NumLeaves();
+   std::vector<int> leaves = tree->GetLeaves();
+   std::vector<double> leaf_weights(num_leaves);
+-  std::fill(leaf_weights.begin(), leaf_weights.end(), 1.0/num_leaves);
++  std::fill(leaf_weights.begin(), leaf_weights.end(), 1.0 / num_leaves);
+   walker_vose leaf_dist(leaf_weights.begin(), leaf_weights.end());
+   int leaf_chosen = leaves[leaf_dist(gen)];
+   int leaf_depth = tree->GetDepth(leaf_chosen);
+ 
+-  // Maximum leaf depth
+   int32_t max_depth = tree_prior.GetMaxDepth();
++  if (((max_depth != -1) && (leaf_depth >= max_depth)) || !(prob_grow_old > 0.0)) return;
+ 
+-  // Terminate early if cannot be split
+-  bool accept;
+-  if ((leaf_depth >= max_depth) && (max_depth != -1)) {
+-    accept = false;
+-  } else {
+-
+-    // Select a split variable at random
+-    int p = dataset.GetCovariates().cols();
+-    CHECK_EQ(variable_weights.size(), p);
+-    walker_vose var_dist(variable_weights.begin(), variable_weights.end());
+-    int var_chosen = var_dist(gen);
+-
+-    // Determine the range of possible cutpoints
+-    // TODO: specialize this for binary / ordered categorical / unordered categorical variables
+-    double var_min, var_max;
+-    VarSplitRange(tracker, dataset, tree_num, leaf_chosen, var_chosen, var_min, var_max);
+-    if (var_max <= var_min) {
+-      return;
+-    }
+-    
+-    // Split based on var_min to var_max in a given node
+-    double split_point_chosen = standard_uniform_draw_53bit(gen) * (var_max - var_min) + var_min;
+-
+-    // Create a split object
+-    TreeSplit split = TreeSplit(split_point_chosen);
++  int p = dataset.GetCovariates().cols();
++  CHECK_EQ(variable_weights.size(), p);
++  walker_vose var_dist(variable_weights.begin(), variable_weights.end());
++  int var_chosen = var_dist(gen);
++
++  double var_min, var_max;
++  VarSplitRange(tracker, dataset, tree_num, leaf_chosen, var_chosen, var_min, var_max);
++  if (!(var_max > var_min)) return;
++  double split_point_chosen = standard_uniform_draw_53bit(gen) * (var_max - var_min) + var_min;
++  TreeSplit split(split_point_chosen);
+ 
+-    // Compute the marginal likelihood of split and no split, given the leaf prior
+-    std::tuple<double, double, int32_t, int32_t> split_eval = EvaluateProposedSplit<LeafModel, LeafSuffStat, LeafSuffStatConstructorArgs...>(
+-      dataset, tracker, residual, leaf_model, split, tree_num, leaf_chosen, var_chosen, global_variance, num_threads, leaf_suff_stat_args...
+-    );
+-    double split_log_marginal_likelihood = std::get<0>(split_eval);
+-    double no_split_log_marginal_likelihood = std::get<1>(split_eval);
+-    int32_t left_n = std::get<2>(split_eval);
+-    int32_t right_n = std::get<3>(split_eval);
+-
+-    // Reject the split if either of the left and right nodes are smaller than tree_prior.GetMinSamplesLeaf()
+-    bool left_node_sample_cutoff = left_n >= tree_prior.GetMinSamplesLeaf();
+-    bool right_node_sample_cutoff = right_n >= tree_prior.GetMinSamplesLeaf();
+-    if ((left_node_sample_cutoff) && (right_node_sample_cutoff)) {
+-      
+-      // Determine probability of growing the split node and its two new left and right nodes
+-      double pg = tree_prior.GetAlpha() * std::pow(1+leaf_depth, -tree_prior.GetBeta());
+-      double pgl = tree_prior.GetAlpha() * std::pow(1+leaf_depth+1, -tree_prior.GetBeta());
+-      double pgr = tree_prior.GetAlpha() * std::pow(1+leaf_depth+1, -tree_prior.GetBeta());
+-
+-      // Determine whether a "grow" move is possible from the newly formed tree
+-      // in order to compute the probability of choosing "prune" from the new tree
+-      // (which is always possible by construction)
+-      bool non_constant = NodesNonConstantAfterSplit(dataset, tracker, split, tree_num, leaf_chosen, var_chosen);
+-      bool min_samples_left_check = left_n >= 2*tree_prior.GetMinSamplesLeaf();
+-      bool min_samples_right_check = right_n >= 2*tree_prior.GetMinSamplesLeaf();
+-      double prob_prune_new;
+-      if (non_constant && (min_samples_left_check || min_samples_right_check)) {
+-        prob_prune_new = 0.5;
+-      } else {
+-        prob_prune_new = 1.0;
+-      }
++  std::tuple<double, double, int32_t, int32_t> split_eval = EvaluateProposedSplit<LeafModel, LeafSuffStat, LeafSuffStatConstructorArgs...>(
++      dataset, tracker, residual, leaf_model, split, tree_num, leaf_chosen, var_chosen, global_variance, num_threads, leaf_suff_stat_args...);
++  double split_log_marginal_likelihood = std::get<0>(split_eval);
++  double no_split_log_marginal_likelihood = std::get<1>(split_eval);
++  int32_t left_n = std::get<2>(split_eval);
++  int32_t right_n = std::get<3>(split_eval);
++  if ((left_n < tree_prior.GetMinSamplesLeaf()) || (right_n < tree_prior.GetMinSamplesLeaf())) return;
+ 
+-      // Determine the number of leaves in the current tree and leaf parents in the proposed tree
+-      int num_leaf_parents = tree->NumLeafParents();
+-      double p_leaf = 1/static_cast<double>(num_leaves);
+-      double p_leaf_parent = 1/static_cast<double>(num_leaf_parents+1);
+-
+-      // Compute the final MH ratio
+-      double log_mh_ratio = (
+-        std::log(pg) + std::log(1-pgl) + std::log(1-pgr) - std::log(1-pg) + std::log(prob_prune_new) +
+-        std::log(p_leaf_parent) - std::log(prob_grow_old) - std::log(p_leaf) - no_split_log_marginal_likelihood + split_log_marginal_likelihood
+-      );
+-      // Threshold at 0
+-      if (log_mh_ratio > 0) {
+-        log_mh_ratio = 0;
+-      }
++  bool grow_possible_new = AnyLeafCanGrowAfterGrow(tree, tracker, dataset, tree_prior,
++      variable_weights, tree_num, leaf_chosen, var_chosen, split, leaf_depth + 1);
++  // A grow always creates at least one leaf-parent, so prune is available in T'.
++  double prob_prune_new = grow_possible_new ? 0.5 : 1.0;
++
++  int proposed_num_leaf_parents = tree->NumLeafParents() + 1;
++  if (!tree->IsRoot(leaf_chosen) && tree->IsLeafParent(tree->Parent(leaf_chosen))) {
++    --proposed_num_leaf_parents;
++  }
++  if (!(prob_prune_new > 0.0) || proposed_num_leaf_parents <= 0) return;
++
++  double pg = TreeSplitProbability(tree_prior, leaf_depth);
++  double pgl = TreeSplitProbability(tree_prior, leaf_depth + 1);
++  double pgr = pgl;
++  double range_width = var_max - var_min;
++  double log_rule_proposal = LogGrowRuleDensity(variable_weights, var_chosen, range_width);
++  // The configured model uses equal feature weights and a uniform continuous
++  // threshold over this same node range as its split-rule prior, so these
++  // target-prior and proposal log densities cancel explicitly.
++  double log_rule_prior = log_rule_proposal;
++  if (!std::isfinite(log_rule_proposal)) return;
+ 
+-      // Draw a uniform random variable and accept/reject the proposal on this basis
+-      double log_acceptance_prob = std::log(standard_uniform_draw_53bit(gen));
+-      if (log_acceptance_prob <= log_mh_ratio) {
+-        accept = true;
+-        AddSplitToModel(tracker, dataset, tree_prior, split, gen, tree, tree_num, leaf_chosen, var_chosen, false, num_threads);
+-      } else {
+-        accept = false;
+-      }
++  double log_mh_ratio = (
++      std::log(pg) + std::log1p(-pgl) + std::log1p(-pgr) - std::log1p(-pg) +
++      std::log(prob_prune_new) - std::log(static_cast<double>(proposed_num_leaf_parents)) -
++      std::log(prob_grow_old) + std::log(static_cast<double>(num_leaves)) +
++      log_rule_prior - log_rule_proposal +
++      split_log_marginal_likelihood - no_split_log_marginal_likelihood);
++  if (log_mh_ratio > 0.0) log_mh_ratio = 0.0;
+ 
+-    } else {
+-      accept = false;
+-    }
++  double log_acceptance_prob = std::log(standard_uniform_draw_53bit(gen));
++  if (log_acceptance_prob <= log_mh_ratio) {
++    AddSplitToModel(tracker, dataset, tree_prior, split, gen, tree, tree_num, leaf_chosen, var_chosen, false, num_threads);
+   }
+ }
+ 
+ template <typename LeafModel, typename LeafSuffStat, typename... LeafSuffStatConstructorArgs>
+-static inline void MCMCPruneTreeOneIter(Tree* tree, ForestTracker& tracker, LeafModel& leaf_model, ForestDataset& dataset, ColumnVector& residual, 
+-                                        TreePrior& tree_prior, std::mt19937& gen, int tree_num, double global_variance, int num_threads, 
++static inline void MCMCPruneTreeOneIter(Tree* tree, ForestTracker& tracker, LeafModel& leaf_model, ForestDataset& dataset, ColumnVector& residual,
++                                        TreePrior& tree_prior, std::mt19937& gen, int tree_num,
++                                        std::vector<double>& variable_weights, double global_variance, int num_threads,
+                                         LeafSuffStatConstructorArgs&... leaf_suff_stat_args) {
+-  // Choose a "leaf parent" node at random
+   int num_leaves = tree->NumLeaves();
+   int num_leaf_parents = tree->NumLeafParents();
+   std::vector<int> leaf_parents = tree->GetLeafParents();
+   std::vector<double> leaf_parent_weights(num_leaf_parents);
+-  std::fill(leaf_parent_weights.begin(), leaf_parent_weights.end(), 1.0/num_leaf_parents);
++  std::fill(leaf_parent_weights.begin(), leaf_parent_weights.end(), 1.0 / num_leaf_parents);
+   walker_vose leaf_parent_dist(leaf_parent_weights.begin(), leaf_parent_weights.end());
+   int leaf_parent_chosen = leaf_parents[leaf_parent_dist(gen)];
+   int leaf_parent_depth = tree->GetDepth(leaf_parent_chosen);
+   int left_node = tree->LeftChild(leaf_parent_chosen);
+   int right_node = tree->RightChild(leaf_parent_chosen);
+   int feature_split = tree->SplitIndex(leaf_parent_chosen);
+-  
+-  // Compute the marginal likelihood for the leaf parent and its left and right nodes
++
+   std::tuple<double, double, int32_t, int32_t> split_eval = EvaluateExistingSplit<LeafModel, LeafSuffStat, LeafSuffStatConstructorArgs...>(
+-    dataset, tracker, residual, leaf_model, global_variance, tree_num, leaf_parent_chosen, left_node, right_node, leaf_suff_stat_args...
+-  );
++      dataset, tracker, residual, leaf_model, global_variance, tree_num, leaf_parent_chosen, left_node, right_node, leaf_suff_stat_args...);
+   double split_log_marginal_likelihood = std::get<0>(split_eval);
+   double no_split_log_marginal_likelihood = std::get<1>(split_eval);
+   int32_t left_n = std::get<2>(split_eval);
+   int32_t right_n = std::get<3>(split_eval);
+-  
+-  // Determine probability of growing the split node and its two new left and right nodes
+-  double pg = tree_prior.GetAlpha() * std::pow(1+leaf_parent_depth, -tree_prior.GetBeta());
+-  double pgl = tree_prior.GetAlpha() * std::pow(1+leaf_parent_depth+1, -tree_prior.GetBeta());
+-  double pgr = tree_prior.GetAlpha() * std::pow(1+leaf_parent_depth+1, -tree_prior.GetBeta());
+-
+-  // Determine whether a "prune" move is possible from the new tree,
+-  // in order to compute the probability of choosing "grow" from the new tree
+-  // (which is always possible by construction)
+-  bool non_root_tree = tree->NumNodes() > 1;
+-  double prob_grow_new;
+-  if (non_root_tree) {
+-    prob_grow_new = 0.5;
+-  } else {
+-    prob_grow_new = 1.0;
+-  }
+-
+-  // Determine whether a "grow" move was possible from the old tree,
+-  // in order to compute the probability of choosing "prune" from the old tree
+-  bool non_constant_left = NodeNonConstant(dataset, tracker, tree_num, left_node);
+-  bool non_constant_right = NodeNonConstant(dataset, tracker, tree_num, right_node);
+-  double prob_prune_old;
+-  if (non_constant_left && non_constant_right) {
+-    prob_prune_old = 0.5;
+-  } else {
+-    prob_prune_old = 1.0;
+-  }
+ 
+-  // Determine the number of leaves in the current tree and leaf parents in the proposed tree
+-  double p_leaf = 1/static_cast<double>(num_leaves-1);
+-  double p_leaf_parent = 1/static_cast<double>(num_leaf_parents);
+-
+-  // Compute the final MH ratio
++  bool grow_possible_old = AnyLeafCanGrow(tree, tracker, dataset, tree_prior, variable_weights, tree_num);
++  double prob_prune_old = grow_possible_old ? 0.5 : 1.0;
++  bool grow_possible_new = AnyLeafCanGrowAfterPrune(tree, tracker, dataset, tree_prior,
++      variable_weights, tree_num, leaf_parent_chosen, left_node, right_node);
++  bool prune_possible_new = tree->NumSplitNodes() > 1;
++  double prob_grow_new = grow_possible_new ? (prune_possible_new ? 0.5 : 1.0) : 0.0;
++  // If the reverse grow move has zero probability in the proposed tree, the
++  // selected prune has zero MH acceptance probability.
++  if (!(prob_grow_new > 0.0) || num_leaves <= 1 || num_leaf_parents <= 0) return;
++
++  double var_min, var_max;
++  VarSplitRange(tracker, dataset, tree_num, leaf_parent_chosen, feature_split, var_min, var_max);
++  double range_width = var_max - var_min;
++  double stored_threshold = tree->Threshold(leaf_parent_chosen);
++  if (!(range_width > 0.0) || stored_threshold < var_min || stored_threshold > var_max ||
++      left_n < tree_prior.GetMinSamplesLeaf() || right_n < tree_prior.GetMinSamplesLeaf()) return;
++  double log_rule_proposal_reverse = LogGrowRuleDensity(variable_weights, feature_split, range_width);
++  // Same matched split-rule density as in the reverse-grow proposal above.
++  double log_rule_prior = log_rule_proposal_reverse;
++  if (!std::isfinite(log_rule_proposal_reverse)) return;
++
++  double pg = TreeSplitProbability(tree_prior, leaf_parent_depth);
++  double pgl = TreeSplitProbability(tree_prior, leaf_parent_depth + 1);
++  double pgr = pgl;
+   double log_mh_ratio = (
+-    std::log(1-pg) - std::log(pg) - std::log(1-pgl) - std::log(1-pgr) + std::log(prob_prune_old) +
+-    std::log(p_leaf) - std::log(prob_grow_new) - std::log(p_leaf_parent) + no_split_log_marginal_likelihood - split_log_marginal_likelihood
+-  );
+-  // Threshold at 0
+-  if (log_mh_ratio > 0) {
+-    log_mh_ratio = 0;
+-  }
++      std::log1p(-pg) - std::log(pg) - std::log1p(-pgl) - std::log1p(-pgr) +
++      std::log(prob_grow_new) - std::log(static_cast<double>(num_leaves - 1)) -
++      std::log(prob_prune_old) + std::log(static_cast<double>(num_leaf_parents)) +
++      log_rule_proposal_reverse - log_rule_prior +
++      no_split_log_marginal_likelihood - split_log_marginal_likelihood);
++  if (log_mh_ratio > 0.0) log_mh_ratio = 0.0;
+ 
+-  // Draw a uniform random variable and accept/reject the proposal on this basis
+-  bool accept;
+   double log_acceptance_prob = std::log(standard_uniform_draw_53bit(gen));
+   if (log_acceptance_prob <= log_mh_ratio) {
+-    accept = true;
+     RemoveSplitFromModel(tracker, dataset, tree_prior, gen, tree, tree_num, leaf_parent_chosen, left_node, right_node, false);
+-  } else {
+-    accept = false;
+   }
+ }
+ 
+ template <typename LeafModel, typename LeafSuffStat, typename... LeafSuffStatConstructorArgs>
+ static inline void MCMCSampleTreeOneIter(Tree* tree, ForestTracker& tracker, ForestContainer& forests, LeafModel& leaf_model, ForestDataset& dataset,
+-                                         ColumnVector& residual, TreePrior& tree_prior, std::mt19937& gen, std::vector<double>& variable_weights, 
++                                         ColumnVector& residual, TreePrior& tree_prior, std::mt19937& gen, std::vector<double>& variable_weights,
+                                          int tree_num, double global_variance, int num_threads, LeafSuffStatConstructorArgs&... leaf_suff_stat_args) {
+-  // Determine whether it is possible to grow any of the leaves
+-  bool grow_possible = false;
+-  std::vector<int> leaves = tree->GetLeaves();
+-  for (auto& leaf: leaves) {
+-    if (tracker.UnsortedNodeSize(tree_num, leaf) > 2 * tree_prior.GetMinSamplesLeaf()) {
+-      grow_possible = true;
+-      break;
+-    }
+-  }
++  CHECK_EQ(variable_weights.size(), dataset.GetCovariates().cols());
++  CHECK(!tree->HasCategoricalSplit());
++  bool grow_possible = AnyLeafCanGrow(tree, tracker, dataset, tree_prior, variable_weights, tree_num);
++  bool prune_possible = tree->NumLeafParents() > 0;
++  if (!grow_possible && !prune_possible) return;
+ 
+-  // Determine whether it is possible to prune the tree
+-  bool prune_possible = false;
+-  if (tree->NumValidNodes() > 1) {
+-    prune_possible = true;
+-  }
+-
+-  // Determine the relative probability of grow vs prune (0 = grow, 1 = prune)
+-  double prob_grow;
+-  std::vector<double> step_probs(2);
+-  if (grow_possible && prune_possible) {
+-    step_probs = {0.5, 0.5};
+-    prob_grow = 0.5;
+-  } else if (!grow_possible && prune_possible) {
+-    step_probs = {0.0, 1.0};
+-    prob_grow = 0.0;
+-  } else if (grow_possible && !prune_possible) {
+-    step_probs = {1.0, 0.0};
+-    prob_grow = 1.0;
+-  } else {
+-    Log::Fatal("In this tree, neither grow nor prune is possible");
+-  }
++  double prob_grow = grow_possible ? (prune_possible ? 0.5 : 1.0) : 0.0;
++  std::vector<double> step_probs{prob_grow, 1.0 - prob_grow};
+   walker_vose step_dist(step_probs.begin(), step_probs.end());
+-
+-  // Draw a split rule at random
+   data_size_t step_chosen = step_dist(gen);
+-  bool accept;
+-  
++
+   if (step_chosen == 0) {
+     MCMCGrowTreeOneIter<LeafModel, LeafSuffStat, LeafSuffStatConstructorArgs...>(
+-      tree, tracker, leaf_model, dataset, residual, tree_prior, gen, tree_num, variable_weights, global_variance, prob_grow, num_threads, leaf_suff_stat_args...
+-    );
++      tree, tracker, leaf_model, dataset, residual, tree_prior, gen, tree_num, variable_weights,
++      global_variance, prob_grow, num_threads, leaf_suff_stat_args...);
+   } else {
+     MCMCPruneTreeOneIter<LeafModel, LeafSuffStat, LeafSuffStatConstructorArgs...>(
+-      tree, tracker, leaf_model, dataset, residual, tree_prior, gen, tree_num, global_variance, num_threads, leaf_suff_stat_args...
+-    );
++      tree, tracker, leaf_model, dataset, residual, tree_prior, gen, tree_num, variable_weights,
++      global_variance, num_threads, leaf_suff_stat_args...);
+   }
+ }
+ 
+--- a/src/cutpoint_candidates.cpp
++++ b/src/cutpoint_candidates.cpp
+@@ -303,7 +303,7 @@
+     } else {
+       next_sort_ind = feature_node_sort_tracker->SortIndex(i + 1, feature_index);
+       next_val = covariates(next_sort_ind, feature_index);
+-      bin_complete = ((stride_length <= step_size) && ((stride_length + 1) > step_size));
++      bin_complete = (stride_length >= step_size);
+       stride_complete = ((bin_complete) && (std::fabs(next_val - current_val) > StochTree::kEpsilon));
+       if (stride_complete) {
+         // Update bin vectors

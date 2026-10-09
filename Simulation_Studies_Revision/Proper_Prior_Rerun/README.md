@@ -1,5 +1,13 @@
 # Proper-prior DiD-BCF reruns
 
+For the **current repaired-engine, 30-replication budget comparison**, use
+[Repaired_Performance_30/README.md](Repaired_Performance_30/README.md) and its
+48 loose `Colab/remaining_00.ipynb` through `remaining_47.ipynb` notebooks.
+Those assignments preserve nine completed local chains and run only the
+remaining 1,881 chains. The historical unpatched campaign described below
+remains archived for reference; its `Colab/proper_ig_shard_*` notebooks are
+not the current repaired comparison.
+
 This campaign replaces the improper IG(0,0) noise-variance prior by IG(2,1)
 on standardized outcomes. See `JBES_Submission/audit/PROPER_PRIOR_REPAIR.md`
 for the proof and scope. The shape/second-parameter convention is
