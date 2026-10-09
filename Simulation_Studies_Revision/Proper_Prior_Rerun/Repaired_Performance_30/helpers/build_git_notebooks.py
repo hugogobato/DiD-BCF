@@ -43,7 +43,7 @@ WORK = Path("/content") if Path("/content").is_dir() else Path.cwd() / "didbcf_c
 WORK.mkdir(parents=True,exist_ok=True)
 ROOT = WORK / ("didbcf_source_" + SOURCE_COMMIT[:12])
 OUT = WORK / "didbcf_outputs" / LABEL
-SETUP_WORK = WORK / (LABEL + "_setup")
+SETUP_WORK = WORK / (LABEL + "_setup_" + str(time.time_ns()))
 OUT.mkdir(parents=True,exist_ok=True)
 print("Python",platform.python_version(),"| source",SOURCE_COMMIT,"| notebook",LABEL)
 print("Total session window",SESSION_HOURS,"hours, including setup; export reserve",RESERVE_MIN,"minutes")

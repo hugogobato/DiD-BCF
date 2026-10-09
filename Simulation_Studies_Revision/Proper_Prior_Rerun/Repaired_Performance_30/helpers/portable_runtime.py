@@ -138,6 +138,14 @@ def prepare_engine(args):
     actual = {name:importlib.metadata.version(name) for name in manifest["dependencies"]}
     if actual != manifest["dependencies"]:
         raise ValueError("Dependency versions differ from the frozen study")
+    # The pip-installed CMake executable may be absent from PATH in an
+    # unactivated venv, or shadowed by a different system CMake on Colab.
+    # Select the executable belonging to the verified package explicitly.
+    import cmake
+    cmake_bin = Path(cmake.CMAKE_BIN_DIR)
+    if not (cmake_bin / "cmake").is_file():
+        raise ValueError("Verified CMake package has no executable")
+    os.environ["PATH"] = str(cmake_bin) + os.pathsep + os.environ.get("PATH","")
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
     if args.resume:
