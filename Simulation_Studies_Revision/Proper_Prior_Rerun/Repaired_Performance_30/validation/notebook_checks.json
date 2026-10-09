@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+  "transfer_hash": "b81aca6ec78944869c45741b4f8f5996f6674847858fa85375a042e04919a872",
+  "notebooks_validated": 48,
+  "notebook_cells_syntax_validated": 336,
+  "remaining_chains": 1881,
+  "all_source_pins_match": true,
+  "colab_download_fallback_present": true,
+  "committed_sparse_clone_package_verification": "PASS",
+  "isolated_clone_partial_collector": "PASS",
+  "preserved_local_chains": 9,
+  "new_mcmc_fits_run": 0
+}

@@ -1,0 +1,22 @@
+{
+  "scope": "Issues observed during clean local bootstrap validation, before publication",
+  "statistical_source_changes": false,
+  "new_experimental_replications": 0,
+  "observations": [
+    {
+      "issue": "The pinned CMake package was installed but its executable was absent from PATH in an unactivated virtual environment",
+      "observed_failure": "FileNotFoundError: cmake",
+      "repair": "Select the executable directory from the verified cmake Python package explicitly",
+      "failed_attempt_preserved": "JBES_Submission/performance_comparison_20261009/reviews/colab_transfer/fresh_build"
+    },
+    {
+      "issue": "Modern CMake FindPython ignored the upstream legacy PYTHON_EXECUTABLE flag and selected another installed Python",
+      "observed_failure": "Python 3.10 extension built for a Python 3.12 runtime; isolated-engine activation rejected a global-module fallback",
+      "repair": "Provide a CMake toolchain file pinning Python_EXECUTABLE, Python3_EXECUTABLE and PYTHON_EXECUTABLE to the active interpreter",
+      "configure_probe": "PASS: CMake selected the active Python 3.12.3 interpreter and development headers",
+      "failed_attempt_preserved": "JBES_Submission/performance_comparison_20261009/reviews/colab_transfer/fresh_build_v2"
+    }
+  ],
+  "provenance": "Each output archive includes the interpreter toolchain file and its SHA256. Every retry uses a separate setup directory. The frozen builder, native patch and statistical files remain byte-for-byte unchanged.",
+  "final_compilation_and_controls": "See fresh_build_checks.json"
+}

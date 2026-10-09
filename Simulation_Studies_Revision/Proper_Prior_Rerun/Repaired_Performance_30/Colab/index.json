@@ -1,0 +1,390 @@
+{
+  "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+  "transfer_hash": "b81aca6ec78944869c45741b4f8f5996f6674847858fa85375a042e04919a872",
+  "notebooks": [
+    {
+      "notebook": "Colab/remaining_00.ipynb",
+      "sha256": "2293fdbee109af3392b16f0819569a9b9ce9773bf2f32194d1cce5e2d778502f",
+      "shard": 0,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "e7fc7aba94d92dbeb03135e927e24a35de57b8fadc91488dc87b65beb3013c9f",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_01.ipynb",
+      "sha256": "fdbca566956490f4be59d1282668fca70534f3c0753d5da3ffc9abdd58447073",
+      "shard": 1,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "8c41891f391951adacce753dd206e7256a4824246649759712c4beb62404738d",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_02.ipynb",
+      "sha256": "a01bc9b7a40d3584f4de31b2d23b1600e98b3e72f377a424db4b1f4e0302ff85",
+      "shard": 2,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "f540b9ffed9851ac9e7b87b98ddf96d9c8c4294c5dcb820f363eb35bc893f2c3",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_03.ipynb",
+      "sha256": "2b9c58b28d67f998fcf3b1667dedc1c1f16ebab5773257bb89fd06e912d58277",
+      "shard": 3,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "ab396e953c15b1257938cd96d5ef7f741544b109a98423cb469d3844ea391ced",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_04.ipynb",
+      "sha256": "e93a2910d8ecbc6b765c136344374290702a10570aff5d3bde8f457327cf36ed",
+      "shard": 4,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "a5cc834bb935f2f4e50e6d74eb58bb4d5f02194993bc6d734d8919d2772f4064",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_05.ipynb",
+      "sha256": "8d3c50bbb6f8610deea4b1990600fe4ffa01574bdb1dfee70d8b8e574f81418d",
+      "shard": 5,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "4743f628754693b1f4cd3044732371c6e8188e640a0ce1bfad22a891f2db73e9",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_06.ipynb",
+      "sha256": "128ad7b09be4098d74f2efe159b2b7ec6690d626f96657bc07f5bf38c9acf004",
+      "shard": 6,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "0a7d5cb369ee4754d3671897fc36a5b46b9ebd166ca3cc0d62e1ddb83070f0bb",
+      "units": 49
+    },
+    {
+      "notebook": "Colab/remaining_07.ipynb",
+      "sha256": "b7cb87f49ac07424cc3abf929b79e08952d5443fcf746ef7db97bcb9bef7aabe",
+      "shard": 7,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "115cce9b66533a4e089b7f2735853516d7e74265351b97b2d2aebfb663534e61",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_08.ipynb",
+      "sha256": "7ae0222fd56ad2ab07339de45adbc880f81009178fd40a74ac8badc9bbe7ac55",
+      "shard": 8,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "e6878b8a27a02cb860e74b859d2a6f10570e8c438361c6c6e6b5e1b752a6862b",
+      "units": 39
+    },
+    {
+      "notebook": "Colab/remaining_09.ipynb",
+      "sha256": "12390ac1e9c8ca538e6a4f8f9d4afe3fa8cb887113ee9de6f9c8f2e591512002",
+      "shard": 9,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "63280010915b044633e71fbcc76d05115beb2b53c84e14d0b11df927a69c6a57",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_10.ipynb",
+      "sha256": "86b4e2b5a0d776d37b5a34b311171f84a3dc98250319fc52027ad327c7ea0d50",
+      "shard": 10,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "f1c8cda3120fb86b43bd10b9af1909345c77aea3a33a2b09b70c81a67cd74fe4",
+      "units": 49
+    },
+    {
+      "notebook": "Colab/remaining_11.ipynb",
+      "sha256": "4dd97c27f035e30afb1b8dda2b80af87734c38c65df065732638781280632544",
+      "shard": 11,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "5c367087c40d0ec5251542e6bd3cf691999177d7175ba571059bb9bfa12864ad",
+      "units": 49
+    },
+    {
+      "notebook": "Colab/remaining_12.ipynb",
+      "sha256": "0da05958268671495044f51b44ca9a72653e985161fdbb94b3d8b050e276e6cb",
+      "shard": 12,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "5eef36cb8d471105c4803a46c374d8a89d0b3eefe2b195e422e41196b57b2d3d",
+      "units": 49
+    },
+    {
+      "notebook": "Colab/remaining_13.ipynb",
+      "sha256": "759262d5587077d7a1452bf8ae44a3a6e447b6402de34617f0c025adae7f409a",
+      "shard": 13,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "19d78bb87e5cd23a892f9e2e49c16d6eb8d3afd0f2bb646ff54a97fd37feb91d",
+      "units": 49
+    },
+    {
+      "notebook": "Colab/remaining_14.ipynb",
+      "sha256": "7c123e94a1fc4fe817eab21d42b832ce181b9f7f27fabf9a35383cf7608826e7",
+      "shard": 14,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "4549f7bef5ce4e1a1081017439fe71e0a67449b92badc55c3410d9968a3158db",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_15.ipynb",
+      "sha256": "7f0bacb9d361def8a00ca1d12f23ce00de6eccf3d1f3b9e917622fc096533408",
+      "shard": 15,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "02b1055205e1e98ea9f6ddf87d8379b0ffa3c46ec0af58321fdcd5d78c23926c",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_16.ipynb",
+      "sha256": "c2ae066d3eb99dabcbc6c7ecf660e9d6275ac694a4ab5eef4c3fddf320bbbf59",
+      "shard": 16,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "3a1ff27219600c20a7d2f87f84b8c379e2b34de54e391c12a6f32cc501c47685",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_17.ipynb",
+      "sha256": "fe93f42279ef125bce07e4c38da29659b614b5611562ca44daff106a08ad5f35",
+      "shard": 17,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "08909c13500b3c9380e3f8c7440351d51827ecd11025a282bda45a5f677dbe70",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_18.ipynb",
+      "sha256": "3dd3eefacdbd5f7052a1611bab802d97daf23fb03481989f4f0ffa514dc4ce01",
+      "shard": 18,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "88f05bc0b12c34f797c46aee4cb072f0b82d58f2535831baec3e014dd0c62352",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_19.ipynb",
+      "sha256": "9611b5d86c9e55dc614881b6870d7c8b6571c88a870e6a80d15c36b9cf65388b",
+      "shard": 19,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "b1e8b6a575a8d2c6d8788d54fb574ed67523051d5174f032a19e6ef1bb6a7e6c",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_20.ipynb",
+      "sha256": "cc2b766f4e0d417ed89315d9f68766e6f273a6e1799b0b6e8ef6c25b16ebe03b",
+      "shard": 20,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "e4b1a3dced0021c77560392500d90f8353a54679e439cf204cab930c419df268",
+      "units": 43
+    },
+    {
+      "notebook": "Colab/remaining_21.ipynb",
+      "sha256": "094e588be6a1664d3423fefc2e5e418fa507768f253cad7f3b93888f1ed3b0c6",
+      "shard": 21,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "f0771ed72d32de8f9e7ffd3f6f2d15a598122e2df1474df5d167b68d50025887",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_22.ipynb",
+      "sha256": "3f41d61ff88437673f0b3c3456e9ae12a56331c2cb36760d55ffc6987ca26a5b",
+      "shard": 22,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "3dc20ea2f73a528efb7477211dd9876baf05142c9386581fdb15de42b6fa8041",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_23.ipynb",
+      "sha256": "8ab6bcdfeaed48fc36c7e743c9553f81bd9d4dbec043522abb4a2b9fcd01cebc",
+      "shard": 23,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "602936ff79fa069e95ae037210d1aa962c3110a39d101877e3e51963fe75b45d",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_24.ipynb",
+      "sha256": "ad8279408cc77fb1adae343ad52150ea26510fbf6960c5045beb5b9723008fd2",
+      "shard": 24,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "717cb564356aa9af57c684ad821bb8fe1cef55fee0115a1d997fb017f56b515d",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_25.ipynb",
+      "sha256": "065375d572f54a1abbc571c2a4ee0155c0a214a281bb32f79f61e99ffb108e4e",
+      "shard": 25,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "0d74788eab011d42181272957f797c8829dfa90521762afc6156e591ed33928d",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_26.ipynb",
+      "sha256": "05767ab2e4829538713f9ab95b4c81c2d05e69d41bf6dd5498edf58ed0e920d2",
+      "shard": 26,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "3f3330e38cdcb43045c1667a8f6b0d96e8dec800271c02d536b0c1404fd0df4b",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_27.ipynb",
+      "sha256": "9ac1a62e8d93d58f0fc9d6e07de0536fc6b4f2e33aa0f8c87f1afe852178a92a",
+      "shard": 27,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "10a157b16806ff41a87b2131eb3aa63bd4e9a84dc658c8900675ccd23b4c8cd9",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_28.ipynb",
+      "sha256": "070827fb98dd664b036fb365268d027bb1e8d37424b0abcf6fa77955c3846e80",
+      "shard": 28,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "c17a41d2f153ee6a0c63758ac281506a437dc0f701aeeeb6e128b0429d5626fe",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_29.ipynb",
+      "sha256": "00fcd60644246cc458f246f38333482371c5b24601631c6ef21184888fa0a680",
+      "shard": 29,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "f0762753746002b236485877c75b5f7baf784b824bc7813224908b801ee3d3d5",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_30.ipynb",
+      "sha256": "01331395a2aabe7e929e983d49250a5389bce40e79fdf972726ad1bf932f818d",
+      "shard": 30,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "262cc0c11bcd8cae628fb008744088e5857cafbf133d61443ee177d4508abc6f",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_31.ipynb",
+      "sha256": "1b545100a3544081a9962b38b964e6f9670de6b73450bb25b549f508ab77415f",
+      "shard": 31,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "3a63e0e2398044d8f9d10cde291cb7cfe77940f1b1da9b04d99f62fda0df5861",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_32.ipynb",
+      "sha256": "77651a6891bc7adc05c28ed46533e9f2d204fd3085d5c964016f313e64e1693a",
+      "shard": 32,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "761c592d1219708bc509094e3dc28630d303930cf61a76d05c3378c5890b579a",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_33.ipynb",
+      "sha256": "e9ab1e6fb4f5d88dcb817a6e146c9c58cfd3ff24cff9b343d9a03fcaa5453c83",
+      "shard": 33,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "650335c4feaddc884f2342f4f2f77d42f31be998adb8dc05b7864832e2b21cfd",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_34.ipynb",
+      "sha256": "3bebaa157f1c003272d7289f019af1fd65b234af80fe67f12e07a10d4205803c",
+      "shard": 34,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "e29d177383ba4e59ef3b6b580c14dc37eb7fdea6da4c6a79a1bcd0181585e9e2",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_35.ipynb",
+      "sha256": "cddb965b46cad09593c1c95a08ec7af1655f12fc80e1573d692a0ce95e92a6d7",
+      "shard": 35,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "38084d2abcfa571055307a0202eef354b228a82235b39952f971c1cac1a41c2b",
+      "units": 42
+    },
+    {
+      "notebook": "Colab/remaining_36.ipynb",
+      "sha256": "a7fe5eb2c307facb4d9aa6b457f736916674213348a189750fe41f55147e939a",
+      "shard": 36,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "30ec76f11a72383be4d336f7af30febf8edd64bc7a94e8a8eff868f3de1c3984",
+      "units": 28
+    },
+    {
+      "notebook": "Colab/remaining_37.ipynb",
+      "sha256": "f85ee65467d8fdeaec2182addfe1b490e16a12ee9b0bb813d84fc7c95f7a2391",
+      "shard": 37,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "67b6fcc6d824b6edbda6c30ec883029058bc93f75198bd2f58937a55c4f233ee",
+      "units": 28
+    },
+    {
+      "notebook": "Colab/remaining_38.ipynb",
+      "sha256": "8a11e30de1a559dd7db12ddebc6726416182d15a1359ca04dec5f790ba2df48b",
+      "shard": 38,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "efa7684939a7f02b23c1730a7d1b0de2def595b1c8732fbd0dfa38c9abbc3500",
+      "units": 28
+    },
+    {
+      "notebook": "Colab/remaining_39.ipynb",
+      "sha256": "6e964fa92e001a28a54f42717ba9ea53eccb4cf96174767665811398428b82cc",
+      "shard": 39,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "34f1f62b0a0a98df8e5bfdacebf8c2bbb5a25f4a63cb87e6f74f793baf309dea",
+      "units": 28
+    },
+    {
+      "notebook": "Colab/remaining_40.ipynb",
+      "sha256": "f50c64aef6699b1c13cf27e5fa5237948e359a757485952b9a8ee7a003815fce",
+      "shard": 40,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "fec63fe6c5b9b241bc64660fc020c87a60464b5dd02e7233af7280af5ab1963f",
+      "units": 28
+    },
+    {
+      "notebook": "Colab/remaining_41.ipynb",
+      "sha256": "4d82635ed1f658e663e12cbc0d763838d52f6acfea350f466860b2f356a62915",
+      "shard": 41,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "cc5e699bb5e04a1b89cd74559a86b24044b56846edfdc531245cd0cb5c7e2ece",
+      "units": 28
+    },
+    {
+      "notebook": "Colab/remaining_42.ipynb",
+      "sha256": "6bddc246948e504ce67f575dee1250858a42bc247d229c40a0a9d3701091b0d2",
+      "shard": 42,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "f15a39beb1f77a5cea2835ac2ae9daaff86bec0e7437c97ea25e19d88b91952b",
+      "units": 28
+    },
+    {
+      "notebook": "Colab/remaining_43.ipynb",
+      "sha256": "34177430b4c0f8da259cc6ce85e9bc10cb3955e45ff835b93cbeb0eba020d404",
+      "shard": 43,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "df517dde4e1b26438e75d3e961609a193ba2dcdda629a6167ecfa9912d365203",
+      "units": 28
+    },
+    {
+      "notebook": "Colab/remaining_44.ipynb",
+      "sha256": "ecfcd19a4d966afd367f1732bb5ab6e193a73a0abfbdefba32722e6d5aff025e",
+      "shard": 44,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "73222157f1f7eba7ce8f1af57873b64ce297fb0cd9b98cca8523ad6ee0bc6dcb",
+      "units": 28
+    },
+    {
+      "notebook": "Colab/remaining_45.ipynb",
+      "sha256": "5fada6018330bd7d8941fd9d060700a56cb089e520c219137daded9ce114056e",
+      "shard": 45,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "19f92f691c908dbd439c11cdc4116ff574d59035282dbf4b35e8c9aa2c1b0e99",
+      "units": 28
+    },
+    {
+      "notebook": "Colab/remaining_46.ipynb",
+      "sha256": "22aa70be5c21702dd47f19cdccba54f1b1bc02c2beb40bc7081be63d25f13a8d",
+      "shard": 46,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "8298a4275de3ee1da19d887b13196d4a84c5103a568e2734eb3519fef965cca8",
+      "units": 28
+    },
+    {
+      "notebook": "Colab/remaining_47.ipynb",
+      "sha256": "a17e47d63f2412298ffc263eb76dcb054892106e5e2b449ff1aa9fcc56191490",
+      "shard": 47,
+      "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+      "assignment_hash": "01517c42debc7b6ecc3c6369ea1098a902c911628d725b4a8f7716f7fd80e1fe",
+      "units": 28
+    }
+  ]
+}

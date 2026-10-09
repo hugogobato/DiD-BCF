@@ -1,7 +1,8 @@
 # Repaired DiD-BCF: remaining 30-replication comparison on 48 Colab runtimes
 
 Run the 48 loose notebooks in `Colab/remaining_00.ipynb` through
-`remaining_47.ipynb`, once each. They replace the earlier local execution plan
+`remaining_47.ipynb`, once each. [Open all 48 using individual Colab links](Colab/README.md).
+They replace the earlier local execution plan
 for this study. The local run was stopped at the user's request; its nine
 verified completed chains are preserved in `local_completed_outputs/` and
 excluded from the 1,881 chains assigned to these notebooks. Original partial
@@ -27,6 +28,7 @@ or establish asymptotic theory for a finite simulation budget.
 Use a CPU runtime with Python 3.12 through 3.14. Upload the numbered notebooks
 as individual `.ipynb` files, or open them from GitHub. Each notebook clones the
 repository and checks out the full source revision pinned in its first cell.
+The pinned helper revision is `290e35f2dea4977ad7277336e3cfb8f3f8c59ea9`.
 It installs exact Python dependency versions, verifies the frozen files and
 assignment, downloads SHA256-verified source archives, builds the repaired
 stochtree engine into an isolated site directory with one compilation worker,

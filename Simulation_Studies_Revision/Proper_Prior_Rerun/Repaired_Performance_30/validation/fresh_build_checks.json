@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "source_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+  "fresh_isolated_build_from_committed_sparse_clone": true,
+  "archive_cache": "existing SHA256-verified archives",
+  "network_downloads_tested": false,
+  "native_controls": "PASS",
+  "eligible_feature_controls": "PASS",
+  "compiled_workers": 1,
+  "python": "3.12.3",
+  "active_python_abi_pinned": true,
+  "extension_sha256": "cf54fc6487dc0336f419f7bb810d5a35cc18f3585880fec803e9700297626248",
+  "elapsed_seconds": 220.2310493440018,
+  "new_mcmc_fits_run": 0,
+  "colab_runtime_tested": false
+}
