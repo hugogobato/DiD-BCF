@@ -1,7 +1,7 @@
 {
   "status": "PASS",
   "statistical_manifest_hash": "aa9051ee7011de39ff09292ab984e358ff9ee852510be95ce3dec9579a65bbf7",
-  "transfer_hash": "5ccdc6cb97541dc7029a26870977b3d94d5150c29488c2c0f4b8352f1ec002ad",
+  "transfer_hash": "b81aca6ec78944869c45741b4f8f5996f6674847858fa85375a042e04919a872",
   "original_unit_objects_identical": true,
   "complete_disjoint_coverage": true,
   "remaining_units": 1881,
@@ -19,7 +19,7 @@
     "status": "DRY_RUN_ONLY_NO_SAMPLING",
     "units": 42,
     "workers": 2,
-    "memory_pool_GiB": 18.264163970947266,
+    "memory_pool_GiB": 18.292705535888672,
     "worker_ceiling_GiB": 3,
     "numeric_threads_per_worker": 1,
     "accessible_cpus": 8

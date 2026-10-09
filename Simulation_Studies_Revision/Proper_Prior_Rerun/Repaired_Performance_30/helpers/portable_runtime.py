@@ -146,6 +146,20 @@ def prepare_engine(args):
     if not (cmake_bin / "cmake").is_file():
         raise ValueError("Verified CMake package has no executable")
     os.environ["PATH"] = str(cmake_bin) + os.pathsep + os.environ.get("PATH","")
+    # Modern FindPython uses mixed-case variables; the frozen upstream build
+    # only supplies legacy PYTHON_EXECUTABLE. Pin both APIs without editing
+    # the frozen build script or statistical sources. CMake reads this file
+    # from its documented CMAKE_TOOLCHAIN_FILE environment variable.
+    args.work.mkdir(parents=True,exist_ok=True)
+    toolchain = args.work.resolve() / "active_python.cmake"
+    marker = "=="
+    while "]" + marker + "]" in sys.executable:
+        marker += "="
+    literal = "[" + marker + "[" + sys.executable + "]" + marker + "]"
+    toolchain.write_text("# Build against the active sampling interpreter.\n" + "".join(
+        f'set({name} {literal} CACHE FILEPATH "DiD-BCF active Python" FORCE)\n'
+        for name in ("Python_EXECUTABLE","Python3_EXECUTABLE","PYTHON_EXECUTABLE")))
+    os.environ["CMAKE_TOOLCHAIN_FILE"] = str(toolchain)
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
     if args.resume:
@@ -211,6 +225,10 @@ def prepare_engine(args):
         if verify_engine_archive(out,manifest) != active:
             raise ValueError("Archived engine differs from the loaded build")
     write_bundle(out,args.assignment)
+    shutil.copy2(toolchain,out / "_bundle/active_python.cmake")
+    atomic(out / "_bundle/build_toolchain.json",dict(python_executable=sys.executable,
+           python_toolchain_sha256=sha(toolchain),cmake_version=actual["cmake"],
+           cmake_executable=str(cmake_bin / "cmake"),frozen_builder_changed=False))
     print(json.dumps(dict(status="PASS",setup=str(setup_path),engine=active),indent=2))
     return 0
 
