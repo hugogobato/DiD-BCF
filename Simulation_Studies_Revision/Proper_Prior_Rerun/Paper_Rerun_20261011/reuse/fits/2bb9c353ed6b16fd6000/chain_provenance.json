@@ -1,0 +1,473 @@
+{
+  "origin": "verified_comparison",
+  "chains": [
+    {
+      "record": {
+        "run_id": "cb23b0a89d7aad86",
+        "stat_job_id": "2bb9c353ed6b16fd6000",
+        "parent_job_id": "2bb9c353ed6b16fd6000",
+        "phase": "main",
+        "setting": "B1_selection_obs",
+        "rep": 8,
+        "spec": "structured",
+        "kind": "effect",
+        "budget_key": "earlier_budget_repaired",
+        "budget": {
+          "num_gfr": 50,
+          "num_burnin": 0,
+          "num_mcmc": 500,
+          "keep_every": 5,
+          "num_chains": 3,
+          "label": "repaired engine at the earlier proper-prior budget"
+        },
+        "chain_index": 0,
+        "chain_seed": 8000,
+        "trace": true,
+        "attempt": 0,
+        "parent_manifest": "105ee8510f99817b132d69869167ec5a724596ed37d8094f7ae430c958ad1ccc",
+        "assignment_hash": "88f05bc0b12c34f797c46aee4cb072f0b82d58f2535831baec3e014dd0c62352",
+        "recovery_version": "0.2.0-repaired-20261008",
+        "purpose": "replicated_performance_colab_transfer",
+        "source_hashes_sha256": "bb0c640d64cb1ff4e4a6a5a745031f19c20a42aa091e08a51320364a115ba87d",
+        "dependencies": {
+          "numpy": "2.4.6",
+          "pandas": "3.0.3",
+          "scipy": "1.18.0",
+          "scikit-learn": "1.9.0",
+          "cmake": "4.3.4",
+          "matplotlib": "3.11.0"
+        },
+        "runtime": {
+          "python": "3.13.16",
+          "implementation": "CPython",
+          "platform": "Linux-6.6.122+-x86_64-with-glibc2.39"
+        },
+        "engine": {
+          "specification": {
+            "variant": "repaired",
+            "build_manifest_sha256": "12f509b5baff3657a246aea9f565ec042a624ed92a29fca2aa8ef4076a4e23be",
+            "patch_sha256": "b18a0a97e3302496b439bf8825ec0b5eeaa5bdba1a67287b5b92d6b84566c118",
+            "source_hashes": {
+              "include/stochtree/tree_sampler.h": "5e3375bf1bb0e23cd355d4c8d9b1b19e38dfcca0ca163f81996d96cfc4295319",
+              "src/cutpoint_candidates.cpp": "a60917dd01e468ea591ddd78878be72fc6701227b193cfeb8c5c1636dd8079e7"
+            },
+            "archives": {
+              "boost_math": "9c712659fb947ec87bd41a0d25a620598b7964965c6858b097f55c1bfc5897b0",
+              "eigen": "348e54987bbfac329d26acc626325febdc85982fd7a7087b968054cea79714ab",
+              "fast_double_parser": "6ee728d641a12dbe2f4fe7c3ae2044fddc671a144ca9fa56e9171514251475a9",
+              "fmt": "9c62261229fe117c5b7fc5a104dbe0cd920b84a69436deb58bb3f91e5fc762af",
+              "pybind11": "92d91803e06e8c3b06371700ad9afa06b0835020a9910f2123740961551c1acd",
+              "stochtree": "9ad59b427d8552c12c05daf2aa4212fe089a337f0282c448e57f9223e77e6a8b"
+            },
+            "target_prior": "raw depth/split/feature/uniform-node-range prior globally restricted and normalized on minleaf/maxdepth-feasible numeric trees"
+          },
+          "build_identity": "2b7aa067cb34379801528da49cb90a9f6bc297ec21fc54099783e71366b99dc6",
+          "extension_sha256": "24d081a1f96b37bedff8a963663a7056be38099970f9e2435f9f39cffe816b4b",
+          "python": "3.13.16",
+          "site_files_sha256": "80a1355621590d36085bb964265e7369cbcad0ef6bb7e66127da0a5d7be1b44a"
+        },
+        "continuation": "independent_chain",
+        "source_git_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+        "portable_transfer_hash": "b81aca6ec78944869c45741b4f8f5996f6674847858fa85375a042e04919a872",
+        "sampler": {
+          "num_gfr": 50,
+          "num_burnin": 0,
+          "num_mcmc": 500,
+          "keep_every": 5,
+          "num_chains": 3,
+          "label": "repaired engine at the earlier proper-prior budget"
+        },
+        "actual_sampler": {
+          "num_gfr": 50,
+          "num_burnin": 0,
+          "num_mcmc": 500,
+          "keep_every": 5,
+          "num_chains": 3,
+          "label": "repaired engine at the earlier proper-prior budget",
+          "sigma2_shape": 2.0,
+          "sigma2_rate": 1.0
+        },
+        "prior": {
+          "method_version": "0.2.0-proper-ig",
+          "global_prior": {
+            "sigma2_shape": 2.0,
+            "sigma2_rate": 1.0,
+            "sample_intercept": true,
+            "intercept_prior_var": null
+          },
+          "variance_prior_scale": "standardized_outcome",
+          "outcome_std": 2.8204759863099778,
+          "outcome_mean": 0.6742787261099514,
+          "effect_by_cohort": true,
+          "rfx": "none",
+          "level_prior": {
+            "num_trees": 125,
+            "alpha": 0.95,
+            "beta": 2.0,
+            "min_samples_leaf": 5,
+            "max_depth": 10,
+            "cutpoint_grid_size": 100,
+            "sample_leaf_scale": true,
+            "leaf_scale_init": null,
+            "leaf_scale_shape": 3.0,
+            "leaf_scale_rate": null,
+            "calibration": "prognostic"
+          },
+          "trend_prior": {
+            "num_trees": 125,
+            "alpha": 0.95,
+            "beta": 2.0,
+            "min_samples_leaf": 5,
+            "max_depth": 10,
+            "cutpoint_grid_size": 100,
+            "sample_leaf_scale": true,
+            "leaf_scale_init": null,
+            "leaf_scale_shape": 3.0,
+            "leaf_scale_rate": null,
+            "calibration": "prognostic"
+          },
+          "effect_prior": {
+            "num_trees": 100,
+            "alpha": 0.25,
+            "beta": 3.0,
+            "min_samples_leaf": 5,
+            "max_depth": 5,
+            "cutpoint_grid_size": 100,
+            "sample_leaf_scale": false,
+            "leaf_scale_init": null,
+            "leaf_scale_shape": 3.0,
+            "leaf_scale_rate": null,
+            "calibration": "effect"
+          }
+        },
+        "peak_rss_mb": 496.08984375,
+        "unit_mode": "independent_chain",
+        "panel_hash": "d2dc7b86a1130a9f309502070391980013883d65110c538c1002be07a144ea99",
+        "seconds": 176.69845820099727,
+        "output_bytes": 2453289,
+        "outputs": {
+          "draws.npz": "ca1cc69fdd4099595ecde8ca9bfe35f905b61f68ddb5f9b9098f3f5b006dd616",
+          "trace.npz": "d35e3e4dd848eb66356d3c2f259f6adfdc19fd54f6686f3c5f42f9c9ccdd0441"
+        },
+        "completed": true,
+        "artifact": "attempt_000"
+      },
+      "archive": "didbcf_repaired_30_remaining_18.zip",
+      "archive_sha256": "b1a9b9e47d135fda55647500924e15d868ec69aa6923a3a2bf19a7eff0f89ede",
+      "member": "runs/cb23b0a89d7aad86/attempt_000/complete.json"
+    },
+    {
+      "record": {
+        "run_id": "42f4f4c8c12d81c7",
+        "stat_job_id": "2bb9c353ed6b16fd6000",
+        "parent_job_id": "2bb9c353ed6b16fd6000",
+        "phase": "main",
+        "setting": "B1_selection_obs",
+        "rep": 8,
+        "spec": "structured",
+        "kind": "effect",
+        "budget_key": "earlier_budget_repaired",
+        "budget": {
+          "num_gfr": 50,
+          "num_burnin": 0,
+          "num_mcmc": 500,
+          "keep_every": 5,
+          "num_chains": 3,
+          "label": "repaired engine at the earlier proper-prior budget"
+        },
+        "chain_index": 1,
+        "chain_seed": 8001,
+        "trace": true,
+        "attempt": 0,
+        "parent_manifest": "105ee8510f99817b132d69869167ec5a724596ed37d8094f7ae430c958ad1ccc",
+        "assignment_hash": "88f05bc0b12c34f797c46aee4cb072f0b82d58f2535831baec3e014dd0c62352",
+        "recovery_version": "0.2.0-repaired-20261008",
+        "purpose": "replicated_performance_colab_transfer",
+        "source_hashes_sha256": "bb0c640d64cb1ff4e4a6a5a745031f19c20a42aa091e08a51320364a115ba87d",
+        "dependencies": {
+          "numpy": "2.4.6",
+          "pandas": "3.0.3",
+          "scipy": "1.18.0",
+          "scikit-learn": "1.9.0",
+          "cmake": "4.3.4",
+          "matplotlib": "3.11.0"
+        },
+        "runtime": {
+          "python": "3.13.16",
+          "implementation": "CPython",
+          "platform": "Linux-6.6.122+-x86_64-with-glibc2.39"
+        },
+        "engine": {
+          "specification": {
+            "variant": "repaired",
+            "build_manifest_sha256": "12f509b5baff3657a246aea9f565ec042a624ed92a29fca2aa8ef4076a4e23be",
+            "patch_sha256": "b18a0a97e3302496b439bf8825ec0b5eeaa5bdba1a67287b5b92d6b84566c118",
+            "source_hashes": {
+              "include/stochtree/tree_sampler.h": "5e3375bf1bb0e23cd355d4c8d9b1b19e38dfcca0ca163f81996d96cfc4295319",
+              "src/cutpoint_candidates.cpp": "a60917dd01e468ea591ddd78878be72fc6701227b193cfeb8c5c1636dd8079e7"
+            },
+            "archives": {
+              "boost_math": "9c712659fb947ec87bd41a0d25a620598b7964965c6858b097f55c1bfc5897b0",
+              "eigen": "348e54987bbfac329d26acc626325febdc85982fd7a7087b968054cea79714ab",
+              "fast_double_parser": "6ee728d641a12dbe2f4fe7c3ae2044fddc671a144ca9fa56e9171514251475a9",
+              "fmt": "9c62261229fe117c5b7fc5a104dbe0cd920b84a69436deb58bb3f91e5fc762af",
+              "pybind11": "92d91803e06e8c3b06371700ad9afa06b0835020a9910f2123740961551c1acd",
+              "stochtree": "9ad59b427d8552c12c05daf2aa4212fe089a337f0282c448e57f9223e77e6a8b"
+            },
+            "target_prior": "raw depth/split/feature/uniform-node-range prior globally restricted and normalized on minleaf/maxdepth-feasible numeric trees"
+          },
+          "build_identity": "2b7aa067cb34379801528da49cb90a9f6bc297ec21fc54099783e71366b99dc6",
+          "extension_sha256": "24d081a1f96b37bedff8a963663a7056be38099970f9e2435f9f39cffe816b4b",
+          "python": "3.13.16",
+          "site_files_sha256": "80a1355621590d36085bb964265e7369cbcad0ef6bb7e66127da0a5d7be1b44a"
+        },
+        "continuation": "independent_chain",
+        "source_git_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+        "portable_transfer_hash": "b81aca6ec78944869c45741b4f8f5996f6674847858fa85375a042e04919a872",
+        "sampler": {
+          "num_gfr": 50,
+          "num_burnin": 0,
+          "num_mcmc": 500,
+          "keep_every": 5,
+          "num_chains": 3,
+          "label": "repaired engine at the earlier proper-prior budget"
+        },
+        "actual_sampler": {
+          "num_gfr": 50,
+          "num_burnin": 0,
+          "num_mcmc": 500,
+          "keep_every": 5,
+          "num_chains": 3,
+          "label": "repaired engine at the earlier proper-prior budget",
+          "sigma2_shape": 2.0,
+          "sigma2_rate": 1.0
+        },
+        "prior": {
+          "method_version": "0.2.0-proper-ig",
+          "global_prior": {
+            "sigma2_shape": 2.0,
+            "sigma2_rate": 1.0,
+            "sample_intercept": true,
+            "intercept_prior_var": null
+          },
+          "variance_prior_scale": "standardized_outcome",
+          "outcome_std": 2.8204759863099778,
+          "outcome_mean": 0.6742787261099514,
+          "effect_by_cohort": true,
+          "rfx": "none",
+          "level_prior": {
+            "num_trees": 125,
+            "alpha": 0.95,
+            "beta": 2.0,
+            "min_samples_leaf": 5,
+            "max_depth": 10,
+            "cutpoint_grid_size": 100,
+            "sample_leaf_scale": true,
+            "leaf_scale_init": null,
+            "leaf_scale_shape": 3.0,
+            "leaf_scale_rate": null,
+            "calibration": "prognostic"
+          },
+          "trend_prior": {
+            "num_trees": 125,
+            "alpha": 0.95,
+            "beta": 2.0,
+            "min_samples_leaf": 5,
+            "max_depth": 10,
+            "cutpoint_grid_size": 100,
+            "sample_leaf_scale": true,
+            "leaf_scale_init": null,
+            "leaf_scale_shape": 3.0,
+            "leaf_scale_rate": null,
+            "calibration": "prognostic"
+          },
+          "effect_prior": {
+            "num_trees": 100,
+            "alpha": 0.25,
+            "beta": 3.0,
+            "min_samples_leaf": 5,
+            "max_depth": 5,
+            "cutpoint_grid_size": 100,
+            "sample_leaf_scale": false,
+            "leaf_scale_init": null,
+            "leaf_scale_shape": 3.0,
+            "leaf_scale_rate": null,
+            "calibration": "effect"
+          }
+        },
+        "peak_rss_mb": 496.58984375,
+        "unit_mode": "independent_chain",
+        "panel_hash": "d2dc7b86a1130a9f309502070391980013883d65110c538c1002be07a144ea99",
+        "seconds": 176.83984953499748,
+        "output_bytes": 2440387,
+        "outputs": {
+          "draws.npz": "cd4483a90a9b77dbc8cab1a4f2203548d84b6c90de8d31bfd75fdde11d884499",
+          "trace.npz": "032d15f04e79ea5f71cb5b64dc0350d04468316fe8b0393fdf526791d8f6a2dd"
+        },
+        "completed": true,
+        "artifact": "attempt_000"
+      },
+      "archive": "didbcf_repaired_30_remaining_18.zip",
+      "archive_sha256": "b1a9b9e47d135fda55647500924e15d868ec69aa6923a3a2bf19a7eff0f89ede",
+      "member": "runs/42f4f4c8c12d81c7/attempt_000/complete.json"
+    },
+    {
+      "record": {
+        "run_id": "9ba1717937527c62",
+        "stat_job_id": "2bb9c353ed6b16fd6000",
+        "parent_job_id": "2bb9c353ed6b16fd6000",
+        "phase": "main",
+        "setting": "B1_selection_obs",
+        "rep": 8,
+        "spec": "structured",
+        "kind": "effect",
+        "budget_key": "earlier_budget_repaired",
+        "budget": {
+          "num_gfr": 50,
+          "num_burnin": 0,
+          "num_mcmc": 500,
+          "keep_every": 5,
+          "num_chains": 3,
+          "label": "repaired engine at the earlier proper-prior budget"
+        },
+        "chain_index": 2,
+        "chain_seed": 8002,
+        "trace": true,
+        "attempt": 0,
+        "parent_manifest": "105ee8510f99817b132d69869167ec5a724596ed37d8094f7ae430c958ad1ccc",
+        "assignment_hash": "88f05bc0b12c34f797c46aee4cb072f0b82d58f2535831baec3e014dd0c62352",
+        "recovery_version": "0.2.0-repaired-20261008",
+        "purpose": "replicated_performance_colab_transfer",
+        "source_hashes_sha256": "bb0c640d64cb1ff4e4a6a5a745031f19c20a42aa091e08a51320364a115ba87d",
+        "dependencies": {
+          "numpy": "2.4.6",
+          "pandas": "3.0.3",
+          "scipy": "1.18.0",
+          "scikit-learn": "1.9.0",
+          "cmake": "4.3.4",
+          "matplotlib": "3.11.0"
+        },
+        "runtime": {
+          "python": "3.13.16",
+          "implementation": "CPython",
+          "platform": "Linux-6.6.122+-x86_64-with-glibc2.39"
+        },
+        "engine": {
+          "specification": {
+            "variant": "repaired",
+            "build_manifest_sha256": "12f509b5baff3657a246aea9f565ec042a624ed92a29fca2aa8ef4076a4e23be",
+            "patch_sha256": "b18a0a97e3302496b439bf8825ec0b5eeaa5bdba1a67287b5b92d6b84566c118",
+            "source_hashes": {
+              "include/stochtree/tree_sampler.h": "5e3375bf1bb0e23cd355d4c8d9b1b19e38dfcca0ca163f81996d96cfc4295319",
+              "src/cutpoint_candidates.cpp": "a60917dd01e468ea591ddd78878be72fc6701227b193cfeb8c5c1636dd8079e7"
+            },
+            "archives": {
+              "boost_math": "9c712659fb947ec87bd41a0d25a620598b7964965c6858b097f55c1bfc5897b0",
+              "eigen": "348e54987bbfac329d26acc626325febdc85982fd7a7087b968054cea79714ab",
+              "fast_double_parser": "6ee728d641a12dbe2f4fe7c3ae2044fddc671a144ca9fa56e9171514251475a9",
+              "fmt": "9c62261229fe117c5b7fc5a104dbe0cd920b84a69436deb58bb3f91e5fc762af",
+              "pybind11": "92d91803e06e8c3b06371700ad9afa06b0835020a9910f2123740961551c1acd",
+              "stochtree": "9ad59b427d8552c12c05daf2aa4212fe089a337f0282c448e57f9223e77e6a8b"
+            },
+            "target_prior": "raw depth/split/feature/uniform-node-range prior globally restricted and normalized on minleaf/maxdepth-feasible numeric trees"
+          },
+          "build_identity": "2b7aa067cb34379801528da49cb90a9f6bc297ec21fc54099783e71366b99dc6",
+          "extension_sha256": "24d081a1f96b37bedff8a963663a7056be38099970f9e2435f9f39cffe816b4b",
+          "python": "3.13.16",
+          "site_files_sha256": "80a1355621590d36085bb964265e7369cbcad0ef6bb7e66127da0a5d7be1b44a"
+        },
+        "continuation": "independent_chain",
+        "source_git_commit": "290e35f2dea4977ad7277336e3cfb8f3f8c59ea9",
+        "portable_transfer_hash": "b81aca6ec78944869c45741b4f8f5996f6674847858fa85375a042e04919a872",
+        "sampler": {
+          "num_gfr": 50,
+          "num_burnin": 0,
+          "num_mcmc": 500,
+          "keep_every": 5,
+          "num_chains": 3,
+          "label": "repaired engine at the earlier proper-prior budget"
+        },
+        "actual_sampler": {
+          "num_gfr": 50,
+          "num_burnin": 0,
+          "num_mcmc": 500,
+          "keep_every": 5,
+          "num_chains": 3,
+          "label": "repaired engine at the earlier proper-prior budget",
+          "sigma2_shape": 2.0,
+          "sigma2_rate": 1.0
+        },
+        "prior": {
+          "method_version": "0.2.0-proper-ig",
+          "global_prior": {
+            "sigma2_shape": 2.0,
+            "sigma2_rate": 1.0,
+            "sample_intercept": true,
+            "intercept_prior_var": null
+          },
+          "variance_prior_scale": "standardized_outcome",
+          "outcome_std": 2.8204759863099778,
+          "outcome_mean": 0.6742787261099514,
+          "effect_by_cohort": true,
+          "rfx": "none",
+          "level_prior": {
+            "num_trees": 125,
+            "alpha": 0.95,
+            "beta": 2.0,
+            "min_samples_leaf": 5,
+            "max_depth": 10,
+            "cutpoint_grid_size": 100,
+            "sample_leaf_scale": true,
+            "leaf_scale_init": null,
+            "leaf_scale_shape": 3.0,
+            "leaf_scale_rate": null,
+            "calibration": "prognostic"
+          },
+          "trend_prior": {
+            "num_trees": 125,
+            "alpha": 0.95,
+            "beta": 2.0,
+            "min_samples_leaf": 5,
+            "max_depth": 10,
+            "cutpoint_grid_size": 100,
+            "sample_leaf_scale": true,
+            "leaf_scale_init": null,
+            "leaf_scale_shape": 3.0,
+            "leaf_scale_rate": null,
+            "calibration": "prognostic"
+          },
+          "effect_prior": {
+            "num_trees": 100,
+            "alpha": 0.25,
+            "beta": 3.0,
+            "min_samples_leaf": 5,
+            "max_depth": 5,
+            "cutpoint_grid_size": 100,
+            "sample_leaf_scale": false,
+            "leaf_scale_init": null,
+            "leaf_scale_shape": 3.0,
+            "leaf_scale_rate": null,
+            "calibration": "effect"
+          }
+        },
+        "peak_rss_mb": 498.18359375,
+        "unit_mode": "independent_chain",
+        "panel_hash": "d2dc7b86a1130a9f309502070391980013883d65110c538c1002be07a144ea99",
+        "seconds": 174.56996807099858,
+        "output_bytes": 2519794,
+        "outputs": {
+          "draws.npz": "7f5b91ecb88ba080dfec53de7496a4e7b4779942e364762c986489c7dc43baff",
+          "trace.npz": "79830b658a553061ff2e253ee6d1267787c99ce24bf5b91b8ba7f721cdf82a6b"
+        },
+        "completed": true,
+        "artifact": "attempt_000"
+      },
+      "archive": "didbcf_repaired_30_remaining_18.zip",
+      "archive_sha256": "b1a9b9e47d135fda55647500924e15d868ec69aa6923a3a2bf19a7eff0f89ede",
+      "member": "runs/9ba1717937527c62/attempt_000/complete.json"
+    }
+  ],
+  "input_metrics_sha256": "f63ba42c03232f988d99b482551d9af288257fd983d10f893328b69595d3be15",
+  "input_diagnostics_sha256": "0d96b0cbb76c181bd26fbdd11fac8e40884fdf0ec92cef0785f26312dcc7faeb",
+  "verification_sha256": "b3ed8ff918f493a7956a1b8ac1b98c91b07f8d942a9833756b21a298d01fb625"
+}

@@ -1,0 +1,18 @@
+{
+  "main_fits": 5100,
+  "reused": 264,
+  "new_main_fits": 4836,
+  "main_notebooks": 60,
+  "bridge_notebooks": 4,
+  "waves": 2,
+  "measured_full_fit_seconds_q75_by_N": {
+    "100": 237.9061939719977,
+    "200": 439.97705574750125,
+    "800": 1569.9252729810014
+  },
+  "total_estimated_worker_hours_including_margin": 895.6522312681677,
+  "load_min_hours": 7.954035566518322,
+  "load_max_hours": 7.973683722038115,
+  "timing_note": "Planning estimates from previous Colab worker elapsed times; hardware and memory variation can increase wall time. One-worker execution takes roughly twice as long.",
+  "input_analysis_verification_sha256": "b3ed8ff918f493a7956a1b8ac1b98c91b07f8d942a9833756b21a298d01fb625"
+}

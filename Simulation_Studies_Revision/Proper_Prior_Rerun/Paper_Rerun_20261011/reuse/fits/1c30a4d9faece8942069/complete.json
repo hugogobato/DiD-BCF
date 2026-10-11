@@ -1,0 +1,38 @@
+{
+  "manifest_hash": "b93afa87d50e9b20492d40a981d15defdebe0d4562a52289be01505b01b47ac5",
+  "job_id": "1c30a4d9faece8942069",
+  "job_hash": "8ff37cf68269533314320daffab8fa21be5c2fdd2aea61da71c065372bd84de7",
+  "budget_key": "earlier_budget_repaired",
+  "chain_seeds": [
+    24000,
+    24001,
+    24002
+  ],
+  "engine_specification": {
+    "variant": "repaired",
+    "build_manifest_sha256": "12f509b5baff3657a246aea9f565ec042a624ed92a29fca2aa8ef4076a4e23be",
+    "patch_sha256": "b18a0a97e3302496b439bf8825ec0b5eeaa5bdba1a67287b5b92d6b84566c118",
+    "source_hashes": {
+      "include/stochtree/tree_sampler.h": "5e3375bf1bb0e23cd355d4c8d9b1b19e38dfcca0ca163f81996d96cfc4295319",
+      "src/cutpoint_candidates.cpp": "a60917dd01e468ea591ddd78878be72fc6701227b193cfeb8c5c1636dd8079e7"
+    },
+    "archives": {
+      "boost_math": "9c712659fb947ec87bd41a0d25a620598b7964965c6858b097f55c1bfc5897b0",
+      "eigen": "348e54987bbfac329d26acc626325febdc85982fd7a7087b968054cea79714ab",
+      "fast_double_parser": "6ee728d641a12dbe2f4fe7c3ae2044fddc671a144ca9fa56e9171514251475a9",
+      "fmt": "9c62261229fe117c5b7fc5a104dbe0cd920b84a69436deb58bb3f91e5fc762af",
+      "pybind11": "92d91803e06e8c3b06371700ad9afa06b0835020a9910f2123740961551c1acd",
+      "stochtree": "9ad59b427d8552c12c05daf2aa4212fe089a337f0282c448e57f9223e77e6a8b"
+    },
+    "target_prior": "raw depth/split/feature/uniform-node-range prior globally restricted and normalized on minleaf/maxdepth-feasible numeric trees"
+  },
+  "origin": "reused_verified_earlier_fit",
+  "per_replication_rows": 10,
+  "diagnostic_rows": 23,
+  "outputs": {
+    "per_replication.csv": "f539065fd0b9492e484069a909e06d87c3b819650cbc378ef44d6310ccf57b55",
+    "diagnostics.csv": "9b582d12eba69db636e7b0662aab5165640ed3861ff94adbe4b8bb565152ec6e",
+    "chain_provenance.json": "b8fa19b17e605c426d506550d6d94f5c046c902cd3b3b05967fbb6739bf572e1"
+  },
+  "record_hash": "2ce0d22d97b9b6a6d29da92018deb5c7131782b3eed8f82e3a4416ee89720b32"
+}

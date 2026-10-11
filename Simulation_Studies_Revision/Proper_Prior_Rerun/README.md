@@ -1,12 +1,12 @@
 # Proper-prior DiD-BCF reruns
 
-For the **current repaired-engine, 30-replication budget comparison**, use
-[Repaired_Performance_30/README.md](Repaired_Performance_30/README.md) and its
-48 loose `Colab/remaining_00.ipynb` through `remaining_47.ipynb` notebooks.
-Those assignments preserve nine completed local chains and run only the
-remaining 1,881 chains. The historical unpatched campaign described below
-remains archived for reference; its `Colab/proper_ig_shard_*` notebooks are
-not the current repaired comparison.
+The current final main rerun uses [Paper_Rerun_20261011](Paper_Rerun_20261011/README.md): 60 main notebooks targeting eight hours, four smaller budget-check notebooks, and a metrics collector. It reuses 264 verified repaired fits and runs only 4,836 missing main fits. Use its [upload guide](Paper_Rerun_20261011/Colab/UPLOAD_GUIDE.md).
+
+The intermediate repaired 30-replication comparison, earlier unpatched Colab package and returned ZIPs were moved to the local ignored archive at `.local_experiment_archive/intermediate/20261011/` in the repository root, following the user’s request. See [the archive map](../../../../EXPERIMENT_ARCHIVE_MAP.md). Final rerun outputs remain publishable and are not ignored.
+
+## Historical unpatched proper-prior campaign definitions
+
+The description and commands below document the earlier campaign. Its manifest is retained as the original job universe; run the current pinned repaired notebooks for the paper rerun.
 
 This campaign replaces the improper IG(0,0) noise-variance prior by IG(2,1)
 on standardized outcomes. See `JBES_Submission/audit/PROPER_PRIOR_REPAIR.md`

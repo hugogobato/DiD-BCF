@@ -1,0 +1,19 @@
+{
+  "name": "bridge_checks_02",
+  "phase": "bridge_checks",
+  "manifest_hash": "b93afa87d50e9b20492d40a981d15defdebe0d4562a52289be01505b01b47ac5",
+  "job_ids": [
+    "f5f99eef5ea464cd63a6",
+    "71da8f440a5f3366927e"
+  ],
+  "estimated_fit_seconds": {
+    "f5f99eef5ea464cd63a6": 141.4667197425069,
+    "71da8f440a5f3366927e": 141.4667197425069
+  },
+  "target_hours": 8,
+  "nominal_workers": 2,
+  "estimated_wall_hours": 0.5392963110395852,
+  "hard_runtime_hours": 9.5,
+  "setup_reserve_hours": 0.5,
+  "assignment_hash": "b61e4e797d74e6aa2c802a955beac3ca46462d1c82d01f1303986eb6f6ee5459"
+}

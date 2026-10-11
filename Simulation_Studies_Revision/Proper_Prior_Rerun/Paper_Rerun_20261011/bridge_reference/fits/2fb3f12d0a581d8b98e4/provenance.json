@@ -1,0 +1,635 @@
+{
+  "job_id": "2fb3f12d0a581d8b98e4",
+  "budget_key": "B3_warm2500_ret2000",
+  "pilot_manifest_hash": "4b59c17d371179745602bf42cb0c7bded06c6ef1bb2a2ab0cacb8994c263a34f",
+  "engine": {
+    "specification": {
+      "variant": "repaired",
+      "build_manifest_sha256": "12f509b5baff3657a246aea9f565ec042a624ed92a29fca2aa8ef4076a4e23be",
+      "patch_sha256": "b18a0a97e3302496b439bf8825ec0b5eeaa5bdba1a67287b5b92d6b84566c118",
+      "source_hashes": {
+        "include/stochtree/tree_sampler.h": "5e3375bf1bb0e23cd355d4c8d9b1b19e38dfcca0ca163f81996d96cfc4295319",
+        "src/cutpoint_candidates.cpp": "a60917dd01e468ea591ddd78878be72fc6701227b193cfeb8c5c1636dd8079e7"
+      },
+      "archives": {
+        "boost_math": "9c712659fb947ec87bd41a0d25a620598b7964965c6858b097f55c1bfc5897b0",
+        "eigen": "348e54987bbfac329d26acc626325febdc85982fd7a7087b968054cea79714ab",
+        "fast_double_parser": "6ee728d641a12dbe2f4fe7c3ae2044fddc671a144ca9fa56e9171514251475a9",
+        "fmt": "9c62261229fe117c5b7fc5a104dbe0cd920b84a69436deb58bb3f91e5fc762af",
+        "pybind11": "92d91803e06e8c3b06371700ad9afa06b0835020a9910f2123740961551c1acd",
+        "stochtree": "9ad59b427d8552c12c05daf2aa4212fe089a337f0282c448e57f9223e77e6a8b"
+      },
+      "target_prior": "raw depth/split/feature/uniform-node-range prior globally restricted and normalized on minleaf/maxdepth-feasible numeric trees"
+    },
+    "build_identity": "2b7aa067cb34379801528da49cb90a9f6bc297ec21fc54099783e71366b99dc6",
+    "extension_sha256": "07b73cbdba5cd3f44f7517be8b966fcae3ead816ad2336eb919d1e4142cb19e4",
+    "python": "3.12.3",
+    "site_files_sha256": "43909161617d737da04d175130d1d1efafd9366297ceea16a22831114aca58c2"
+  },
+  "chains": [
+    {
+      "run_id": "bed8f3c076c50637",
+      "stat_job_id": "2fb3f12d0a581d8b98e4",
+      "parent_job_id": "2fb3f12d0a581d8b98e4",
+      "phase": "application",
+      "setting": "mpdta",
+      "rep": 0,
+      "spec": "structured_rfx_unit",
+      "kind": "application",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 1,
+      "chain_seed": 1,
+      "trace": true,
+      "attempt": 0,
+      "parent_manifest": "105ee8510f99817b132d69869167ec5a724596ed37d8094f7ae430c958ad1ccc",
+      "assignment_hash": "09968011036976d6e63f25c1e0b3bb5c0e1d18a4f589f4d6d8880f87f90e6928",
+      "recovery_version": "0.2.0-repaired-20261008",
+      "purpose": "diagnostic_pilot",
+      "source_hashes_sha256": "bb0c640d64cb1ff4e4a6a5a745031f19c20a42aa091e08a51320364a115ba87d",
+      "dependencies": {
+        "numpy": "2.4.6",
+        "pandas": "3.0.3",
+        "scipy": "1.18.0",
+        "scikit-learn": "1.9.0",
+        "cmake": "4.3.4",
+        "matplotlib": "3.11.0"
+      },
+      "runtime": {
+        "python": "3.12.3",
+        "implementation": "CPython",
+        "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+      },
+      "engine": {
+        "specification": {
+          "variant": "repaired",
+          "build_manifest_sha256": "12f509b5baff3657a246aea9f565ec042a624ed92a29fca2aa8ef4076a4e23be",
+          "patch_sha256": "b18a0a97e3302496b439bf8825ec0b5eeaa5bdba1a67287b5b92d6b84566c118",
+          "source_hashes": {
+            "include/stochtree/tree_sampler.h": "5e3375bf1bb0e23cd355d4c8d9b1b19e38dfcca0ca163f81996d96cfc4295319",
+            "src/cutpoint_candidates.cpp": "a60917dd01e468ea591ddd78878be72fc6701227b193cfeb8c5c1636dd8079e7"
+          },
+          "archives": {
+            "boost_math": "9c712659fb947ec87bd41a0d25a620598b7964965c6858b097f55c1bfc5897b0",
+            "eigen": "348e54987bbfac329d26acc626325febdc85982fd7a7087b968054cea79714ab",
+            "fast_double_parser": "6ee728d641a12dbe2f4fe7c3ae2044fddc671a144ca9fa56e9171514251475a9",
+            "fmt": "9c62261229fe117c5b7fc5a104dbe0cd920b84a69436deb58bb3f91e5fc762af",
+            "pybind11": "92d91803e06e8c3b06371700ad9afa06b0835020a9910f2123740961551c1acd",
+            "stochtree": "9ad59b427d8552c12c05daf2aa4212fe089a337f0282c448e57f9223e77e6a8b"
+          },
+          "target_prior": "raw depth/split/feature/uniform-node-range prior globally restricted and normalized on minleaf/maxdepth-feasible numeric trees"
+        },
+        "build_identity": "2b7aa067cb34379801528da49cb90a9f6bc297ec21fc54099783e71366b99dc6",
+        "extension_sha256": "07b73cbdba5cd3f44f7517be8b966fcae3ead816ad2336eb919d1e4142cb19e4",
+        "python": "3.12.3",
+        "site_files_sha256": "43909161617d737da04d175130d1d1efafd9366297ceea16a22831114aca58c2"
+      },
+      "continuation": "independent_chain",
+      "sampler": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "actual_sampler": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0
+      },
+      "prior": {
+        "method_version": "0.2.0-proper-ig",
+        "global_prior": {
+          "sigma2_shape": 2.0,
+          "sigma2_rate": 1.0,
+          "sample_intercept": true,
+          "intercept_prior_var": null
+        },
+        "variance_prior_scale": "standardized_outcome",
+        "outcome_std": 1.5084793888938146,
+        "outcome_mean": 5.7725163264272314,
+        "effect_by_cohort": true,
+        "rfx": "unit",
+        "level_prior": {
+          "num_trees": 125,
+          "alpha": 0.95,
+          "beta": 2.0,
+          "min_samples_leaf": 5,
+          "max_depth": 10,
+          "cutpoint_grid_size": 100,
+          "sample_leaf_scale": true,
+          "leaf_scale_init": null,
+          "leaf_scale_shape": 3.0,
+          "leaf_scale_rate": null,
+          "calibration": "prognostic"
+        },
+        "trend_prior": {
+          "num_trees": 125,
+          "alpha": 0.95,
+          "beta": 2.0,
+          "min_samples_leaf": 5,
+          "max_depth": 10,
+          "cutpoint_grid_size": 100,
+          "sample_leaf_scale": true,
+          "leaf_scale_init": null,
+          "leaf_scale_shape": 3.0,
+          "leaf_scale_rate": null,
+          "calibration": "prognostic"
+        },
+        "effect_prior": {
+          "num_trees": 100,
+          "alpha": 0.25,
+          "beta": 3.0,
+          "min_samples_leaf": 5,
+          "max_depth": 5,
+          "cutpoint_grid_size": 100,
+          "sample_leaf_scale": false,
+          "leaf_scale_init": null,
+          "leaf_scale_shape": 3.0,
+          "leaf_scale_rate": null,
+          "calibration": "effect"
+        }
+      },
+      "peak_rss_mb": 1453.3125,
+      "unit_mode": "independent_chain",
+      "panel_hash": "c069c6dd9f85d3c53fd3737835ca91d3ca828c33a40a9a9202123852ac7b0691",
+      "seconds": 701.425000537005,
+      "output_bytes": 16495468,
+      "outputs": {
+        "draws.npz": "001bfca893254b119f966fdc98b38b065075ee4001f55fc5be544f6bff4fbff6",
+        "panel.csv": "d9b83aac3f7c61da2dc1a3983dcedd9091482f5c187b23064b6dd56c0b102ced",
+        "trace.npz": "1445297cf7365bdbcf66be4f998ce72437cb2b29977426706949232d75ef3cc4"
+      },
+      "completed": true,
+      "artifact": "attempt_000"
+    },
+    {
+      "run_id": "111265e0d4292f79",
+      "stat_job_id": "2fb3f12d0a581d8b98e4",
+      "parent_job_id": "2fb3f12d0a581d8b98e4",
+      "phase": "application",
+      "setting": "mpdta",
+      "rep": 0,
+      "spec": "structured_rfx_unit",
+      "kind": "application",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 3,
+      "chain_seed": 3,
+      "trace": true,
+      "attempt": 0,
+      "parent_manifest": "105ee8510f99817b132d69869167ec5a724596ed37d8094f7ae430c958ad1ccc",
+      "assignment_hash": "01c8f6ac8f74bf884b8eef5c48223ef76cafbcee1292d29a3ff23340bf68760b",
+      "recovery_version": "0.2.0-repaired-20261008",
+      "purpose": "diagnostic_pilot",
+      "source_hashes_sha256": "bb0c640d64cb1ff4e4a6a5a745031f19c20a42aa091e08a51320364a115ba87d",
+      "dependencies": {
+        "numpy": "2.4.6",
+        "pandas": "3.0.3",
+        "scipy": "1.18.0",
+        "scikit-learn": "1.9.0",
+        "cmake": "4.3.4",
+        "matplotlib": "3.11.0"
+      },
+      "runtime": {
+        "python": "3.12.3",
+        "implementation": "CPython",
+        "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+      },
+      "engine": {
+        "specification": {
+          "variant": "repaired",
+          "build_manifest_sha256": "12f509b5baff3657a246aea9f565ec042a624ed92a29fca2aa8ef4076a4e23be",
+          "patch_sha256": "b18a0a97e3302496b439bf8825ec0b5eeaa5bdba1a67287b5b92d6b84566c118",
+          "source_hashes": {
+            "include/stochtree/tree_sampler.h": "5e3375bf1bb0e23cd355d4c8d9b1b19e38dfcca0ca163f81996d96cfc4295319",
+            "src/cutpoint_candidates.cpp": "a60917dd01e468ea591ddd78878be72fc6701227b193cfeb8c5c1636dd8079e7"
+          },
+          "archives": {
+            "boost_math": "9c712659fb947ec87bd41a0d25a620598b7964965c6858b097f55c1bfc5897b0",
+            "eigen": "348e54987bbfac329d26acc626325febdc85982fd7a7087b968054cea79714ab",
+            "fast_double_parser": "6ee728d641a12dbe2f4fe7c3ae2044fddc671a144ca9fa56e9171514251475a9",
+            "fmt": "9c62261229fe117c5b7fc5a104dbe0cd920b84a69436deb58bb3f91e5fc762af",
+            "pybind11": "92d91803e06e8c3b06371700ad9afa06b0835020a9910f2123740961551c1acd",
+            "stochtree": "9ad59b427d8552c12c05daf2aa4212fe089a337f0282c448e57f9223e77e6a8b"
+          },
+          "target_prior": "raw depth/split/feature/uniform-node-range prior globally restricted and normalized on minleaf/maxdepth-feasible numeric trees"
+        },
+        "build_identity": "2b7aa067cb34379801528da49cb90a9f6bc297ec21fc54099783e71366b99dc6",
+        "extension_sha256": "07b73cbdba5cd3f44f7517be8b966fcae3ead816ad2336eb919d1e4142cb19e4",
+        "python": "3.12.3",
+        "site_files_sha256": "43909161617d737da04d175130d1d1efafd9366297ceea16a22831114aca58c2"
+      },
+      "continuation": "independent_chain",
+      "sampler": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "actual_sampler": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0
+      },
+      "prior": {
+        "method_version": "0.2.0-proper-ig",
+        "global_prior": {
+          "sigma2_shape": 2.0,
+          "sigma2_rate": 1.0,
+          "sample_intercept": true,
+          "intercept_prior_var": null
+        },
+        "variance_prior_scale": "standardized_outcome",
+        "outcome_std": 1.5084793888938146,
+        "outcome_mean": 5.7725163264272314,
+        "effect_by_cohort": true,
+        "rfx": "unit",
+        "level_prior": {
+          "num_trees": 125,
+          "alpha": 0.95,
+          "beta": 2.0,
+          "min_samples_leaf": 5,
+          "max_depth": 10,
+          "cutpoint_grid_size": 100,
+          "sample_leaf_scale": true,
+          "leaf_scale_init": null,
+          "leaf_scale_shape": 3.0,
+          "leaf_scale_rate": null,
+          "calibration": "prognostic"
+        },
+        "trend_prior": {
+          "num_trees": 125,
+          "alpha": 0.95,
+          "beta": 2.0,
+          "min_samples_leaf": 5,
+          "max_depth": 10,
+          "cutpoint_grid_size": 100,
+          "sample_leaf_scale": true,
+          "leaf_scale_init": null,
+          "leaf_scale_shape": 3.0,
+          "leaf_scale_rate": null,
+          "calibration": "prognostic"
+        },
+        "effect_prior": {
+          "num_trees": 100,
+          "alpha": 0.25,
+          "beta": 3.0,
+          "min_samples_leaf": 5,
+          "max_depth": 5,
+          "cutpoint_grid_size": 100,
+          "sample_leaf_scale": false,
+          "leaf_scale_init": null,
+          "leaf_scale_shape": 3.0,
+          "leaf_scale_rate": null,
+          "calibration": "effect"
+        }
+      },
+      "peak_rss_mb": 1444.31640625,
+      "unit_mode": "independent_chain",
+      "panel_hash": "c069c6dd9f85d3c53fd3737835ca91d3ca828c33a40a9a9202123852ac7b0691",
+      "seconds": 698.5639927490047,
+      "output_bytes": 16565173,
+      "outputs": {
+        "draws.npz": "1a308cf844fa199af92ee73ef74de1540c9dc68437bb2c637067a530622ad81b",
+        "panel.csv": "d9b83aac3f7c61da2dc1a3983dcedd9091482f5c187b23064b6dd56c0b102ced",
+        "trace.npz": "fb5651c643f689fd7997bb4dd3f1d9e4ea1ef08342786df3f912d91fd1f01596"
+      },
+      "completed": true,
+      "artifact": "attempt_000"
+    },
+    {
+      "run_id": "5b4ca58d7ea1a08c",
+      "stat_job_id": "2fb3f12d0a581d8b98e4",
+      "parent_job_id": "2fb3f12d0a581d8b98e4",
+      "phase": "application",
+      "setting": "mpdta",
+      "rep": 0,
+      "spec": "structured_rfx_unit",
+      "kind": "application",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 2,
+      "chain_seed": 2,
+      "trace": true,
+      "attempt": 0,
+      "parent_manifest": "105ee8510f99817b132d69869167ec5a724596ed37d8094f7ae430c958ad1ccc",
+      "assignment_hash": "8f55a459e8fe7d1e86990563149a4ac6fed2954ead82460ed350bdfa71c98fee",
+      "recovery_version": "0.2.0-repaired-20261008",
+      "purpose": "diagnostic_pilot",
+      "source_hashes_sha256": "bb0c640d64cb1ff4e4a6a5a745031f19c20a42aa091e08a51320364a115ba87d",
+      "dependencies": {
+        "numpy": "2.4.6",
+        "pandas": "3.0.3",
+        "scipy": "1.18.0",
+        "scikit-learn": "1.9.0",
+        "cmake": "4.3.4",
+        "matplotlib": "3.11.0"
+      },
+      "runtime": {
+        "python": "3.12.3",
+        "implementation": "CPython",
+        "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+      },
+      "engine": {
+        "specification": {
+          "variant": "repaired",
+          "build_manifest_sha256": "12f509b5baff3657a246aea9f565ec042a624ed92a29fca2aa8ef4076a4e23be",
+          "patch_sha256": "b18a0a97e3302496b439bf8825ec0b5eeaa5bdba1a67287b5b92d6b84566c118",
+          "source_hashes": {
+            "include/stochtree/tree_sampler.h": "5e3375bf1bb0e23cd355d4c8d9b1b19e38dfcca0ca163f81996d96cfc4295319",
+            "src/cutpoint_candidates.cpp": "a60917dd01e468ea591ddd78878be72fc6701227b193cfeb8c5c1636dd8079e7"
+          },
+          "archives": {
+            "boost_math": "9c712659fb947ec87bd41a0d25a620598b7964965c6858b097f55c1bfc5897b0",
+            "eigen": "348e54987bbfac329d26acc626325febdc85982fd7a7087b968054cea79714ab",
+            "fast_double_parser": "6ee728d641a12dbe2f4fe7c3ae2044fddc671a144ca9fa56e9171514251475a9",
+            "fmt": "9c62261229fe117c5b7fc5a104dbe0cd920b84a69436deb58bb3f91e5fc762af",
+            "pybind11": "92d91803e06e8c3b06371700ad9afa06b0835020a9910f2123740961551c1acd",
+            "stochtree": "9ad59b427d8552c12c05daf2aa4212fe089a337f0282c448e57f9223e77e6a8b"
+          },
+          "target_prior": "raw depth/split/feature/uniform-node-range prior globally restricted and normalized on minleaf/maxdepth-feasible numeric trees"
+        },
+        "build_identity": "2b7aa067cb34379801528da49cb90a9f6bc297ec21fc54099783e71366b99dc6",
+        "extension_sha256": "07b73cbdba5cd3f44f7517be8b966fcae3ead816ad2336eb919d1e4142cb19e4",
+        "python": "3.12.3",
+        "site_files_sha256": "43909161617d737da04d175130d1d1efafd9366297ceea16a22831114aca58c2"
+      },
+      "continuation": "independent_chain",
+      "sampler": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "actual_sampler": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0
+      },
+      "prior": {
+        "method_version": "0.2.0-proper-ig",
+        "global_prior": {
+          "sigma2_shape": 2.0,
+          "sigma2_rate": 1.0,
+          "sample_intercept": true,
+          "intercept_prior_var": null
+        },
+        "variance_prior_scale": "standardized_outcome",
+        "outcome_std": 1.5084793888938146,
+        "outcome_mean": 5.7725163264272314,
+        "effect_by_cohort": true,
+        "rfx": "unit",
+        "level_prior": {
+          "num_trees": 125,
+          "alpha": 0.95,
+          "beta": 2.0,
+          "min_samples_leaf": 5,
+          "max_depth": 10,
+          "cutpoint_grid_size": 100,
+          "sample_leaf_scale": true,
+          "leaf_scale_init": null,
+          "leaf_scale_shape": 3.0,
+          "leaf_scale_rate": null,
+          "calibration": "prognostic"
+        },
+        "trend_prior": {
+          "num_trees": 125,
+          "alpha": 0.95,
+          "beta": 2.0,
+          "min_samples_leaf": 5,
+          "max_depth": 10,
+          "cutpoint_grid_size": 100,
+          "sample_leaf_scale": true,
+          "leaf_scale_init": null,
+          "leaf_scale_shape": 3.0,
+          "leaf_scale_rate": null,
+          "calibration": "prognostic"
+        },
+        "effect_prior": {
+          "num_trees": 100,
+          "alpha": 0.25,
+          "beta": 3.0,
+          "min_samples_leaf": 5,
+          "max_depth": 5,
+          "cutpoint_grid_size": 100,
+          "sample_leaf_scale": false,
+          "leaf_scale_init": null,
+          "leaf_scale_shape": 3.0,
+          "leaf_scale_rate": null,
+          "calibration": "effect"
+        }
+      },
+      "peak_rss_mb": 1447.4375,
+      "unit_mode": "independent_chain",
+      "panel_hash": "c069c6dd9f85d3c53fd3737835ca91d3ca828c33a40a9a9202123852ac7b0691",
+      "seconds": 706.1990162380025,
+      "output_bytes": 16452090,
+      "outputs": {
+        "draws.npz": "168aa57bc5daae1a5f9d13a38099fe076fbbabb37be70f2600ca602fb925b764",
+        "panel.csv": "d9b83aac3f7c61da2dc1a3983dcedd9091482f5c187b23064b6dd56c0b102ced",
+        "trace.npz": "78ba90acde6202d52d69cf77b386a705fb1591a15528e48c7efdcd0623b3a11f"
+      },
+      "completed": true,
+      "artifact": "attempt_000"
+    },
+    {
+      "run_id": "f35615b3a86dfcbf",
+      "stat_job_id": "2fb3f12d0a581d8b98e4",
+      "parent_job_id": "2fb3f12d0a581d8b98e4",
+      "phase": "application",
+      "setting": "mpdta",
+      "rep": 0,
+      "spec": "structured_rfx_unit",
+      "kind": "application",
+      "budget_key": "B3_warm2500_ret2000",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "chain_index": 0,
+      "chain_seed": 0,
+      "trace": true,
+      "attempt": 0,
+      "parent_manifest": "105ee8510f99817b132d69869167ec5a724596ed37d8094f7ae430c958ad1ccc",
+      "assignment_hash": "a1f83113d63ffc574a86acc6229f8df5a71ce4aedeb576844b23e1c6620f6bba",
+      "recovery_version": "0.2.0-repaired-20261008",
+      "purpose": "diagnostic_pilot",
+      "source_hashes_sha256": "bb0c640d64cb1ff4e4a6a5a745031f19c20a42aa091e08a51320364a115ba87d",
+      "dependencies": {
+        "numpy": "2.4.6",
+        "pandas": "3.0.3",
+        "scipy": "1.18.0",
+        "scikit-learn": "1.9.0",
+        "cmake": "4.3.4",
+        "matplotlib": "3.11.0"
+      },
+      "runtime": {
+        "python": "3.12.3",
+        "implementation": "CPython",
+        "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+      },
+      "engine": {
+        "specification": {
+          "variant": "repaired",
+          "build_manifest_sha256": "12f509b5baff3657a246aea9f565ec042a624ed92a29fca2aa8ef4076a4e23be",
+          "patch_sha256": "b18a0a97e3302496b439bf8825ec0b5eeaa5bdba1a67287b5b92d6b84566c118",
+          "source_hashes": {
+            "include/stochtree/tree_sampler.h": "5e3375bf1bb0e23cd355d4c8d9b1b19e38dfcca0ca163f81996d96cfc4295319",
+            "src/cutpoint_candidates.cpp": "a60917dd01e468ea591ddd78878be72fc6701227b193cfeb8c5c1636dd8079e7"
+          },
+          "archives": {
+            "boost_math": "9c712659fb947ec87bd41a0d25a620598b7964965c6858b097f55c1bfc5897b0",
+            "eigen": "348e54987bbfac329d26acc626325febdc85982fd7a7087b968054cea79714ab",
+            "fast_double_parser": "6ee728d641a12dbe2f4fe7c3ae2044fddc671a144ca9fa56e9171514251475a9",
+            "fmt": "9c62261229fe117c5b7fc5a104dbe0cd920b84a69436deb58bb3f91e5fc762af",
+            "pybind11": "92d91803e06e8c3b06371700ad9afa06b0835020a9910f2123740961551c1acd",
+            "stochtree": "9ad59b427d8552c12c05daf2aa4212fe089a337f0282c448e57f9223e77e6a8b"
+          },
+          "target_prior": "raw depth/split/feature/uniform-node-range prior globally restricted and normalized on minleaf/maxdepth-feasible numeric trees"
+        },
+        "build_identity": "2b7aa067cb34379801528da49cb90a9f6bc297ec21fc54099783e71366b99dc6",
+        "extension_sha256": "07b73cbdba5cd3f44f7517be8b966fcae3ead816ad2336eb919d1e4142cb19e4",
+        "python": "3.12.3",
+        "site_files_sha256": "43909161617d737da04d175130d1d1efafd9366297ceea16a22831114aca58c2"
+      },
+      "continuation": "independent_chain",
+      "sampler": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws"
+      },
+      "actual_sampler": {
+        "num_gfr": 50,
+        "num_burnin": 2500,
+        "num_mcmc": 2000,
+        "keep_every": 5,
+        "num_chains": 4,
+        "label": "independently more retained draws",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 1.0
+      },
+      "prior": {
+        "method_version": "0.2.0-proper-ig",
+        "global_prior": {
+          "sigma2_shape": 2.0,
+          "sigma2_rate": 1.0,
+          "sample_intercept": true,
+          "intercept_prior_var": null
+        },
+        "variance_prior_scale": "standardized_outcome",
+        "outcome_std": 1.5084793888938146,
+        "outcome_mean": 5.7725163264272314,
+        "effect_by_cohort": true,
+        "rfx": "unit",
+        "level_prior": {
+          "num_trees": 125,
+          "alpha": 0.95,
+          "beta": 2.0,
+          "min_samples_leaf": 5,
+          "max_depth": 10,
+          "cutpoint_grid_size": 100,
+          "sample_leaf_scale": true,
+          "leaf_scale_init": null,
+          "leaf_scale_shape": 3.0,
+          "leaf_scale_rate": null,
+          "calibration": "prognostic"
+        },
+        "trend_prior": {
+          "num_trees": 125,
+          "alpha": 0.95,
+          "beta": 2.0,
+          "min_samples_leaf": 5,
+          "max_depth": 10,
+          "cutpoint_grid_size": 100,
+          "sample_leaf_scale": true,
+          "leaf_scale_init": null,
+          "leaf_scale_shape": 3.0,
+          "leaf_scale_rate": null,
+          "calibration": "prognostic"
+        },
+        "effect_prior": {
+          "num_trees": 100,
+          "alpha": 0.25,
+          "beta": 3.0,
+          "min_samples_leaf": 5,
+          "max_depth": 5,
+          "cutpoint_grid_size": 100,
+          "sample_leaf_scale": false,
+          "leaf_scale_init": null,
+          "leaf_scale_shape": 3.0,
+          "leaf_scale_rate": null,
+          "calibration": "effect"
+        }
+      },
+      "peak_rss_mb": 1453.24609375,
+      "unit_mode": "independent_chain",
+      "panel_hash": "c069c6dd9f85d3c53fd3737835ca91d3ca828c33a40a9a9202123852ac7b0691",
+      "seconds": 695.8903791839984,
+      "output_bytes": 16612785,
+      "outputs": {
+        "draws.npz": "6a44ff673f2009e65e6944642424f1ea441b3564fb0348f2319d0fd25be2c6ca",
+        "panel.csv": "d9b83aac3f7c61da2dc1a3983dcedd9091482f5c187b23064b6dd56c0b102ced",
+        "trace.npz": "1dbbb8f53d15a93d20bc5263fad1e316dae62c10f0bde68ddf091bde991a157b"
+      },
+      "completed": true,
+      "artifact": "attempt_000"
+    }
+  ],
+  "outputs": {
+    "per_replication.csv": "aee2c3ed07dcda9added880e1440013d6f3d11d9ad748957225012f3f4433c66",
+    "diagnostics.csv": "5c0bb7dd5be2cead4c17ed5e949a5e359f38a4b8612b8ba495e597bd6ad45b12",
+    "application_gate.csv": "1ed3440e1efeb32f3be3b47c1ab69afd2dc07556181611a14ce2a3ad13faeb52",
+    "application_catt.csv": "f7ce579a9441635141572d2439200511c9a8afe601127f3336cdcb6ce6117698",
+    "application_contrasts.csv": "89b7ef1d0200490d70297ad64cd24cd32c69ed4700275f17edbe477c32fb5b65"
+  },
+  "role": "single-anchor supporting comparison; not main Monte Carlo evidence"
+}

@@ -1,0 +1,115 @@
+{
+  "budget_key": "B3_warm2500_ret2000",
+  "pilot_manifest_sha256": "77b493e93f0222232c033a3130df5ae8066626092fb6adfa1cfe5e0d8cd18239",
+  "fits": [
+    {
+      "job_id": "33f6de1d7aa9626b216a",
+      "outputs": {
+        "per_replication.csv": "0d02acff8a874d465dabb750aec4d5a191f78c4723879f05614d2e73ed6f8c44",
+        "diagnostics.csv": "44350dbb4322d8fb5e9a074a348ca3ade17eefd661d1f01c39ccdf36209308be"
+      },
+      "per_replication_rows": 30,
+      "diagnostic_rows": 28,
+      "application_output_rows": {}
+    },
+    {
+      "job_id": "5e6cf4b70cbd92bbd07a",
+      "outputs": {
+        "per_replication.csv": "2a6e344a0c9013ba1b5ccdb746dd9143fa2557a0b381628d36d66827df04788e",
+        "diagnostics.csv": "5b3c28a043e387a15fb98bc7a3ae87088c671bd71c0df4de2d67c6de005fb83e",
+        "application_gate.csv": "4d643853144c31901bdca266998a38702a28196f985ad28c5f2060664802b8ba",
+        "application_catt.csv": "b28f84c9722fe89a0b8abc2fdc0487e5bd8886977f9d93468425db39849e6152",
+        "application_contrasts.csv": "2ea32e8aaae4f33000fa18389d81abe1ff42afb57bc58ee51137bcf77a5fda03"
+      },
+      "per_replication_rows": 12,
+      "diagnostic_rows": 26,
+      "application_output_rows": {
+        "gate": 4,
+        "catt": 291,
+        "contrasts": 3
+      }
+    },
+    {
+      "job_id": "2fb3f12d0a581d8b98e4",
+      "outputs": {
+        "per_replication.csv": "aee2c3ed07dcda9added880e1440013d6f3d11d9ad748957225012f3f4433c66",
+        "diagnostics.csv": "5c0bb7dd5be2cead4c17ed5e949a5e359f38a4b8612b8ba495e597bd6ad45b12",
+        "application_gate.csv": "1ed3440e1efeb32f3be3b47c1ab69afd2dc07556181611a14ce2a3ad13faeb52",
+        "application_catt.csv": "f7ce579a9441635141572d2439200511c9a8afe601127f3336cdcb6ce6117698",
+        "application_contrasts.csv": "89b7ef1d0200490d70297ad64cd24cd32c69ed4700275f17edbe477c32fb5b65"
+      },
+      "per_replication_rows": 12,
+      "diagnostic_rows": 27,
+      "application_output_rows": {
+        "gate": 4,
+        "catt": 291,
+        "contrasts": 3
+      }
+    },
+    {
+      "job_id": "3d71a7146144e2479b5c",
+      "outputs": {
+        "per_replication.csv": "45e1ea263dfdccef65fd9114b28a93b490e9ffb0e76aee71057a3bbfac0e8c1b",
+        "diagnostics.csv": "603d57e6ece7db6c664460d1735bda6a45aac17a1044f9ddc2dfa70777a14807"
+      },
+      "per_replication_rows": 18,
+      "diagnostic_rows": 18,
+      "application_output_rows": {}
+    },
+    {
+      "job_id": "f5f99eef5ea464cd63a6",
+      "outputs": {
+        "per_replication.csv": "d6ebb50c71399a40e0675c8170afd8ee81dd6079ee6d4c189192c7815c06deb6",
+        "diagnostics.csv": "830e945e12a60e88a77ff9d47505b018299d24ed21c409cd43fda064bf80e494"
+      },
+      "per_replication_rows": 10,
+      "diagnostic_rows": 23,
+      "application_output_rows": {}
+    },
+    {
+      "job_id": "71da8f440a5f3366927e",
+      "outputs": {
+        "per_replication.csv": "734a0e20310703dc882197046f3a4e900aa00dc91e3268e7302e7b358293bfcf",
+        "diagnostics.csv": "24862ee68f007b81d33c307e372b270f7695022945b23b786798696289b06996"
+      },
+      "per_replication_rows": 10,
+      "diagnostic_rows": 23,
+      "application_output_rows": {}
+    },
+    {
+      "job_id": "d97121845302457a09d4",
+      "outputs": {
+        "per_replication.csv": "c768ff9e1c33e18080ef3f6842e19895778f7fc62cd9c477a5cf23f4d1145a46",
+        "diagnostics.csv": "e6145d421e98f751ec478e2c1998a0d804936820da212dfb0790a0e349e50d69",
+        "application_gate.csv": "2fa087bbb6bca507140fc07cb2d57b945b0e87c956b76f49127ac4c35bbf93fc",
+        "application_catt.csv": "7a5fdb3c46ea07780a87f61d64c58409c3da55c9634563730532da71ec632f63",
+        "application_contrasts.csv": "86998e6e66721e7b6d4233d6894d95f78308e5629669aec7da9db9e094817e60"
+      },
+      "per_replication_rows": 12,
+      "diagnostic_rows": 27,
+      "application_output_rows": {
+        "gate": 4,
+        "catt": 291,
+        "contrasts": 3
+      }
+    },
+    {
+      "job_id": "51454a5a9d0f152740d3",
+      "outputs": {
+        "per_replication.csv": "31343590823111efdd67a85a421a9bc57eb1cbe102913b1d955a282b1887857d",
+        "diagnostics.csv": "233c005ef74103dd0e932b41146db3057b90d783ee1e80247f2759265a4f6dc1",
+        "application_gate.csv": "fa93958da2338c7be16b907fddac9914e9e86cd6b508a164cd92dbb9c1b3fd42",
+        "application_catt.csv": "de26a0f7ef6af19772f2840f7a6dfd11b57a5742f4a68b53a8aebff8279b81f9",
+        "application_contrasts.csv": "5be1eff21d3253b47c567d25c4f50c11184f143f958d958587aff4537e1ca2cd"
+      },
+      "per_replication_rows": 12,
+      "diagnostic_rows": 27,
+      "application_output_rows": {
+        "gate": 4,
+        "catt": 291,
+        "contrasts": 3
+      }
+    }
+  ],
+  "verified_units": 26
+}

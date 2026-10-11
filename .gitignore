@@ -89,3 +89,7 @@ Simulation_Studies_Revision/Pretrend/_retired/
 __pycache__/
 *.py[cod]
 .pytest_cache/
+
+# User-requested local archive for intermediate/obsolete experiments only.
+# Final paper rerun outputs and compact verified reuse remain publishable.
+/.local_experiment_archive/
