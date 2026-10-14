@@ -1,0 +1,40 @@
+{
+  "manifest_hash": "d4c6fe4d5369638885b5d3a9a4f5077e5776990be6aa73d2e000188eb20bddca",
+  "job_id": "71da8f440a5f3366927e",
+  "job_hash": "6868a0267e7e6333acc5493084df289e1b9ed9300fdc561c3bdb06e55d703ea1",
+  "budget_key": "earlier_budget_repaired",
+  "chain_seeds": [
+    0,
+    1,
+    2
+  ],
+  "engine_specification": {
+    "variant": "repaired",
+    "build_manifest_sha256": "12f509b5baff3657a246aea9f565ec042a624ed92a29fca2aa8ef4076a4e23be",
+    "patch_sha256": "b18a0a97e3302496b439bf8825ec0b5eeaa5bdba1a67287b5b92d6b84566c118",
+    "source_hashes": {
+      "include/stochtree/tree_sampler.h": "5e3375bf1bb0e23cd355d4c8d9b1b19e38dfcca0ca163f81996d96cfc4295319",
+      "src/cutpoint_candidates.cpp": "a60917dd01e468ea591ddd78878be72fc6701227b193cfeb8c5c1636dd8079e7"
+    },
+    "archives": {
+      "boost_math": "9c712659fb947ec87bd41a0d25a620598b7964965c6858b097f55c1bfc5897b0",
+      "eigen": "348e54987bbfac329d26acc626325febdc85982fd7a7087b968054cea79714ab",
+      "fast_double_parser": "6ee728d641a12dbe2f4fe7c3ae2044fddc671a144ca9fa56e9171514251475a9",
+      "fmt": "9c62261229fe117c5b7fc5a104dbe0cd920b84a69436deb58bb3f91e5fc762af",
+      "pybind11": "92d91803e06e8c3b06371700ad9afa06b0835020a9910f2123740961551c1acd",
+      "stochtree": "9ad59b427d8552c12c05daf2aa4212fe089a337f0282c448e57f9223e77e6a8b"
+    },
+    "target_prior": "raw depth/split/feature/uniform-node-range prior globally restricted and normalized on minleaf/maxdepth-feasible numeric trees"
+  },
+  "origin": "reused_verified_earlier_fit",
+  "reused_from_record_hash": "e936443213e32c10c4d931a454d715385388ef19d942be853f85c25c2c620555",
+  "outputs": {
+    "per_replication.csv": "a0b973fe0b4de4b818cb1128f3bf3f0c578406d5303bffd1c46b3bf08092f211",
+    "diagnostics.csv": "336dc74ecfe08ce3821db3ab3fad5c3a7e7d465ab542629432a587e27025bb6c",
+    "chain_provenance.json": "39896cc132de89355994ddaa65760f8d627bdd7331ee2ef5332095e6ac50957b"
+  },
+  "per_replication_rows": 10,
+  "diagnostic_rows": 23,
+  "application_output_rows": {},
+  "record_hash": "0f220f6818f72fa2fe2914f091425e0c89a7d4eb013625d23b7d69dbc169a3b6"
+}

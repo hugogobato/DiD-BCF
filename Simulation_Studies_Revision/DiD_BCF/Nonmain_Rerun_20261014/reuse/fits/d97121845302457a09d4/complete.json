@@ -1,0 +1,47 @@
+{
+  "manifest_hash": "d4c6fe4d5369638885b5d3a9a4f5077e5776990be6aa73d2e000188eb20bddca",
+  "job_id": "d97121845302457a09d4",
+  "job_hash": "cf524b0ac45e566e7c52bc5a187bf370ee6ae65fe9115cd7094a11a9dc8c6470",
+  "budget_key": "earlier_budget_repaired",
+  "chain_seeds": [
+    0,
+    1,
+    2
+  ],
+  "engine_specification": {
+    "variant": "repaired",
+    "build_manifest_sha256": "12f509b5baff3657a246aea9f565ec042a624ed92a29fca2aa8ef4076a4e23be",
+    "patch_sha256": "b18a0a97e3302496b439bf8825ec0b5eeaa5bdba1a67287b5b92d6b84566c118",
+    "source_hashes": {
+      "include/stochtree/tree_sampler.h": "5e3375bf1bb0e23cd355d4c8d9b1b19e38dfcca0ca163f81996d96cfc4295319",
+      "src/cutpoint_candidates.cpp": "a60917dd01e468ea591ddd78878be72fc6701227b193cfeb8c5c1636dd8079e7"
+    },
+    "archives": {
+      "boost_math": "9c712659fb947ec87bd41a0d25a620598b7964965c6858b097f55c1bfc5897b0",
+      "eigen": "348e54987bbfac329d26acc626325febdc85982fd7a7087b968054cea79714ab",
+      "fast_double_parser": "6ee728d641a12dbe2f4fe7c3ae2044fddc671a144ca9fa56e9171514251475a9",
+      "fmt": "9c62261229fe117c5b7fc5a104dbe0cd920b84a69436deb58bb3f91e5fc762af",
+      "pybind11": "92d91803e06e8c3b06371700ad9afa06b0835020a9910f2123740961551c1acd",
+      "stochtree": "9ad59b427d8552c12c05daf2aa4212fe089a337f0282c448e57f9223e77e6a8b"
+    },
+    "target_prior": "raw depth/split/feature/uniform-node-range prior globally restricted and normalized on minleaf/maxdepth-feasible numeric trees"
+  },
+  "origin": "reused_verified_earlier_fit",
+  "reused_from_record_hash": "2645c95b21e3a4a729c545239827205e690bdcafb8896f38d753913123259019",
+  "outputs": {
+    "per_replication.csv": "5fc478af6e0384810e953c1414cc4395a7f9c1ca8d7f7f2f6240c7f2542210dd",
+    "diagnostics.csv": "9a0a7ba9d208d3d9e108f3e1123401d156cdf717f54308a0100dc06f6c6e9e33",
+    "application_gate.csv": "a35e232568ac5ddab598ed20af79604f28aaa342f860f78cb5b9ece59436d8bf",
+    "application_catt.csv": "df95fc3b462b92a4735485054e083e435c0bcd0bdd99f74aea6644ab8dcff9bc",
+    "application_contrasts.csv": "228dbb34598deb2f6201a3da22b1b36e73244029475e033c4a05b20eb5a3caf5",
+    "chain_provenance.json": "fbe322662cd7859116cd70a582d71ef83b496cdfa37507978d0045ec18c173cb"
+  },
+  "per_replication_rows": 12,
+  "diagnostic_rows": 27,
+  "application_output_rows": {
+    "gate": 4,
+    "catt": 291,
+    "contrasts": 3
+  },
+  "record_hash": "9abdaddb835907376073e7f815880f8d00da131f7da8c1c5f9b365dfe3ad1400"
+}

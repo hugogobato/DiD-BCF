@@ -1,0 +1,83 @@
+{
+  "bcf_python_sha256": "379cb7715e6ca5d2933af8d6f769c225bf8ce7b4f9745e9788201ffa1fcf4124",
+  "defaults": {
+    "general_params_default": {
+      "cutpoint_grid_size": 100,
+      "standardize": true,
+      "sample_sigma2_global": true,
+      "sigma2_global_init": null,
+      "sigma2_global_shape": 0,
+      "sigma2_global_scale": 0,
+      "variable_weights": null,
+      "propensity_covariate": "prognostic",
+      "adaptive_coding": false,
+      "control_coding_init": -0.5,
+      "treated_coding_init": 0.5,
+      "random_seed": null,
+      "keep_burnin": false,
+      "keep_gfr": false,
+      "keep_every": 1,
+      "num_chains": 1,
+      "outcome_model": {
+        "fixed_source_expression": "OutcomeModel(outcome='continuous', link='identity')"
+      },
+      "probit_outcome_model": false,
+      "num_threads": 1
+    },
+    "prognostic_forest_params_default": {
+      "num_trees": 250,
+      "alpha": 0.95,
+      "beta": 2.0,
+      "min_samples_leaf": 5,
+      "max_depth": 10,
+      "sample_sigma2_leaf": true,
+      "sigma2_leaf_init": null,
+      "sigma2_leaf_shape": 3,
+      "sigma2_leaf_scale": null,
+      "keep_vars": null,
+      "drop_vars": null,
+      "num_features_subsample": null
+    },
+    "treatment_effect_forest_params_default": {
+      "num_trees": 100,
+      "alpha": 0.25,
+      "beta": 3.0,
+      "min_samples_leaf": 5,
+      "max_depth": 5,
+      "sample_sigma2_leaf": false,
+      "sigma2_leaf_init": null,
+      "sigma2_leaf_shape": 3,
+      "sigma2_leaf_scale": null,
+      "delta_max": 0.9,
+      "keep_vars": null,
+      "drop_vars": null,
+      "num_features_subsample": null,
+      "sample_intercept": true,
+      "tau_0_prior_var": null
+    },
+    "variance_forest_params_default": {
+      "num_trees": 0,
+      "alpha": 0.95,
+      "beta": 2.0,
+      "min_samples_leaf": 5,
+      "max_depth": 10,
+      "leaf_prior_calibration_param": 1.5,
+      "var_forest_leaf_init": null,
+      "var_forest_prior_shape": null,
+      "var_forest_prior_scale": null,
+      "keep_vars": null,
+      "drop_vars": null,
+      "num_features_subsample": null
+    },
+    "rfx_params_default": {
+      "model_spec": "custom",
+      "working_parameter_prior_mean": null,
+      "group_parameter_prior_mean": null,
+      "working_parameter_prior_cov": null,
+      "group_parameter_prior_cov": null,
+      "variance_prior_shape": 1.0,
+      "variance_prior_scale": 1.0
+    }
+  },
+  "note": "None fields retain pinned outcome-dependent calibration rules; general noise shape/rate 0 defaults are always overridden with the job proper prior."
+}

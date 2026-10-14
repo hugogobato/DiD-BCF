@@ -1,0 +1,213 @@
+{
+  "audit_date": "2026-10-14",
+  "completed_main_return": {
+    "archive_count": 64,
+    "bridge_archives": 4,
+    "fit_level_time_rows": 4844,
+    "fit_level_time_source": "validation/measured_fit_times.csv",
+    "main_archives": 60,
+    "return_validation": {
+      "all_assignments_complete": true,
+      "all_native_and_feature_controls": "PASS",
+      "archives": 64,
+      "manifest_hash": "b93afa87d50e9b20492d40a981d15defdebe0d4562a52289be01505b01b47ac5",
+      "numeric_looking_ids_preserved_as_text": [
+        "1101199218e104432309",
+        "249334232769636e5037",
+        "29648408944929143979",
+        "32333722229129506345"
+      ],
+      "package_hash": "cbb98dd60af77d923ae80c1089ce168af3b8f8e6c95e8290ea2192ea0ca7dc28",
+      "production_sampling_calls": 0,
+      "returned_chain_or_atomic_records": 14528,
+      "returned_fits": 4844,
+      "source_commit": "3078e2ca1155b932feab92c722d697803370b8c7",
+      "status": "PASS",
+      "total_fits": 5108,
+      "verified_reused_fits": 264
+    },
+    "returned_chain_records": 14528,
+    "schedule_precedent": {
+      "bridge_notebooks": 4,
+      "main_notebooks": 60,
+      "main_wave1": 48,
+      "main_wave2": 12,
+      "max_estimated_hours_per_notebook": 7.973684,
+      "notebooks": 64,
+      "two_workers_per_notebook": true
+    }
+  },
+  "frozen_worker_contract": {
+    "configured_sampler": {
+      "keep_every": 5,
+      "label": "repaired engine at the earlier proper-prior budget",
+      "num_burnin": 0,
+      "num_chains": 3,
+      "num_gfr": 50,
+      "num_mcmc": 500
+    },
+    "fit_level_worker": "helpers/job_worker.py resolves one assigned statistical job, constructs all sampling units, runs all units, verifies each completion, calls summarize_job, then writes the fit completion record.",
+    "posterior_collection": "fit_pretrend stores np.asarray(model.tau_hat_train); planning metadata documents expected tau shape as n_obs by num_chains times num_mcmc. pretrend_estimands consumes these retained draws.",
+    "pretrend_atomic_kinds": [
+      "pretrend",
+      "application_pretrend"
+    ],
+    "pretrend_atomic_unit": "recovery_plan.py creates one chain=None unit for pretrend kinds; recovery_core.py calls fit_pretrend once with the configured num_chains, records unit_mode=atomic_job_bcfmodel, and retains the full tau_draws matrix.",
+    "prior_contract": {
+      "default_min_samples_leaf": 5,
+      "frozen_bcf_defaults": "Pinned bcf_defaults.json records min_samples_leaf=5 for both prognostic and treatment forests.",
+      "job_global_variance_prior": "sigma2_shape=2.0 and sigma2_rate from each job are supplied to sigma2_global_shape and sigma2_global_scale; pretrend validates positivity and finiteness before sample.",
+      "method_version": "0.2.0-proper-ig",
+      "repaired_engine_build_manifest_sha256": "12f509b5baff3657a246aea9f565ec042a624ed92a29fca2aa8ef4076a4e23be",
+      "repaired_engine_patch_sha256": "b18a0a97e3302496b439bf8825ec0b5eeaa5bdba1a67287b5b92d6b84566c118",
+      "repaired_numeric_prior": "raw depth/split/feature/uniform-node-range prior globally restricted and normalized on minleaf/maxdepth-feasible numeric trees"
+    }
+  },
+  "input_sha256": {
+    "DiD-BCF/Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/helpers/job_worker.py": "8a0c0f91e9f5c5868797854358d66e11e682505aab6715dc1ea6f0c20588b575",
+    "DiD-BCF/Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/manifest.json": "b8206f85f6f073c3e0d84a3a87e64051db5dbded6925cf4384478f99f22599ee",
+    "DiD-BCF/Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/source_workspace/DiD-BCF/Simulation_Studies_Revision/Proper_Prior_Rerun/manifest.json": "8d7e7f454c09ee206636d295704a77f520e3584d3fc848609af21df5fa1e67e0",
+    "DiD-BCF/Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/source_workspace/DiD-BCF/Simulation_Studies_Revision/did_bcf_revision/did_bcf.py": "97ef5737cfb35c67364e5dc59e3509c164349120a036f441234893981c058b91",
+    "DiD-BCF/Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/source_workspace/DiD-BCF/Simulation_Studies_Revision/did_bcf_revision/pretrend.py": "d62ac6dacaa5b30fae64691bbe9243f3ffb0703b4d86dfce9106d60b6b1230e4",
+    "DiD-BCF/Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/source_workspace/JBES_Submission/recovery_repaired_20261008/engine/bcf_defaults.json": "19a35afae7129640c63036846192c74d60de2750121891197218b7334a21182d",
+    "DiD-BCF/Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/source_workspace/JBES_Submission/recovery_repaired_20261008/engine/build_manifest.json": "12f509b5baff3657a246aea9f565ec042a624ed92a29fca2aa8ef4076a4e23be",
+    "DiD-BCF/Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/source_workspace/JBES_Submission/recovery_repaired_20261008/engine/native/stochtree-0.4.4-native-mcmc-repair.patch": "b18a0a97e3302496b439bf8825ec0b5eeaa5bdba1a67287b5b92d6b84566c118",
+    "DiD-BCF/Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/source_workspace/JBES_Submission/recovery_repaired_20261008/tools/recovery_core.py": "3f49c493ede19bfda4f53253974ec5327ea3956c708feb20ddb04aad22f12c3b",
+    "DiD-BCF/Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/source_workspace/JBES_Submission/recovery_repaired_20261008/tools/recovery_plan.py": "5f77d9cb5b60f4d04d40b9c55c2f0f254d680131d5d69fd1f14fe2608ac9df9d",
+    "DiD-BCF/Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/validation/measured_fit_times.csv": "2f6ff791f043f4030675727e73d18949520db4da8ac5238aa541e58e99244b3a",
+    "DiD-BCF/Simulation_Studies_Revision/DiD_BCF/Paper_Rerun_20261011/analysis_returned_20261014/RETURN_VALIDATION.json": "6f7248de626fb6e5c82e57ea99bf3754ca0f89677d811a8e37a461386616e7f5",
+    "DiD-BCF/Simulation_Studies_Revision/DiD_BCF/Paper_Rerun_20261011/analysis_returned_20261014/archive_inventory.csv": "1bfe4a7fafb9cd6f005f221f3719ad41d7be91ca27ecc204cfaedcd4e48a2226",
+    "DiD-BCF/Simulation_Studies_Revision/DiD_BCF/Paper_Rerun_20261011/analysis_returned_20261014/returned_chain_inventory.csv": "eacea7d96cd00a9d80331369a29026774fd14007dad5452fe8c9888beea5c7c3",
+    "JBES_Submission/recovery_repaired_20261008/local_runs/20261008_overnight_v1/pilot_outputs/_bundle/manifest.json": "77b493e93f0222232c033a3130df5ae8066626092fb6adfa1cfe5e0d8cd18239"
+  },
+  "limitations": [
+    "Elapsed values are fit-level times from returned worker records; runtime depends on Colab contention and setup overhead.",
+    "The two sensitivity prior-rate anchors are N=50 effect and MPDTA application unit-effect fits. They support an approximately 1.01 multiplier, but do not identify every interaction with N or setting.",
+    "No current-budget pretrend bridge at linearity degree 3 exists; the x1.4 schedule margin is intentionally conservative."
+  ],
+  "manifest_reconciliation": {
+    "check": "source main 5100 fits are already complete; 8 nonmain bridge fits are reused; remaining counts equal 9197 Colab simulations plus 22 local application fits.",
+    "nonmain_manifest_hash": "d4c6fe4d5369638885b5d3a9a4f5077e5776990be6aa73d2e000188eb20bddca",
+    "nonmain_manifest_job_count_including_reuse": 9227,
+    "nonmain_phase_counts_including_reuse": {
+      "application": 9,
+      "application_sensitivity": 18,
+      "diagnostic": 4000,
+      "pt_impact": 4000,
+      "sensitivity": 1200
+    },
+    "remaining_colab_simulation_fits": 9197,
+    "remaining_local_application_fits": 22,
+    "remaining_phase_counts": {
+      "application": 6,
+      "application_sensitivity": 16,
+      "diagnostic": 3999,
+      "pt_impact": 4000,
+      "sensitivity": 1198
+    },
+    "remaining_total_fits": 9219,
+    "reused_job_count": 8,
+    "reused_jobs": [
+      {
+        "id": "33f6de1d7aa9626b216a",
+        "kind": "pretrend",
+        "phase": "diagnostic",
+        "setting": "PT_hold",
+        "sigma2_rate": 1.0
+      },
+      {
+        "id": "f5f99eef5ea464cd63a6",
+        "kind": "effect",
+        "phase": "sensitivity",
+        "setting": "B2_sweep",
+        "sigma2_rate": 0.1
+      },
+      {
+        "id": "71da8f440a5f3366927e",
+        "kind": "effect",
+        "phase": "sensitivity",
+        "setting": "B2_sweep",
+        "sigma2_rate": 10.0
+      },
+      {
+        "id": "5e6cf4b70cbd92bbd07a",
+        "kind": "application",
+        "phase": "application",
+        "setting": "mpdta",
+        "sigma2_rate": 1.0
+      },
+      {
+        "id": "2fb3f12d0a581d8b98e4",
+        "kind": "application",
+        "phase": "application",
+        "setting": "mpdta",
+        "sigma2_rate": 1.0
+      },
+      {
+        "id": "3d71a7146144e2479b5c",
+        "kind": "application_pretrend",
+        "phase": "application",
+        "setting": "mpdta",
+        "sigma2_rate": 1.0
+      },
+      {
+        "id": "d97121845302457a09d4",
+        "kind": "application",
+        "phase": "application_sensitivity",
+        "setting": "mpdta",
+        "sigma2_rate": 0.1
+      },
+      {
+        "id": "51454a5a9d0f152740d3",
+        "kind": "application",
+        "phase": "application_sensitivity",
+        "setting": "mpdta",
+        "sigma2_rate": 10.0
+      }
+    ],
+    "source_job_count": 14327,
+    "source_manifest": "DiD-BCF/Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/source_workspace/DiD-BCF/Simulation_Studies_Revision/Proper_Prior_Rerun/manifest.json",
+    "source_manifest_hash": "105ee8510f99817b132d69869167ec5a724596ed37d8094f7ae430c958ad1ccc",
+    "source_phase_counts": {
+      "application": 9,
+      "application_sensitivity": 18,
+      "diagnostic": 4000,
+      "main": 5100,
+      "pt_impact": 4000,
+      "sensitivity": 1200
+    }
+  },
+  "scope": "Read-only scheduling and frozen-worker contract audit; no sampled NPZ arrays opened.",
+  "timing_contract": {
+    "application_prior_rate_bridge_seconds": {
+      "rate_0.1": 880.123224931,
+      "rate_10": 878.630006361
+    },
+    "application_prior_rate_ratio_high_over_low": 1.001699,
+    "cross_budget_pilot_pretrend_records": 6,
+    "effect_prior_rate_bridge_seconds": {
+      "rate_0.1": 152.29003953899996,
+      "rate_10": 151.886225082
+    },
+    "effect_prior_rate_ratio_high_over_low": 1.002659,
+    "main_n200_effect_q75_seconds_by_degree": {
+      "1": 452.684,
+      "2": 451.988,
+      "3": 451.728
+    },
+    "observed_main_degree3_over_degree1_q75_ratio": 0.997888,
+    "pretrend_bridge_elapsed_seconds": {
+      "application_pretrend": 814.9922857930001,
+      "simulation_diagnostic": 564.261120589
+    },
+    "pretrend_bridge_peak_rss_mb": {
+      "application_pretrend": 1126.96875,
+      "simulation_diagnostic": 1096.390625
+    },
+    "pretrend_degree3_multiplier": 1.4,
+    "pretrend_degree3_multiplier_basis": "No degree-3 pretrend bridge was observed. The 1.4 factor is an explicit conservative planning margin, not a measured ratio; returned main effect q75 by degree was effectively flat.",
+    "quantile_method": "Linear interpolation at (n-1)*p, applied to fit-level elapsed seconds.",
+    "recommended_prior_rate_multiplier": 1.01,
+    "saved_pilot_budget_warning": "Pilot diagnostic records used four-chain budgets with 2500 or 5000 warmup sweeps and 1000 or 2000 MCMC draws; use only as cross-budget stress references."
+  }
+}
