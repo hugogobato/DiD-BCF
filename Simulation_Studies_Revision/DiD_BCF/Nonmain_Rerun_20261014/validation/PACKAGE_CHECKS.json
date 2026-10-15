@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "manifest_hash": "d4c6fe4d5369638885b5d3a9a4f5077e5776990be6aa73d2e000188eb20bddca",
+  "package_hash": "99c37cf5731cf9d9a10096aefa3df1932c94902ac705f803c350cd2fee5f4487",
+  "source_commit": "30b165b27610dc4b2c406a9d64281d77e660257a",
+  "total_jobs": 9227,
+  "reused": 8,
+  "colab_jobs": 9197,
+  "local_jobs": 22,
+  "run_notebooks": 132,
+  "collector_notebooks": 1,
+  "code_cells": 662,
+  "waves": {
+    "3": 36,
+    "1": 48,
+    "2": 48
+  },
+  "exact_partition": true,
+  "all_reuse_verified": true,
+  "notebook_schema_and_syntax": "PASS",
+  "mocked_setup_execution": "PASS",
+  "sampling_calls": 0,
+  "dependency_install_calls": 0,
+  "network_calls": 0,
+  "note": "Mocked setup verifies Python orchestration only; actual native controls passed in local setup."
+}

@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "source_commit": "30b165b27610dc4b2c406a9d64281d77e660257a",
+  "fresh_public_sparse_checkout": true,
+  "verified_reused_fits": 8,
+  "byte_identical_collector_tables": {
+    "per_replication.csv": "8eac4b75d22556d6e21df05fb8869c232bf057badb69b820088336c34e51595c",
+    "diagnostics.csv": "16d0eb44da29053cab495ed5d5a6318c320a8b8eed58fd41b427d96fd6d95165",
+    "scalar_metrics.csv": "0a0bc97bdd7ab9b950b2157b47380c4189d97f8b68aa3cc6d87394dbb66503f7",
+    "surface_metrics.csv": "41a72eaa42c9c4d5f7fe9fddcf4ff3a262487c8fbd8d9e35cfcbfb764dfc9f06",
+    "application_gate.csv": "524bf56b08c6aa4321c86f56bfaf8bd4ffa4c98176fcba929352fdc55b725672",
+    "application_catt.csv": "458cdaa87bded0add83794bb32f4a1b32c67c2b347006fb7b1ab1d83356730fb",
+    "application_contrasts.csv": "3df0a82b15ff29c4ed0955b4d79842404128a354c37e97f0da6d447fc0fc1368",
+    "missing_jobs.csv": "125ba2ec0d96491e7be6be2b1a762e8c4f30792c172885659afd1cca559f59de"
+  }
+}
