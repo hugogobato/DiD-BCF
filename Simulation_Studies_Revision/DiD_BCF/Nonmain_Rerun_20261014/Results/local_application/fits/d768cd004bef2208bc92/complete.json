@@ -1,0 +1,46 @@
+{
+  "manifest_hash": "d4c6fe4d5369638885b5d3a9a4f5077e5776990be6aa73d2e000188eb20bddca",
+  "job_id": "d768cd004bef2208bc92",
+  "job_hash": "9e14f0e45a7e3893049957e7e83846c976a6efda5e604f0854b9d845f630d3fb",
+  "budget_key": "earlier_budget_repaired",
+  "chain_seeds": [
+    1000,
+    1001,
+    1002
+  ],
+  "engine_specification": {
+    "variant": "repaired",
+    "build_manifest_sha256": "12f509b5baff3657a246aea9f565ec042a624ed92a29fca2aa8ef4076a4e23be",
+    "patch_sha256": "b18a0a97e3302496b439bf8825ec0b5eeaa5bdba1a67287b5b92d6b84566c118",
+    "source_hashes": {
+      "include/stochtree/tree_sampler.h": "5e3375bf1bb0e23cd355d4c8d9b1b19e38dfcca0ca163f81996d96cfc4295319",
+      "src/cutpoint_candidates.cpp": "a60917dd01e468ea591ddd78878be72fc6701227b193cfeb8c5c1636dd8079e7"
+    },
+    "archives": {
+      "boost_math": "9c712659fb947ec87bd41a0d25a620598b7964965c6858b097f55c1bfc5897b0",
+      "eigen": "348e54987bbfac329d26acc626325febdc85982fd7a7087b968054cea79714ab",
+      "fast_double_parser": "6ee728d641a12dbe2f4fe7c3ae2044fddc671a144ca9fa56e9171514251475a9",
+      "fmt": "9c62261229fe117c5b7fc5a104dbe0cd920b84a69436deb58bb3f91e5fc762af",
+      "pybind11": "92d91803e06e8c3b06371700ad9afa06b0835020a9910f2123740961551c1acd",
+      "stochtree": "9ad59b427d8552c12c05daf2aa4212fe089a337f0282c448e57f9223e77e6a8b"
+    },
+    "target_prior": "raw depth/split/feature/uniform-node-range prior globally restricted and normalized on minleaf/maxdepth-feasible numeric trees"
+  },
+  "origin": "new_repaired_fit",
+  "outputs": {
+    "per_replication.csv": "eab162fe5d5fb65199c0b314089204e5ed85abb3a1f316b34e0f03ccf08f9752",
+    "diagnostics.csv": "8330dc1f92bf71addcc33b7920f62def8bebc9b93af895514ae8a6ec8efe92f7",
+    "application_gate.csv": "5e47657c61c65d9bf21f1e3473058b739e9b88e17bc50090851360307721402b",
+    "application_catt.csv": "c909f30342ceeb80c5c239bd3dcd6d0237d84b1eae7fe83dfde8e82c019ddcee",
+    "application_contrasts.csv": "588dbb1efac8e4d1c69acdaf8167b720c042271a1343fd65f90ca44443b58e09",
+    "chain_provenance.json": "908f1942f135028452019c4f62e24220c8ddaa8b26467393c392350b472b7681"
+  },
+  "per_replication_rows": 12,
+  "diagnostic_rows": 27,
+  "application_output_rows": {
+    "gate": 4,
+    "catt": 291,
+    "contrasts": 3
+  },
+  "record_hash": "9fdbddad83082784e1c18bdc8f9878691e5cee5d01da6c91bf72edc0c9603674"
+}

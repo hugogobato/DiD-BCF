@@ -1,0 +1,212 @@
+{
+  "status": "PASS",
+  "manifest_hash": "d4c6fe4d5369638885b5d3a9a4f5077e5776990be6aa73d2e000188eb20bddca",
+  "new_fits_complete": 22,
+  "application_fits_reused": 5,
+  "application_jobs_complete": 27,
+  "application_job_counts": {
+    "application": 9,
+    "application_sensitivity": 18
+  },
+  "local_elapsed_minutes": 40.04993408521017,
+  "local_failures": 0,
+  "local_deferred": 0,
+  "remaining_colab_simulation_jobs": 9197,
+  "zip_mib": 0.6254596710205078,
+  "zip_sha256": "9db3c8690f7e68675a592fd6446df5bfd6a2abcabf9fdfe25a59cec877c2b4d9",
+  "zip_entries": 136,
+  "posterior_arrays_in_zip": false,
+  "diagnostic_filtering": false,
+  "primary": {
+    "spec": "structured_rfx_unit",
+    "group": "All treated",
+    "n_obs": "291",
+    "att_log": "-0.04850161581800385",
+    "post_sd": "0.014678857951508755",
+    "lo95_log": "-0.076114682571630551",
+    "hi95_log": "-0.020529890581556139",
+    "att_pct": "-4.724160131386304",
+    "lo95_pct": "-7.3290077012061694",
+    "hi95_pct": "-2.0320587150520875",
+    "p_bayes": "0.0013333333333333333",
+    "job_id": "2fb3f12d0a581d8b98e4",
+    "budget_key": "earlier_budget_repaired",
+    "rep": "0",
+    "job_phase": "application",
+    "job_kind": "application",
+    "sigma2_shape": "2.0",
+    "sigma2_rate": "1.0",
+    "setting": "mpdta"
+  },
+  "unit_intercept_point_range_pct": [
+    -4.893597073381913,
+    -4.65453480259575
+  ],
+  "unit_intercept_intervals_excluding_zero": 9,
+  "no_unit_intercept_intervals_including_zero": 3,
+  "all_no_unit_crossings_at_rate": 10,
+  "preserved_baseline_files": {
+    "DiD-BCF/Simulation_Studies_Revision/Results/empirical/APPLICATION_RESULTS.md": true,
+    "DiD-BCF/Simulation_Studies_Revision/Results/empirical/ATT_SEED_INSTABILITY.md": true,
+    "DiD-BCF/Simulation_Studies_Revision/Results/empirical/fig_mpdta_gate_kde.pdf": true,
+    "DiD-BCF/Simulation_Studies_Revision/Results/empirical/fig_mpdta_gate_kde.png": true,
+    "DiD-BCF/Simulation_Studies_Revision/Results/empirical/fig_pretrend_empirical.pdf": true,
+    "DiD-BCF/Simulation_Studies_Revision/Results/empirical/mpdta_structured_catt.csv": true,
+    "DiD-BCF/Simulation_Studies_Revision/Results/empirical/mpdta_structured_contrasts.csv": true,
+    "DiD-BCF/Simulation_Studies_Revision/Results/empirical/mpdta_structured_gate.csv": true,
+    "DiD-BCF/Simulation_Studies_Revision/Results/empirical/mpdta_structured_seeds.csv": true,
+    "DiD-BCF/Simulation_Studies_Revision/Results/empirical/pretrend_mpdta.csv": true,
+    "JBES_Submission/raw_continuous_supplement.tex": true,
+    "JBES_Submission/raw_finite_algorithm_supplement.tex": true,
+    "JBES_Submission/raw_forest_consistency_supplement.tex": true,
+    "JBES_Submission/raw_implementation_supplement.tex": true,
+    "JBES_Submission/raw_inference_diagnostics.tex": true,
+    "JBES_Submission/raw_native_finite_budget_supplement.tex": true,
+    "JBES_Submission/raw_theory_main.tex": true,
+    "JBES_Submission/raw_unknown_variance_supplement.tex": true,
+    "JBES_Submission/sim_figures/fig_calibration.pdf": true,
+    "JBES_Submission/sim_figures/fig_es_bias.pdf": true,
+    "JBES_Submission/sim_figures/fig_es_methods.pdf": true,
+    "JBES_Submission/sim_figures/fig_event_study.pdf": true,
+    "JBES_Submission/sim_figures/fig_pretrend.pdf": true,
+    "JBES_Submission/sim_figures/fig_pretrend_d3.pdf": true,
+    "JBES_Submission/sim_figures/fig_smalln.pdf": true,
+    "JBES_Submission/sim_figures/fig_sqrtn.pdf": true,
+    "JBES_Submission/sim_figures/fig_surface.pdf": true,
+    "JBES_Submission/sim_figures/fig_surface_sweep.pdf": true,
+    "JBES_Submission/sim_figures/fig_sweep.pdf": true,
+    "JBES_Submission/sim_tables/tab_b1_att.tex": true,
+    "JBES_Submission/sim_tables/tab_b1_gatt.tex": true,
+    "JBES_Submission/sim_tables/tab_bacon.tex": true,
+    "JBES_Submission/sim_tables/tab_null.tex": true,
+    "JBES_Submission/sim_tables/tab_pretrend.tex": true,
+    "JBES_Submission/sim_tables/tab_pretrend_d3.tex": true,
+    "JBES_Submission/sim_tables/tab_smalln.tex": true,
+    "JBES_Submission/sim_tables/tab_smalln_surface.tex": true,
+    "JBES_Submission/sim_tables/tab_staggered.tex": true,
+    "JBES_Submission/sim_tables/tab_staggered_cells.tex": true,
+    "JBES_Submission/sim_tables/tab_staggered_deg.tex": true,
+    "JBES_Submission/sim_tables/tab_staggered_gatt.tex": true,
+    "JBES_Submission/sim_tables/tab_surface.tex": true,
+    "JBES_Submission/sim_tables/tab_sweep.tex": true,
+    "JBES_Submission/sim_tables/tab_sweep_deg.tex": true,
+    "JBES_Submission/theory_supplement.tex": true
+  },
+  "historical_corrected_table_byte_identical": true,
+  "embedded_theory_paragraph_unchanged": true,
+  "paper_assets_identical_to_versioned_results": true,
+  "application_prior_table_rows": 18,
+  "application_pretrend_table_rows": 9,
+  "core_theory_reaudit_performed": false,
+  "incomplete_application_apply_refused_without_mutation": true,
+  "paper_builds": {
+    "main": {
+      "document": "main",
+      "status": "PASS",
+      "steps": [
+        {
+          "command": [
+            "pdflatex",
+            "-interaction=nonstopmode",
+            "-halt-on-error",
+            "-file-line-error",
+            "main.tex"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "bibtex",
+            "main"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "pdflatex",
+            "-interaction=nonstopmode",
+            "-halt-on-error",
+            "-file-line-error",
+            "main.tex"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "pdflatex",
+            "-interaction=nonstopmode",
+            "-halt-on-error",
+            "-file-line-error",
+            "main.tex"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "source_sha256": "49492c90daf3568be97b0dbcc82883563214b7a355d874aa2dca83a2efbc028c",
+      "pdf_sha256": "496707c931cd7208a4fb4138a22519dd78bbd8ee61ec5d8cefa025014ef27eb1",
+      "pages": [
+        "37"
+      ],
+      "unresolved_reference_or_error_lines": [],
+      "overfull_boxes": 0,
+      "underfull_boxes": 1
+    },
+    "supplementary_material": {
+      "document": "supplementary_material",
+      "status": "PASS",
+      "steps": [
+        {
+          "command": [
+            "pdflatex",
+            "-interaction=nonstopmode",
+            "-halt-on-error",
+            "-file-line-error",
+            "supplementary_material.tex"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "bibtex",
+            "supplementary_material"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "pdflatex",
+            "-interaction=nonstopmode",
+            "-halt-on-error",
+            "-file-line-error",
+            "supplementary_material.tex"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "pdflatex",
+            "-interaction=nonstopmode",
+            "-halt-on-error",
+            "-file-line-error",
+            "supplementary_material.tex"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "source_sha256": "14c19e16bc0f0e9f0c5e37f959c00be229d07a85416a7b81e7ac8372aeaddfa4",
+      "pdf_sha256": "e6b991aef76f4ec4eebd14cfb30781ef41e82baaa12f26ce361070e3f3582fee",
+      "pages": [
+        "111"
+      ],
+      "unresolved_reference_or_error_lines": [],
+      "overfull_boxes": 2,
+      "underfull_boxes": 1
+    }
+  },
+  "visual_layout_review": [
+    "updated two-panel application figure",
+    "main.pdf page 30, primary and comparison table",
+    "supplementary_material.pdf page 40, sensitivity and pretrend tables"
+  ],
+  "result_files_ignored": 0
+}

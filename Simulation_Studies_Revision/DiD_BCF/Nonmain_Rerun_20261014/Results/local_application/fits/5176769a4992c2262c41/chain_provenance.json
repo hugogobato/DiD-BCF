@@ -1,0 +1,328 @@
+{
+  "origin": "new_repaired_fit",
+  "panel_hash": "c069c6dd9f85d3c53fd3737835ca91d3ca828c33a40a9a9202123852ac7b0691",
+  "package_hash": "99c37cf5731cf9d9a10096aefa3df1932c94902ac705f803c350cd2fee5f4487",
+  "assignment_hash": "2542a359cca972ec2f43bec82000f947f755f7028aba36bc9cfef818da411c09",
+  "runtime": {
+    "python": "3.12.3",
+    "implementation": "CPython",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+  },
+  "engine": {
+    "specification": {
+      "variant": "repaired",
+      "build_manifest_sha256": "12f509b5baff3657a246aea9f565ec042a624ed92a29fca2aa8ef4076a4e23be",
+      "patch_sha256": "b18a0a97e3302496b439bf8825ec0b5eeaa5bdba1a67287b5b92d6b84566c118",
+      "source_hashes": {
+        "include/stochtree/tree_sampler.h": "5e3375bf1bb0e23cd355d4c8d9b1b19e38dfcca0ca163f81996d96cfc4295319",
+        "src/cutpoint_candidates.cpp": "a60917dd01e468ea591ddd78878be72fc6701227b193cfeb8c5c1636dd8079e7"
+      },
+      "archives": {
+        "boost_math": "9c712659fb947ec87bd41a0d25a620598b7964965c6858b097f55c1bfc5897b0",
+        "eigen": "348e54987bbfac329d26acc626325febdc85982fd7a7087b968054cea79714ab",
+        "fast_double_parser": "6ee728d641a12dbe2f4fe7c3ae2044fddc671a144ca9fa56e9171514251475a9",
+        "fmt": "9c62261229fe117c5b7fc5a104dbe0cd920b84a69436deb58bb3f91e5fc762af",
+        "pybind11": "92d91803e06e8c3b06371700ad9afa06b0835020a9910f2123740961551c1acd",
+        "stochtree": "9ad59b427d8552c12c05daf2aa4212fe089a337f0282c448e57f9223e77e6a8b"
+      },
+      "target_prior": "raw depth/split/feature/uniform-node-range prior globally restricted and normalized on minleaf/maxdepth-feasible numeric trees"
+    },
+    "build_identity": "2b7aa067cb34379801528da49cb90a9f6bc297ec21fc54099783e71366b99dc6",
+    "extension_sha256": "07b73cbdba5cd3f44f7517be8b966fcae3ead816ad2336eb919d1e4142cb19e4",
+    "python": "3.12.3",
+    "site_files_sha256": "43909161617d737da04d175130d1d1efafd9366297ceea16a22831114aca58c2"
+  },
+  "chains": [
+    {
+      "run_id": "35b353790a5c1f73",
+      "stat_job_id": "5176769a4992c2262c41",
+      "parent_job_id": "5176769a4992c2262c41",
+      "phase": "application_sensitivity",
+      "setting": "mpdta",
+      "rep": 2,
+      "spec": "pretrend_unit",
+      "kind": "application_pretrend",
+      "budget_key": "earlier_budget_repaired",
+      "budget": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "chain_index": null,
+      "chain_seed": null,
+      "trace": false,
+      "attempt": 0,
+      "parent_manifest": "105ee8510f99817b132d69869167ec5a724596ed37d8094f7ae430c958ad1ccc",
+      "assignment_hash": "2542a359cca972ec2f43bec82000f947f755f7028aba36bc9cfef818da411c09",
+      "recovery_version": "0.2.0-repaired-20261008",
+      "purpose": "final_nonmain_paper_rerun",
+      "source_hashes_sha256": "fbbcf2c8f2264b9b0bae6fc6f298e8960e1fec2c3eba99eb5a70c6b67e02118c",
+      "dependencies": {
+        "numpy": "2.4.6",
+        "pandas": "3.0.3",
+        "scipy": "1.18.0",
+        "scikit-learn": "1.9.0",
+        "cmake": "4.3.4",
+        "matplotlib": "3.11.0"
+      },
+      "runtime": {
+        "python": "3.12.3",
+        "implementation": "CPython",
+        "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+      },
+      "engine": {
+        "specification": {
+          "variant": "repaired",
+          "build_manifest_sha256": "12f509b5baff3657a246aea9f565ec042a624ed92a29fca2aa8ef4076a4e23be",
+          "patch_sha256": "b18a0a97e3302496b439bf8825ec0b5eeaa5bdba1a67287b5b92d6b84566c118",
+          "source_hashes": {
+            "include/stochtree/tree_sampler.h": "5e3375bf1bb0e23cd355d4c8d9b1b19e38dfcca0ca163f81996d96cfc4295319",
+            "src/cutpoint_candidates.cpp": "a60917dd01e468ea591ddd78878be72fc6701227b193cfeb8c5c1636dd8079e7"
+          },
+          "archives": {
+            "boost_math": "9c712659fb947ec87bd41a0d25a620598b7964965c6858b097f55c1bfc5897b0",
+            "eigen": "348e54987bbfac329d26acc626325febdc85982fd7a7087b968054cea79714ab",
+            "fast_double_parser": "6ee728d641a12dbe2f4fe7c3ae2044fddc671a144ca9fa56e9171514251475a9",
+            "fmt": "9c62261229fe117c5b7fc5a104dbe0cd920b84a69436deb58bb3f91e5fc762af",
+            "pybind11": "92d91803e06e8c3b06371700ad9afa06b0835020a9910f2123740961551c1acd",
+            "stochtree": "9ad59b427d8552c12c05daf2aa4212fe089a337f0282c448e57f9223e77e6a8b"
+          },
+          "target_prior": "raw depth/split/feature/uniform-node-range prior globally restricted and normalized on minleaf/maxdepth-feasible numeric trees"
+        },
+        "build_identity": "2b7aa067cb34379801528da49cb90a9f6bc297ec21fc54099783e71366b99dc6",
+        "extension_sha256": "07b73cbdba5cd3f44f7517be8b966fcae3ead816ad2336eb919d1e4142cb19e4",
+        "python": "3.12.3",
+        "site_files_sha256": "43909161617d737da04d175130d1d1efafd9366297ceea16a22831114aca58c2"
+      },
+      "continuation": "atomic_job_no_per_chain_state",
+      "paper_manifest_hash": "d4c6fe4d5369638885b5d3a9a4f5077e5776990be6aa73d2e000188eb20bddca",
+      "package_hash": "99c37cf5731cf9d9a10096aefa3df1932c94902ac705f803c350cd2fee5f4487",
+      "sampler": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget"
+      },
+      "actual_sampler": {
+        "num_gfr": 50,
+        "num_burnin": 0,
+        "num_mcmc": 500,
+        "keep_every": 5,
+        "num_chains": 3,
+        "label": "repaired engine at the earlier proper-prior budget",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 10.0
+      },
+      "prior": {
+        "variance_prior_scale": "standardized_outcome",
+        "sigma2_shape": 2.0,
+        "sigma2_rate": 10.0,
+        "effect_by_cohort": null,
+        "rfx": "unit",
+        "estimator": "stochtree.BCFModel",
+        "bcf_parameters": {
+          "general_params_default": {
+            "cutpoint_grid_size": 100,
+            "standardize": true,
+            "sample_sigma2_global": true,
+            "sigma2_global_init": null,
+            "sigma2_global_shape": 2.0,
+            "sigma2_global_scale": 10.0,
+            "variable_weights": null,
+            "propensity_covariate": "none",
+            "adaptive_coding": false,
+            "control_coding_init": -0.5,
+            "treated_coding_init": 0.5,
+            "random_seed": 2,
+            "keep_burnin": false,
+            "keep_gfr": false,
+            "keep_every": 5,
+            "num_chains": 3,
+            "outcome_model": {
+              "fixed_source_expression": "OutcomeModel(outcome='continuous', link='identity')"
+            },
+            "probit_outcome_model": false,
+            "num_threads": 1
+          },
+          "prognostic_forest_params_default": {
+            "num_trees": 250,
+            "alpha": 0.95,
+            "beta": 2.0,
+            "min_samples_leaf": 5,
+            "max_depth": 10,
+            "sample_sigma2_leaf": true,
+            "sigma2_leaf_init": null,
+            "sigma2_leaf_shape": 3,
+            "sigma2_leaf_scale": null,
+            "keep_vars": [
+              0,
+              1
+            ],
+            "drop_vars": null,
+            "num_features_subsample": null
+          },
+          "treatment_effect_forest_params_default": {
+            "num_trees": 100,
+            "alpha": 0.25,
+            "beta": 3.0,
+            "min_samples_leaf": 5,
+            "max_depth": 5,
+            "sample_sigma2_leaf": false,
+            "sigma2_leaf_init": null,
+            "sigma2_leaf_shape": 3,
+            "sigma2_leaf_scale": null,
+            "delta_max": 0.9,
+            "keep_vars": [
+              0,
+              2
+            ],
+            "drop_vars": null,
+            "num_features_subsample": null,
+            "sample_intercept": true,
+            "tau_0_prior_var": null
+          },
+          "variance_forest_params_default": {
+            "num_trees": 0,
+            "alpha": 0.95,
+            "beta": 2.0,
+            "min_samples_leaf": 5,
+            "max_depth": 10,
+            "leaf_prior_calibration_param": 1.5,
+            "var_forest_leaf_init": null,
+            "var_forest_prior_shape": null,
+            "var_forest_prior_scale": null,
+            "keep_vars": null,
+            "drop_vars": null,
+            "num_features_subsample": null
+          },
+          "rfx_params_default": {
+            "model_spec": "custom",
+            "working_parameter_prior_mean": null,
+            "group_parameter_prior_mean": null,
+            "working_parameter_prior_cov": null,
+            "group_parameter_prior_cov": null,
+            "variance_prior_shape": 1.0,
+            "variance_prior_scale": 1.0
+          }
+        },
+        "bcf_default_spec": {
+          "bcf_python_sha256": "379cb7715e6ca5d2933af8d6f769c225bf8ce7b4f9745e9788201ffa1fcf4124",
+          "defaults": {
+            "general_params_default": {
+              "cutpoint_grid_size": 100,
+              "standardize": true,
+              "sample_sigma2_global": true,
+              "sigma2_global_init": null,
+              "sigma2_global_shape": 0,
+              "sigma2_global_scale": 0,
+              "variable_weights": null,
+              "propensity_covariate": "prognostic",
+              "adaptive_coding": false,
+              "control_coding_init": -0.5,
+              "treated_coding_init": 0.5,
+              "random_seed": null,
+              "keep_burnin": false,
+              "keep_gfr": false,
+              "keep_every": 1,
+              "num_chains": 1,
+              "outcome_model": {
+                "fixed_source_expression": "OutcomeModel(outcome='continuous', link='identity')"
+              },
+              "probit_outcome_model": false,
+              "num_threads": 1
+            },
+            "prognostic_forest_params_default": {
+              "num_trees": 250,
+              "alpha": 0.95,
+              "beta": 2.0,
+              "min_samples_leaf": 5,
+              "max_depth": 10,
+              "sample_sigma2_leaf": true,
+              "sigma2_leaf_init": null,
+              "sigma2_leaf_shape": 3,
+              "sigma2_leaf_scale": null,
+              "keep_vars": null,
+              "drop_vars": null,
+              "num_features_subsample": null
+            },
+            "treatment_effect_forest_params_default": {
+              "num_trees": 100,
+              "alpha": 0.25,
+              "beta": 3.0,
+              "min_samples_leaf": 5,
+              "max_depth": 5,
+              "sample_sigma2_leaf": false,
+              "sigma2_leaf_init": null,
+              "sigma2_leaf_shape": 3,
+              "sigma2_leaf_scale": null,
+              "delta_max": 0.9,
+              "keep_vars": null,
+              "drop_vars": null,
+              "num_features_subsample": null,
+              "sample_intercept": true,
+              "tau_0_prior_var": null
+            },
+            "variance_forest_params_default": {
+              "num_trees": 0,
+              "alpha": 0.95,
+              "beta": 2.0,
+              "min_samples_leaf": 5,
+              "max_depth": 10,
+              "leaf_prior_calibration_param": 1.5,
+              "var_forest_leaf_init": null,
+              "var_forest_prior_shape": null,
+              "var_forest_prior_scale": null,
+              "keep_vars": null,
+              "drop_vars": null,
+              "num_features_subsample": null
+            },
+            "rfx_params_default": {
+              "model_spec": "custom",
+              "working_parameter_prior_mean": null,
+              "group_parameter_prior_mean": null,
+              "working_parameter_prior_cov": null,
+              "group_parameter_prior_cov": null,
+              "variance_prior_shape": 1.0,
+              "variance_prior_scale": 1.0
+            }
+          },
+          "note": "None fields retain pinned outcome-dependent calibration rules; general noise shape/rate 0 defaults are always overridden with the job proper prior."
+        }
+      },
+      "peak_rss_mb": 1093.13671875,
+      "unit_mode": "atomic_job_bcfmodel",
+      "continuation_limitation": "stochtree.BCFModel does not expose per-chain state; this job is atomic and an interrupted attempt is rerun from its recorded seed, never appended to",
+      "bcfmodel_series_shapes": {
+        "global_var_samples": [
+          1500
+        ],
+        "leaf_scale_mu_samples": [
+          1500
+        ],
+        "tau_0_samples": [
+          1,
+          1500
+        ],
+        "rfx_sigma": [
+          1500
+        ]
+      },
+      "panel_hash": "c069c6dd9f85d3c53fd3737835ca91d3ca828c33a40a9a9202123852ac7b0691",
+      "seconds": 618.95998826,
+      "output_bytes": 10214437,
+      "outputs": {
+        "draws.npz": "65446d6e0e0864b1dc8a32d9324d242f63454b617d10798cb71cf76775827bc3",
+        "panel.csv": "d9b83aac3f7c61da2dc1a3983dcedd9091482f5c187b23064b6dd56c0b102ced"
+      },
+      "completed": true,
+      "artifact": "attempt_000"
+    }
+  ],
+  "elapsed_seconds": 623.8939490550001,
+  "local_arrays_exported": false
+}

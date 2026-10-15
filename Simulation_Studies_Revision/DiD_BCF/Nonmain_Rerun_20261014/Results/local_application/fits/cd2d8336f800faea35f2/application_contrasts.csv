@@ -1,0 +1,4 @@
+spec,contrast,diff_log,post_sd,lo95_log,hi95_log,p_bayes,job_id,budget_key,rep
+structured_rfx_unit,Medium population - Small population,-0.015236849108785094,0.01688252285227617,-0.049653340259476972,0.02439384826771171,0.29599999999999999,cd2d8336f800faea35f2,earlier_budget_repaired,2
+structured_rfx_unit,High population - Small population,0.0047644902193655593,0.025387857880652835,-0.038134241996648013,0.057608615130319507,0.91333333333333333,cd2d8336f800faea35f2,earlier_budget_repaired,2
+structured_rfx_unit,High population - Medium population,0.020001339328150656,0.021784865645676162,-0.011349084208490748,0.069982373788860686,0.31733333333333336,cd2d8336f800faea35f2,earlier_budget_repaired,2

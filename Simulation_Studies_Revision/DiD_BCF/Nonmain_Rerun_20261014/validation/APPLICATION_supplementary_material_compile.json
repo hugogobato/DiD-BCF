@@ -1,0 +1,51 @@
+{
+  "document": "supplementary_material",
+  "status": "PASS",
+  "steps": [
+    {
+      "command": [
+        "pdflatex",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-file-line-error",
+        "supplementary_material.tex"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "bibtex",
+        "supplementary_material"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "pdflatex",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-file-line-error",
+        "supplementary_material.tex"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "pdflatex",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-file-line-error",
+        "supplementary_material.tex"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "source_sha256": "14c19e16bc0f0e9f0c5e37f959c00be229d07a85416a7b81e7ac8372aeaddfa4",
+  "pdf_sha256": "e6b991aef76f4ec4eebd14cfb30781ef41e82baaa12f26ce361070e3f3582fee",
+  "pages": [
+    "111"
+  ],
+  "unresolved_reference_or_error_lines": [],
+  "overfull_boxes": 2,
+  "underfull_boxes": 1
+}
