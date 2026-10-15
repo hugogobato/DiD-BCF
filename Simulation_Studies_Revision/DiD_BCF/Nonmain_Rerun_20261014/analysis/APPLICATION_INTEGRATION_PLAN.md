@@ -94,4 +94,3 @@ Before writing, all existing manuscript targets are copied byte-for-byte to
 the dated audit snapshot directory. The paper figure and TeX inputs are also
 written to the versioned results directory for reproducibility. The updater
 does not touch theory source files or bibliography data.
-
