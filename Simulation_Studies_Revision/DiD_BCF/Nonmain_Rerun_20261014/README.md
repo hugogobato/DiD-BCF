@@ -2,6 +2,8 @@
 
 Run the loose notebooks described in [the Colab upload guide](Colab/UPLOAD_GUIDE.md). There are **132 experiment notebooks**, in waves of **48, 48 and 36**, plus one collector. Each targets about eight hours with two CPU workers. The 9.5-hour session deadline includes setup and export reserve. Runtime varies across Colab machines; a saved metrics ZIP resumes verified complete fits from the same assignment.
 
+You can also use [the direct Colab launch links](Colab/OPEN_IN_COLAB.md) to open each published notebook without uploading it manually.
+
 The Colab notebooks cover 3,999 remaining pretrend diagnostic fits, 4,000 pretrend-impact fits and 1,198 simulation prior-sensitivity fits. They are mixed into balanced assignments rather than isolating a study phase into an unequal runtime. Application and application prior-sensitivity runs are assigned locally: 22 new fits. The package includes eight completed, checksum-verified earlier fits, including five application fits, so no already completed anchor is repeated. Completing all assignments yields all 9,227 original non-main jobs.
 
 All jobs retain their original DGPs, data, priors, specifications and seeds. The budget is 50 GFR sweeps, no extra burn-in, 500 retained draws per chain, thinning five and three chains. The main standardized noise variance prior is IG(2,1); the prespecified sensitivity rates are 0.1 and 10. The exact repaired engine/source fingerprint is inherited from the completed main rerun. The earlier budget is used under the user-authorized paper-performance policy, with diagnostics retained and no diagnostic or performance filtering. This policy does not certify finite-MCMC convergence or nominal frequentist interval coverage.
