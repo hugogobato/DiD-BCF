@@ -278,5 +278,149 @@
     "values_or_rows_removed": false,
     "posterior_arrays_present": false,
     "read_with": "pandas.read_csv('diagnostics.csv.gz') or gzip.open"
+  },
+  "fresh_checkout_verification": {
+    "status": "PASS",
+    "tested_commit": "0af37befb8420110b2b634d8949aaf91df60e4b1",
+    "fresh_sparse_checkout": true,
+    "no_network_or_sampling_used": true,
+    "nonmain_builder_succeeded": true,
+    "publication_asset_generator_succeeded": true,
+    "csv_hashes_identical": {
+      "coverage_grid.csv": true,
+      "main_per_replication.csv": true,
+      "main_scalar_metrics.csv": true,
+      "main_surface_metrics.csv": true,
+      "metrics_all.csv": true,
+      "nonmain_per_replication.csv": true,
+      "nonmain_scalar_metrics.csv": true,
+      "nonmain_surface_metrics.csv": true,
+      "pretrend_profiles.csv": true,
+      "pretrend_summary.csv": true,
+      "prior_sensitivity.csv": true,
+      "prior_sensitivity_paired.csv": true,
+      "sqrtn_all.csv": true,
+      "surface_all.csv": true
+    },
+    "publication_tex_hashes_identical": {
+      "tab_pretrend.tex": true,
+      "tab_pretrend_d3.tex": true,
+      "tab_pretrend_main.tex": true,
+      "tab_prior_sensitivity.tex": true
+    },
+    "paper_and_repository_output_paths_correct": true,
+    "scope": "Rebuild completed non-main metrics overlay and publication assets from committed inputs in an isolated checkout."
+  },
+  "anonymous_versions": {
+    "main_anonymous": {
+      "build": {
+        "document": "main_anonymous",
+        "status": "PASS",
+        "steps": [
+          {
+            "command": [
+              "pdflatex",
+              "-interaction=nonstopmode",
+              "-halt-on-error",
+              "-file-line-error",
+              "main_anonymous.tex"
+            ],
+            "exit_code": 0
+          },
+          {
+            "command": [
+              "bibtex",
+              "main_anonymous"
+            ],
+            "exit_code": 0
+          },
+          {
+            "command": [
+              "pdflatex",
+              "-interaction=nonstopmode",
+              "-halt-on-error",
+              "-file-line-error",
+              "main_anonymous.tex"
+            ],
+            "exit_code": 0
+          },
+          {
+            "command": [
+              "pdflatex",
+              "-interaction=nonstopmode",
+              "-halt-on-error",
+              "-file-line-error",
+              "main_anonymous.tex"
+            ],
+            "exit_code": 0
+          }
+        ],
+        "source_sha256": "bd4e2de76e7f6c6cc7eb7a5672be0e846e9061bf67dd0a90d3569d30dcc1c24b",
+        "pdf_sha256": "d24df4b16ac6178aeb8158136d131417bbc281ebc7deb5fe961883c49da20a0a",
+        "pages": [
+          "35"
+        ],
+        "unresolved_reference_or_error_lines": [],
+        "overfull_boxes": 0,
+        "underfull_boxes": 2
+      },
+      "author_names_email_repository_link_absent": true,
+      "author_metadata_empty": false
+    },
+    "supplementary_material_anonymous": {
+      "build": {
+        "document": "supplementary_material_anonymous",
+        "status": "PASS",
+        "steps": [
+          {
+            "command": [
+              "pdflatex",
+              "-interaction=nonstopmode",
+              "-halt-on-error",
+              "-file-line-error",
+              "supplementary_material_anonymous.tex"
+            ],
+            "exit_code": 0
+          },
+          {
+            "command": [
+              "bibtex",
+              "supplementary_material_anonymous"
+            ],
+            "exit_code": 0
+          },
+          {
+            "command": [
+              "pdflatex",
+              "-interaction=nonstopmode",
+              "-halt-on-error",
+              "-file-line-error",
+              "supplementary_material_anonymous.tex"
+            ],
+            "exit_code": 0
+          },
+          {
+            "command": [
+              "pdflatex",
+              "-interaction=nonstopmode",
+              "-halt-on-error",
+              "-file-line-error",
+              "supplementary_material_anonymous.tex"
+            ],
+            "exit_code": 0
+          }
+        ],
+        "source_sha256": "a3ab45b1d75c86f0913d947749f5abecb4c547ee5cf6e8a9b035a7afb7b6c9fe",
+        "pdf_sha256": "f4db7a49261a3576a14b60401d2450d6032c988dc5da20fcc24e368fa7545bba",
+        "pages": [
+          "114"
+        ],
+        "unresolved_reference_or_error_lines": [],
+        "overfull_boxes": 0,
+        "underfull_boxes": 3
+      },
+      "author_names_email_repository_link_absent": true,
+      "author_metadata_empty": false
+    }
   }
 }

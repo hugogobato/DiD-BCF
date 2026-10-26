@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "tested_commit": "0af37befb8420110b2b634d8949aaf91df60e4b1",
+  "fresh_sparse_checkout": true,
+  "no_network_or_sampling_used": true,
+  "nonmain_builder_succeeded": true,
+  "publication_asset_generator_succeeded": true,
+  "csv_hashes_identical": {
+    "coverage_grid.csv": true,
+    "main_per_replication.csv": true,
+    "main_scalar_metrics.csv": true,
+    "main_surface_metrics.csv": true,
+    "metrics_all.csv": true,
+    "nonmain_per_replication.csv": true,
+    "nonmain_scalar_metrics.csv": true,
+    "nonmain_surface_metrics.csv": true,
+    "pretrend_profiles.csv": true,
+    "pretrend_summary.csv": true,
+    "prior_sensitivity.csv": true,
+    "prior_sensitivity_paired.csv": true,
+    "sqrtn_all.csv": true,
+    "surface_all.csv": true
+  },
+  "publication_tex_hashes_identical": {
+    "tab_pretrend.tex": true,
+    "tab_pretrend_d3.tex": true,
+    "tab_pretrend_main.tex": true,
+    "tab_prior_sensitivity.tex": true
+  },
+  "paper_and_repository_output_paths_correct": true,
+  "scope": "Rebuild completed non-main metrics overlay and publication assets from committed inputs in an isolated checkout."
+}
