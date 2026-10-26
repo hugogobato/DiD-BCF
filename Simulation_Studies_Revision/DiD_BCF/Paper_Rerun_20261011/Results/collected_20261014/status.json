@@ -1,0 +1,13 @@
+{
+  "manifest_hash": "b93afa87d50e9b20492d40a981d15defdebe0d4562a52289be01505b01b47ac5",
+  "main_expected": 5100,
+  "main_completed": 5100,
+  "bridge_expected": 8,
+  "bridge_completed": 8,
+  "missing_main_ids": [],
+  "missing_total": 0,
+  "duplicates_identical": [],
+  "diagnostic_filtering": false,
+  "full_state_gate_passed": false,
+  "posterior_arrays_needed_for_collection": false
+}

@@ -1,0 +1,21 @@
+\begin{table}[htbp]
+\centering
+\small
+\caption{Pre-trend rejection frequencies at $d=1$, based on 200 replications per setting. The TWFE placebo uses a separate, unpaired replication stream.}
+\label{tab:pretrend_main}
+\spacingset{1}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrr}
+\toprule
+Scenario & True slope & DiD-BCF & TWFE placebo \\
+\midrule
+PT holds & 0.000 & 0.040 & 0.045 \\
+Conditional PT only & 0.000 & 0.080 & 0.755 \\
+Group slope 0.05 & 0.050 & 0.205 & 0.100 \\
+Group slope 0.10 & 0.100 & 0.525 & 0.250 \\
+Group slope 0.20 & 0.200 & 0.930 & 0.700 \\
+Group slope 0.40 & 0.400 & 1.000 & 1.000 \\
+Unit-effect slope 0.20 & 0.207 & 0.915 & 0.705 \\
+\bottomrule
+\end{tabular}
+\end{table}

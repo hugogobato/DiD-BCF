@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "checks": {
+    "active_paper_rerun": {
+      "regular_noncache_files_verified": 1396,
+      "passed": true
+    },
+    "legacy_proper_prior_remainder": {
+      "regular_noncache_files_verified": 8,
+      "passed": true
+    },
+    "correction_completion_notebooks": {
+      "regular_noncache_files_verified": 219,
+      "passed": true
+    },
+    "theory_calibration_notebooks": {
+      "regular_noncache_files_verified": 101,
+      "passed": true
+    }
+  },
+  "code_or_results_deleted": false,
+  "cache_files_excluded_from_publication": true
+}

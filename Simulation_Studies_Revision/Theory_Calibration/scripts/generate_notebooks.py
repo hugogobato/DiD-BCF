@@ -442,10 +442,11 @@ COMPLETION_SINGLE_SHARDS = 54
 COMPLETION_PAIRED_LAST = 218
 FAMILIES = ("all", "correction_audit", "information_ablation",
             "correction_completion")
-# The generated notebooks live with the final revision artifacts.  The package
-# itself (src/, scripts/, configs/, results/, tests/) stays under
-# Theory_Calibration/; only the uploadable notebooks moved.
-NOTEBOOK_ROOT = Path(__file__).resolve().parents[2] / "DiD_BCF"
+# These earlier correction workflows are preserved under the publishable
+# historical experiment tree. The engine package itself stays under
+# Theory_Calibration/.
+NOTEBOOK_ROOT = (Path(__file__).resolve().parents[3] / "Old_Simulation_Studies"
+                 / "Revision_DiD_BCF" / "DiD_BCF")
 THEORY_NOTEBOOKS = NOTEBOOK_ROOT / "Theory_Calibration"
 COMPLETION_NOTEBOOKS = NOTEBOOK_ROOT / "Correction_Completion_Notebooks"
 
@@ -492,8 +493,9 @@ def generate(output_dir: str | Path | None = None, family: str = "all"):
     """Write the selected notebook family (or every family) to disk.
 
     Without ``output_dir`` the theory notebooks land in
-    ``Simulation_Studies_Revision/DiD_BCF/Theory_Calibration`` and the
-    completion shards in ``Simulation_Studies_Revision/DiD_BCF/Correction_Completion_Notebooks``.
+    ``Old_Simulation_Studies/Revision_DiD_BCF/DiD_BCF/Theory_Calibration`` and
+    the completion shards in
+    ``Old_Simulation_Studies/Revision_DiD_BCF/DiD_BCF/Correction_Completion_Notebooks``.
     A caller-supplied ``output_dir`` collects the selected notebooks flat in
     that directory.
     """

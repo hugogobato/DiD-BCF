@@ -1,0 +1,45 @@
+{
+  "status": "PASS",
+  "main_completed": 5100,
+  "main_cells": 48,
+  "paired_datasets": 4800,
+  "additional_null_datasets": 300,
+  "bootstrap_resamples": 5000,
+  "diagnostic_filtering": false,
+  "independent_all_ATT_arithmetic": "PASS",
+  "new_fits": 0,
+  "inputs": {
+    "raw_historical": "2bebb54db07eaf469c1295ababaa1a6bc621a7b8ee5fb01021425105a4742857",
+    "collection_status": "f53510f6f32bc54bebbdf18613abdd240310a88a0a6fd1501846e2911fb0fb8c",
+    "per_replication": "1bdaa541bd74c232a5e2160f9dbab7eac84d43c4785f2a0d90e43cd7e9df872d",
+    "diagnostics": "b1da924648ccd535a8804ec01ee67c0ad7302d6c9882b57b09520967af0748df",
+    "return_validation": "6f7248de626fb6e5c82e57ea99bf3754ca0f89677d811a8e37a461386616e7f5"
+  },
+  "scripts": {
+    "report_results.py": "cf53d98082c29f77b42ebadbfa0ca31f0c5223750adde9b13eb4ed2994b1aa13",
+    "collect_returned.py": "a239f643b1240daab4e5c4bb874f0f5c1ce5f0c284305c1f886d338dc7581ef6",
+    "plot_results.py": "7c1c911c90f841eea36ffbccfa78d2198f9c94be49f8720db7b4aca23043b810",
+    "validate_returns.py": "b74895be1b3d131d7e1c15d2dd373472adea967b9778b1718a478529c83fb388"
+  },
+  "outputs": {
+    "matched_surface_metrics.csv": "07e99c3ee8c863d1d552cc42723dd02809951e53099d91b14445a1a6d589df60",
+    "matched_att_comparison.csv": "ec922319b990e1ad4e90929a676c28dcc5b720eacc75ccf7319403aea5eba749",
+    "archive_inventory.csv": "1bfe4a7fafb9cd6f005f221f3719ad41d7be91ca27ecc204cfaedcd4e48a2226",
+    "NEXT_STEPS.md": "f94a40b28343f7b48c73620d542ae3a74029fb4047b3215a376f052f511cdbbd",
+    "main_scalar_metrics.csv": "a556e45c3db1acd8d99d9d90b7260c261418993814a78eadd79eb92b13b60f15",
+    "bridge_target_comparison.csv": "17096674ba32007d474fe6174195115e7c651be9f8162d55b396259a3cb30537",
+    "matched_scalar_metrics.csv": "798184ed41224815eaf37f7bf22bc38bb61191937eaefc33bf3558be815b4f5c",
+    "main_att_metrics.csv": "0d85fe74cbaf5804d3cb39df9f39d1a2a3768a4618d655d96b079f2e9b3df835",
+    "main_comparison.pdf": "e405b79900feccfb1a39a7eb851f95378220f0a66eeb54ab09b807e9850f71f6",
+    "bridge_att_comparison.csv": "27512bd3d02ce5d93f61276d5c2a2d9e5f64e6707f9ce80d246f3eb200ce34ea",
+    "main_comparison.png": "e9ed4a80372e6c956cae9c7d8290e6b094852f97ef7e4311697b4add3e57ac3e",
+    "bridge_pretrend_comparison.csv": "4298680c225e828408ea3139f5f30acf0fb6614343b911264b55b072f59ee9e1",
+    "metric_change_summary.csv": "a10828b34ca1c81dc01e9693a976730fc11cc04868e663602b30da429d6aa39b",
+    "returned_chain_inventory.csv": "eacea7d96cd00a9d80331369a29026774fd14007dad5452fe8c9888beea5c7c3",
+    "main_surface_metrics.csv": "271fdca3349c78d7ccfffb538e85e5bb0a124f09d40f02dae399c5b1a15a7c75",
+    "supporting_diagnostic_summary.csv": "988f95de0841220f09720281db59f68430664cf2724d8c28442d05b029fb7bc5",
+    "RESULTS_REPORT.md": "bc1cfc2aeb1d0df00cbd0202fdab54d55404945c83a7d922e19951f1e2c7ec21",
+    "additional_null_replications.csv": "0bfe93123693994b9a6db333a2c50f9f355c3a376052bfb381f044f4d1d5c2ac",
+    "paired_metric_contrasts.csv": "0e0687fe0c89af8911fc4527895941af83e780d4637ced84031540c369a0fc27"
+  }
+}

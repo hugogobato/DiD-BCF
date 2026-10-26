@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "sealed_package_unchanged": true,
+  "all_report_script_and_artifact_hashes": "PASS",
+  "all_64_original_zip_hashes_preserved": true,
+  "final_results_ignored": false,
+  "zone_identifier_sidecars": 0,
+  "all_analysis_scripts_parse": true,
+  "independent_48_ATT_cell_arithmetic": "PASS",
+  "main_fits": 5100,
+  "nonmain_anchors": 8,
+  "new_sampling_calls": 0
+}

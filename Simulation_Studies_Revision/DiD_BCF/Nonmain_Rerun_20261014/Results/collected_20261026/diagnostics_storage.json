@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "representation": "lossless gzip of scalar diagnostics CSV",
+  "uncompressed_name": "diagnostics.csv",
+  "compressed_name": "diagnostics.csv.gz",
+  "uncompressed_sha256": "0031ac38be8b80229860d93b82dd3a7c0010ec50c535b8171f149e3ab00598f6",
+  "uncompressed_bytes": 133269730,
+  "newline_count": 232240,
+  "compressed_sha256": "39402dd66c3fa4db55b08a828e82cd57c359fc4d11263e07670f4628fffdc96c",
+  "compressed_bytes": 42268584,
+  "values_or_rows_removed": false,
+  "posterior_arrays_present": false,
+  "read_with": "pandas.read_csv('diagnostics.csv.gz') or gzip.open"
+}

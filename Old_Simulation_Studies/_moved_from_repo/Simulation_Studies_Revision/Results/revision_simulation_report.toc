@@ -1,0 +1,26 @@
+\contentsline {section}{\numberline {1}Scope, result files, and coverage}{2}{section.1}%
+\contentsline {section}{\numberline {2}Mathematical simulation design}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Persistent latent covariates and the degree axis}{4}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Canonical B1 and B2 designs}{4}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Staggered D designs}{5}{subsection.2.3}%
+\contentsline {section}{\numberline {3}Estimands and estimators}{6}{section.3}%
+\contentsline {subsection}{\numberline {3.1}True estimands}{6}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}DiD-BCF specifications}{6}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Benchmark estimators}{7}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Evaluation formulas}{7}{section.4}%
+\contentsline {section}{\numberline {5}Coverage and complete-grid results}{8}{section.5}%
+\contentsline {subsection}{\numberline {5.1}B1 scalar estimands}{8}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Sharp null}{11}{subsection.5.2}%
+\contentsline {section}{\numberline {6}B2 sample-size sweeps}{12}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Scalar convergence and serial correlation}{12}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}The nonlinear degrees in B2}{14}{subsection.6.2}%
+\contentsline {section}{\numberline {7}D staggered adoption results}{17}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Cohort-time and event-time effects}{17}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Cell-level comparison and the nonlinear degrees}{20}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Goodman--Bacon decomposition}{24}{subsection.7.3}%
+\contentsline {section}{\numberline {8}Individual CATT-surface results}{24}{section.8}%
+\contentsline {section}{\numberline {9}Post-correction route audit: structured DiD-BCF and unit random effect}{29}{section.9}%
+\contentsline {subsection}{\numberline {9.1}What is newly available}{29}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Interpretation and missing route cells}{31}{subsection.9.2}%
+\contentsline {section}{\numberline {10}Overall interpretation and remaining work}{31}{section.10}%
+\contentsline {section}{\numberline {A}Files used and reproducibility}{32}{appendix.A}%

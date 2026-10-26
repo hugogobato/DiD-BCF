@@ -134,8 +134,8 @@ for a pilot. Sharding is deterministic after sorting by design, degree, N,
 and replication, with every method in one bundle on the same shard. There are
 48 generated compute notebooks per family, plus one lightweight validation
 notebook, three one-replication worst-case real-BCF pilot notebooks, and one
-controlled-mechanics notebook (101 notebooks total). They are committed under
-`Simulation_Studies_Revision/DiD_BCF/Theory_Calibration/`. Each compute
+controlled-mechanics notebook (101 notebooks total). They are preserved under
+`Old_Simulation_Studies/Revision_DiD_BCF/DiD_BCF/Theory_Calibration/`. Each compute
 notebook accepts `ETE_N_WAVES` and `ETE_WAVE_ID`; the same 48 notebooks can be
 reused for successive waves without overwriting outputs, because wave
 identifiers are included in output directories, archives, manifests, and
@@ -171,7 +171,7 @@ hashes are unchanged. The family expands to 15,200 task rows (7,600 paired
 bundles in total: about 24,000 sampler fits, three per canonical bundle, seven
 per staggered bundle, and three per pre-trend bundle). It is emitted as one
 single wave of 219 notebooks under
-`Simulation_Studies_Revision/DiD_BCF/Correction_Completion_Notebooks/`, with no
+`Old_Simulation_Studies/Revision_DiD_BCF/DiD_BCF/Correction_Completion_Notebooks/`, with no
 `ETE_N_WAVES`/`ETE_WAVE_ID` setup (`N_WAVES = 1`, `WAVE_ID = 0` hardcoded).
 Notebooks `_000` through `_053` run one original shard each (roughly 3 hours);
 notebooks `_054` through `_218` each run two original shards sequentially,

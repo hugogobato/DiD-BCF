@@ -19,7 +19,7 @@ Results/_staging/**/summaries_*.csv         wang (grf-DiD), doubleml  [unzipped 
 The committed ``Results/aggregated/`` files remain the published copy of the
 old-generation runs.  Rebuilding them requires the legacy summaries that sit on
 disk under ``Old_Simulation_Studies/_moved_from_repo/Simulation_Studies_Revision/DiD_BCF_old_generation/``
-(that folder is intentionally outside the tracked tree); without it the rebuild
+(a pre-existing local legacy folder); without it the rebuild
 simply omits the old-generation rows.
 """
 from __future__ import annotations
@@ -38,7 +38,7 @@ from did_bcf_revision.metrics import compute_metrics, surface_metrics, sqrt_n_su
 OUT = os.path.join(ROOT, "Results", "aggregated")
 # The old-generation DiD-BCF notebooks and summaries were moved out of the
 # tracked tree; they stay on disk under the repo-level legacy folder
-# (Old_Simulation_Studies/, gitignored).
+# (Old_Simulation_Studies/; retained legacy paths are documented).
 LEGACY_OLD_GENERATION = os.path.join(
     os.path.dirname(ROOT), "Old_Simulation_Studies", "_moved_from_repo",
     "Simulation_Studies_Revision", "DiD_BCF_old_generation")

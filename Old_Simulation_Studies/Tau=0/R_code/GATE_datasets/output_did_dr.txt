@@ -1,0 +1,84 @@
+linearity_degree=1 
+Number of iterations (out of 100) with at least two p-values above 0.05 (i.e., we assume that the Parallel Trend Assumption holds): 0
+Mean RMSE for 100 simulations: 0.846869
+Standard Deviation RMSE for 100 simulations: 0.197909
+Mean MAE for 100 simulations: 0.690108
+Standard Deviation MAE for 100 simulations: 0.169836
+Mean MAPE for 100 simulations: NaN
+Standard Deviation MAPE for 100 simulations: NA
+Mean RMSE for 100 simulations for group 1: 0.826951
+Standard Deviation RMSE for 100 simulations for group 1: 0.286968
+Mean MAE for 100 simulations for group 1: 0.701287
+Standard Deviation MAE for 100 simulations for group 1: 0.244058
+Mean MAPE for 100 simulations for group 1: NaN
+Standard Deviation MAPE for 100 simulations for group 1: NA
+Mean RMSE for 100 simulations for group 2: 0.841552
+Standard Deviation RMSE for 100 simulations for group 2: 0.304065
+Mean MAE for 100 simulations for group 2: 0.703875
+Standard Deviation MAE for 100 simulations for group 2: 0.263921
+Mean MAPE for 100 simulations for group 2: NaN
+Standard Deviation MAPE for 100 simulations for group 2: NA
+Mean RMSE for 100 simulations for group 3: 0.791256
+Standard Deviation RMSE for 100 simulations for group 3: 0.278321
+Mean MAE for 100 simulations for group 3: 0.665163
+Standard Deviation MAE for 100 simulations for group 3: 0.234726
+Mean MAPE for 100 simulations for group 3: NaN
+Standard Deviation MAPE for 100 simulations for group 3: NA
+Metrics data saved to sheet 'Metrics' in did_dr_GATE_and_PValues_linearity_degree=1.xlsx
+P-Values data saved to sheet 'P_Values' in did_dr_GATE_and_PValues_linearity_degree=1.xlsx
+linearity_degree=2 
+Number of iterations (out of 100) with at least two p-values above 0.05 (i.e., we assume that the Parallel Trend Assumption holds): 0
+Mean RMSE for 100 simulations: 0.932561
+Standard Deviation RMSE for 100 simulations: 0.225488
+Mean MAE for 100 simulations: 0.762303
+Standard Deviation MAE for 100 simulations: 0.191775
+Mean MAPE for 100 simulations: NaN
+Standard Deviation MAPE for 100 simulations: NA
+Mean RMSE for 100 simulations for group 1: 0.925925
+Standard Deviation RMSE for 100 simulations for group 1: 0.340865
+Mean MAE for 100 simulations for group 1: 0.784634
+Standard Deviation MAE for 100 simulations for group 1: 0.300836
+Mean MAPE for 100 simulations for group 1: NaN
+Standard Deviation MAPE for 100 simulations for group 1: NA
+Mean RMSE for 100 simulations for group 2: 0.920113
+Standard Deviation RMSE for 100 simulations for group 2: 0.352713
+Mean MAE for 100 simulations for group 2: 0.782260
+Standard Deviation MAE for 100 simulations for group 2: 0.304808
+Mean MAPE for 100 simulations for group 2: NaN
+Standard Deviation MAPE for 100 simulations for group 2: NA
+Mean RMSE for 100 simulations for group 3: 0.852985
+Standard Deviation RMSE for 100 simulations for group 3: 0.302009
+Mean MAE for 100 simulations for group 3: 0.720014
+Standard Deviation MAE for 100 simulations for group 3: 0.260861
+Mean MAPE for 100 simulations for group 3: NaN
+Standard Deviation MAPE for 100 simulations for group 3: NA
+Metrics data saved to sheet 'Metrics' in did_dr_GATE_and_PValues_linearity_degree=2.xlsx
+P-Values data saved to sheet 'P_Values' in did_dr_GATE_and_PValues_linearity_degree=2.xlsx
+linearity_degree=3 
+Number of iterations (out of 100) with at least two p-values above 0.05 (i.e., we assume that the Parallel Trend Assumption holds): 0
+Mean RMSE for 100 simulations: 0.660368
+Standard Deviation RMSE for 100 simulations: 0.191675
+Mean MAE for 100 simulations: 0.549316
+Standard Deviation MAE for 100 simulations: 0.165853
+Mean MAPE for 100 simulations: NaN
+Standard Deviation MAPE for 100 simulations: NA
+Mean RMSE for 100 simulations for group 1: 0.620465
+Standard Deviation RMSE for 100 simulations for group 1: 0.271307
+Mean MAE for 100 simulations for group 1: 0.533575
+Standard Deviation MAE for 100 simulations for group 1: 0.253574
+Mean MAPE for 100 simulations for group 1: NaN
+Standard Deviation MAPE for 100 simulations for group 1: NA
+Mean RMSE for 100 simulations for group 2: 0.638666
+Standard Deviation RMSE for 100 simulations for group 2: 0.286605
+Mean MAE for 100 simulations for group 2: 0.560322
+Standard Deviation MAE for 100 simulations for group 2: 0.257904
+Mean MAPE for 100 simulations for group 2: NaN
+Standard Deviation MAPE for 100 simulations for group 2: NA
+Mean RMSE for 100 simulations for group 3: 0.640307
+Standard Deviation RMSE for 100 simulations for group 3: 0.246833
+Mean MAE for 100 simulations for group 3: 0.554050
+Standard Deviation MAE for 100 simulations for group 3: 0.217843
+Mean MAPE for 100 simulations for group 3: NaN
+Standard Deviation MAPE for 100 simulations for group 3: NA
+Metrics data saved to sheet 'Metrics' in did_dr_GATE_and_PValues_linearity_degree=3.xlsx
+P-Values data saved to sheet 'P_Values' in did_dr_GATE_and_PValues_linearity_degree=3.xlsx

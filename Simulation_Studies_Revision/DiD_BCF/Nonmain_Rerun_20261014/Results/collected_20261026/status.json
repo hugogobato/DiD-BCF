@@ -1,0 +1,26 @@
+{
+  "manifest_hash": "d4c6fe4d5369638885b5d3a9a4f5077e5776990be6aa73d2e000188eb20bddca",
+  "phase_expected": {
+    "diagnostic": 4000,
+    "pt_impact": 4000,
+    "sensitivity": 1200,
+    "application": 9,
+    "application_sensitivity": 18
+  },
+  "phase_completed": {
+    "diagnostic": 4000,
+    "pt_impact": 4000,
+    "sensitivity": 1200,
+    "application": 9,
+    "application_sensitivity": 18
+  },
+  "completed_total": 9227,
+  "expected_total": 9227,
+  "missing_total": 0,
+  "missing_ids": [],
+  "missing_job_ids": [],
+  "duplicates_identical": [],
+  "diagnostic_filtering": false,
+  "application_truth_or_error_metrics_created": false,
+  "posterior_arrays_needed_for_collection": false
+}

@@ -1,0 +1,169 @@
+{
+  "archive_bytes": 138021509,
+  "audit": "independent_returned_colab_archive_audit",
+  "checks": {
+    "anomalies": [],
+    "anomaly_count": 0,
+    "disk_source_hash_pins_verified": {
+      "chains_checked": 70,
+      "local": 50,
+      "reused": 20
+    },
+    "passed": true,
+    "source_hash_pin_mismatches": []
+  },
+  "counts": {
+    "colab_assigned": 9197,
+    "colab_assignment_files": 132,
+    "colab_completed": 9197,
+    "colab_missing": 0,
+    "deferred_statuses": 0,
+    "distinct_colab_native_identities": 132,
+    "distinct_extension_hashes": 132,
+    "distinct_setup_commits": 1,
+    "distinct_site_file_hashes": 132,
+    "duplicate_member_archives": 0,
+    "failed_statuses": 0,
+    "local_assigned": 22,
+    "local_completed": 22,
+    "manifest_jobs": 9227,
+    "overall_completed": 9227,
+    "overall_missing": 0,
+    "package_files_checked": 186,
+    "phase_expected": {
+      "application": 9,
+      "application_sensitivity": 18,
+      "diagnostic": 4000,
+      "pt_impact": 4000,
+      "sensitivity": 1200
+    },
+    "reused_completed": 8,
+    "reused_expected": 8,
+    "source_hashes_checked": 54,
+    "unique_manifest_ids": 9227
+  },
+  "created_utc": "2026-10-26T18:11:30.621089+00:00",
+  "notes": [
+    "Every ZIP was read with ZipFile.testzip(); archive members were checked for duplicate names and payload SHA-256.",
+    "Environment-specific native binary identities were required to be present and to match each archive\u2019s chain provenance; equality across separate builds was not required.",
+    "All assigned IDs reconcile as 9,197 Colab fits, 22 local fits, and 8 manifest-registered reuses.",
+    "For local and reused outputs, source hashes were verified on each chain record, where this provenance schema stores the pin (the top-level provenance object has no source_hashes_sha256 field).",
+    "The report stores aggregate wave results instead of repeating all 132 archive and assignment rows; each archive was included in the checks summarized here."
+  ],
+  "scope": {
+    "archive_count": 132,
+    "archive_directory": "/home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/Colab",
+    "crc_passed": 132,
+    "manifest_hash": "d4c6fe4d5369638885b5d3a9a4f5077e5776990be6aa73d2e000188eb20bddca",
+    "package_hash": "99c37cf5731cf9d9a10096aefa3df1932c94902ac705f803c350cd2fee5f4487"
+  },
+  "timing": {
+    "colab_fit_elapsed_seconds": {
+      "max": 2081.1276357029997,
+      "min": 74.74162489400078,
+      "n": 9197,
+      "p10": 356.2230902940002,
+      "p25": 435.3745648569984,
+      "p50": 532.5487442989997,
+      "p75": 560.682228658,
+      "p90": 714.2282201708003,
+      "p95": 731.4076691607999
+    },
+    "colab_fit_elapsed_seconds_by_phase": {
+      "diagnostic": {
+        "max": 802.083685431,
+        "min": 340.08620557499944,
+        "n": 3999,
+        "p10": 402.46887591520004,
+        "p25": 544.1626060865001,
+        "p50": 558.8350404659996,
+        "p75": 585.9534339224992,
+        "p90": 716.2105057512011,
+        "p95": 722.1240859450002
+      },
+      "pt_impact": {
+        "max": 584.1040223579985,
+        "min": 243.08941688099912,
+        "n": 4000,
+        "p10": 302.26546909569913,
+        "p25": 431.72949908275086,
+        "p50": 442.3717195344998,
+        "p75": 460.09082240324915,
+        "p90": 545.3983041763025,
+        "p95": 548.5756348298015
+      },
+      "sensitivity": {
+        "max": 2081.1276357029997,
+        "min": 74.74162489400078,
+        "n": 1198,
+        "p10": 134.30430176350092,
+        "p25": 153.43348918750053,
+        "p50": 441.4030102549996,
+        "p75": 1514.1870419982497,
+        "p90": 1604.3550475512,
+        "p95": 1956.6230237212994
+      }
+    },
+    "notebook_elapsed_hours": {
+      "max": 6.686197503076659,
+      "min": 3.282999798787965,
+      "n": 132,
+      "p10": 3.623619300875399,
+      "p25": 5.0783888997468685,
+      "p50": 5.208291959166527,
+      "p75": 5.380787070145209,
+      "p90": 6.532313740677304,
+      "p95": 6.562961981193887
+    }
+  },
+  "wave_summaries": {
+    "01": {
+      "archives": 48,
+      "completed_fits": 3358,
+      "deferred": 0,
+      "distinct_native_build_identities": 1,
+      "expected_fits": 3358,
+      "failed": 0,
+      "missing_fits": 0,
+      "notebook_elapsed_hours": {
+        "max": 6.631651256548034,
+        "min": 3.282999798787965,
+        "n": 48,
+        "p50": 5.20361409349574,
+        "p90": 6.506998805324236
+      }
+    },
+    "02": {
+      "archives": 48,
+      "completed_fits": 3333,
+      "deferred": 0,
+      "distinct_native_build_identities": 1,
+      "expected_fits": 3333,
+      "failed": 0,
+      "missing_fits": 0,
+      "notebook_elapsed_hours": {
+        "max": 6.686197503076659,
+        "min": 3.3442465943098068,
+        "n": 48,
+        "p50": 5.2520645377371045,
+        "p90": 6.575013418402937
+      }
+    },
+    "03": {
+      "archives": 36,
+      "completed_fits": 2506,
+      "deferred": 0,
+      "distinct_native_build_identities": 1,
+      "expected_fits": 2506,
+      "failed": 0,
+      "missing_fits": 0,
+      "notebook_elapsed_hours": {
+        "max": 6.520324787828657,
+        "min": 3.289943697253863,
+        "n": 36,
+        "p50": 5.184496277537611,
+        "p90": 5.652214363912741
+      }
+    }
+  }
+}

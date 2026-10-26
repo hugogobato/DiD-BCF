@@ -1,0 +1,120 @@
+linearity_degree=1 
+Overall Metrics:
+  ATE_rmse: 0.0954
+  ATE_mae: 0.0725
+  ATE_mape: NA
+  ATE_std_rmse: 0.0623
+  ATE_std_mae: 0.0623
+  ATE_std_mape: NA
+
+Per Time Period Metrics:
+  Time Period 5:
+    ATE_rmse: 0.0954
+    ATE_mae: 0.0725
+    ATE_mape: NA
+    ATE_std_mse: 0.0142
+    ATE_std_mae: 0.0623
+    ATE_std_mape: NA
+  Time Period 6:
+    ATE_rmse: 0.0954
+    ATE_mae: 0.0725
+    ATE_mape: NA
+    ATE_std_mse: 0.0142
+    ATE_std_mae: 0.0623
+    ATE_std_mape: NA
+  Time Period 7:
+    ATE_rmse: 0.0954
+    ATE_mae: 0.0725
+    ATE_mape: NA
+    ATE_std_mse: 0.0142
+    ATE_std_mae: 0.0623
+    ATE_std_mape: NA
+  Time Period 8:
+    ATE_rmse: 0.0954
+    ATE_mae: 0.0725
+    ATE_mape: NA
+    ATE_std_mse: 0.0142
+    ATE_std_mae: 0.0623
+    ATE_std_mape: NA
+[1] "\n"
+[1] "\n"
+linearity_degree=2 
+Overall Metrics:
+  ATE_rmse: 0.4657
+  ATE_mae: 0.3731
+  ATE_mape: NA
+  ATE_std_rmse: 0.2800
+  ATE_std_mae: 0.2800
+  ATE_std_mape: NA
+
+Per Time Period Metrics:
+  Time Period 5:
+    ATE_rmse: 0.4657
+    ATE_mae: 0.3731
+    ATE_mape: NA
+    ATE_std_mse: 0.2842
+    ATE_std_mae: 0.2800
+    ATE_std_mape: NA
+  Time Period 6:
+    ATE_rmse: 0.4657
+    ATE_mae: 0.3731
+    ATE_mape: NA
+    ATE_std_mse: 0.2842
+    ATE_std_mae: 0.2800
+    ATE_std_mape: NA
+  Time Period 7:
+    ATE_rmse: 0.4657
+    ATE_mae: 0.3731
+    ATE_mape: NA
+    ATE_std_mse: 0.2842
+    ATE_std_mae: 0.2800
+    ATE_std_mape: NA
+  Time Period 8:
+    ATE_rmse: 0.4657
+    ATE_mae: 0.3731
+    ATE_mape: NA
+    ATE_std_mse: 0.2842
+    ATE_std_mae: 0.2800
+    ATE_std_mape: NA
+[1] "\n"
+[1] "\n"
+linearity_degree=3 
+Overall Metrics:
+  ATE_rmse: 0.4648
+  ATE_mae: 0.3728
+  ATE_mape: NA
+  ATE_std_rmse: 0.2790
+  ATE_std_mae: 0.2790
+  ATE_std_mape: NA
+
+Per Time Period Metrics:
+  Time Period 5:
+    ATE_rmse: 0.4648
+    ATE_mae: 0.3728
+    ATE_mape: NA
+    ATE_std_mse: 0.2801
+    ATE_std_mae: 0.2790
+    ATE_std_mape: NA
+  Time Period 6:
+    ATE_rmse: 0.4648
+    ATE_mae: 0.3728
+    ATE_mape: NA
+    ATE_std_mse: 0.2801
+    ATE_std_mae: 0.2790
+    ATE_std_mape: NA
+  Time Period 7:
+    ATE_rmse: 0.4648
+    ATE_mae: 0.3728
+    ATE_mape: NA
+    ATE_std_mse: 0.2801
+    ATE_std_mae: 0.2790
+    ATE_std_mape: NA
+  Time Period 8:
+    ATE_rmse: 0.4648
+    ATE_mae: 0.3728
+    ATE_mape: NA
+    ATE_std_mse: 0.2801
+    ATE_std_mae: 0.2790
+    ATE_std_mape: NA
+[1] "\n"
+[1] "\n"

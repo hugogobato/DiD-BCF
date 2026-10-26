@@ -1,0 +1,102 @@
+linearity_degree=1 
+Number of iterations (out of 100) with at least two p-values above 0.05 (i.e., we assume that the Parallel Trend Assumption holds): 93
+Mean RMSE for 100 simulations: 1.076199
+Standard Deviation RMSE for 100 simulations: 0.142406
+Mean MAE for 100 simulations: 0.898924
+Standard Deviation MAE for 100 simulations: 0.109879
+Mean MAPE for 100 simulations: 0.273950
+Standard Deviation MAPE for 100 simulations: 0.045808
+Mean RMSE for 100 simulations for post-treatment period 1: 1.054358
+Standard Deviation RMSE for 100 simulations for post-treatment period 1: 0.236310
+Mean MAE for 100 simulations for post-treatment period 1: 0.897734
+Standard Deviation MAE for 100 simulations for post-treatment period 1: 0.197855
+Mean MAPE for 100 simulations for post-treatment period 1: 0.275126
+Standard Deviation MAPE for 100 simulations for post-treatment period 1: 0.079833
+Mean RMSE for 100 simulations for post-treatment period 2: 1.067911
+Standard Deviation RMSE for 100 simulations for post-treatment period 2: 0.260323
+Mean MAE for 100 simulations for post-treatment period 2: 0.905935
+Standard Deviation MAE for 100 simulations for post-treatment period 2: 0.221366
+Mean MAPE for 100 simulations for post-treatment period 2: 0.276416
+Standard Deviation MAPE for 100 simulations for post-treatment period 2: 0.086119
+Mean RMSE for 100 simulations for post-treatment period 3: 1.069774
+Standard Deviation RMSE for 100 simulations for post-treatment period 3: 0.219679
+Mean MAE for 100 simulations for post-treatment period 3: 0.903032
+Standard Deviation MAE for 100 simulations for post-treatment period 3: 0.175466
+Mean MAPE for 100 simulations for post-treatment period 3: 0.272615
+Standard Deviation MAPE for 100 simulations for post-treatment period 3: 0.070184
+Mean RMSE for 100 simulations for post-treatment period 4: 1.046477
+Standard Deviation RMSE for 100 simulations for post-treatment period 4: 0.227712
+Mean MAE for 100 simulations for post-treatment period 4: 0.888993
+Standard Deviation MAE for 100 simulations for post-treatment period 4: 0.193794
+Mean MAPE for 100 simulations for post-treatment period 4: 0.271644
+Standard Deviation MAPE for 100 simulations for post-treatment period 4: 0.079432
+Metrics data saved to sheet 'Metrics' in did_dr_CATE_PS_and_PValues_linearity_degree=1.xlsx
+P-Values data saved to sheet 'P_Values' in did_dr_CATE_PS_and_PValues_linearity_degree=1.xlsx
+linearity_degree=2 
+Number of iterations (out of 100) with at least two p-values above 0.05 (i.e., we assume that the Parallel Trend Assumption holds): 184
+Mean RMSE for 100 simulations: 1.059393
+Standard Deviation RMSE for 100 simulations: 0.131522
+Mean MAE for 100 simulations: 0.885572
+Standard Deviation MAE for 100 simulations: 0.101507
+Mean MAPE for 100 simulations: 0.269264
+Standard Deviation MAPE for 100 simulations: 0.044189
+Mean RMSE for 100 simulations for post-treatment period 1: 1.041968
+Standard Deviation RMSE for 100 simulations for post-treatment period 1: 0.219799
+Mean MAE for 100 simulations for post-treatment period 1: 0.885923
+Standard Deviation MAE for 100 simulations for post-treatment period 1: 0.181564
+Mean MAPE for 100 simulations for post-treatment period 1: 0.271426
+Standard Deviation MAPE for 100 simulations for post-treatment period 1: 0.076188
+Mean RMSE for 100 simulations for post-treatment period 2: 1.047345
+Standard Deviation RMSE for 100 simulations for post-treatment period 2: 0.235891
+Mean MAE for 100 simulations for post-treatment period 2: 0.886477
+Standard Deviation MAE for 100 simulations for post-treatment period 2: 0.197422
+Mean MAPE for 100 simulations for post-treatment period 2: 0.267522
+Standard Deviation MAPE for 100 simulations for post-treatment period 2: 0.075848
+Mean RMSE for 100 simulations for post-treatment period 3: 1.046361
+Standard Deviation RMSE for 100 simulations for post-treatment period 3: 0.198743
+Mean MAE for 100 simulations for post-treatment period 3: 0.885306
+Standard Deviation MAE for 100 simulations for post-treatment period 3: 0.157667
+Mean MAPE for 100 simulations for post-treatment period 3: 0.266707
+Standard Deviation MAPE for 100 simulations for post-treatment period 3: 0.069020
+Mean RMSE for 100 simulations for post-treatment period 4: 1.048784
+Standard Deviation RMSE for 100 simulations for post-treatment period 4: 0.196643
+Mean MAE for 100 simulations for post-treatment period 4: 0.884581
+Standard Deviation MAE for 100 simulations for post-treatment period 4: 0.160392
+Mean MAPE for 100 simulations for post-treatment period 4: 0.271402
+Standard Deviation MAPE for 100 simulations for post-treatment period 4: 0.070439
+Metrics data saved to sheet 'Metrics' in did_dr_CATE_PS_and_PValues_linearity_degree=2.xlsx
+P-Values data saved to sheet 'P_Values' in did_dr_CATE_PS_and_PValues_linearity_degree=2.xlsx
+linearity_degree=3
+Number of iterations (out of 100) with at least two p-values above 0.05 (i.e., we assume that the Parallel Trend Assumption holds): 278
+Mean RMSE for 100 simulations: 1.110502
+Standard Deviation RMSE for 100 simulations: 0.192204
+Mean MAE for 100 simulations: 0.918758
+Standard Deviation MAE for 100 simulations: 0.142627
+Mean MAPE for 100 simulations: 0.169255
+Standard Deviation MAPE for 100 simulations: 0.029080
+Mean RMSE for 100 simulations for post-treatment period 1: 1.084219
+Standard Deviation RMSE for 100 simulations for post-treatment period 1: 0.250287
+Mean MAE for 100 simulations for post-treatment period 1: 0.910833
+Standard Deviation MAE for 100 simulations for post-treatment period 1: 0.210365
+Mean MAPE for 100 simulations for post-treatment period 1: 0.165921
+Standard Deviation MAPE for 100 simulations for post-treatment period 1: 0.041243
+Mean RMSE for 100 simulations for post-treatment period 2: 1.098557
+Standard Deviation RMSE for 100 simulations for post-treatment period 2: 0.292495
+Mean MAE for 100 simulations for post-treatment period 2: 0.934987
+Standard Deviation MAE for 100 simulations for post-treatment period 2: 0.254181
+Mean MAPE for 100 simulations for post-treatment period 2: 0.173413
+Standard Deviation MAPE for 100 simulations for post-treatment period 2: 0.053305
+Mean RMSE for 100 simulations for post-treatment period 3: 1.073853
+Standard Deviation RMSE for 100 simulations for post-treatment period 3: 0.248759
+Mean MAE for 100 simulations for post-treatment period 3: 0.907050
+Standard Deviation MAE for 100 simulations for post-treatment period 3: 0.212898
+Mean MAPE for 100 simulations for post-treatment period 3: 0.168343
+Standard Deviation MAPE for 100 simulations for post-treatment period 3: 0.042591
+Mean RMSE for 100 simulations for post-treatment period 4: 1.107008
+Standard Deviation RMSE for 100 simulations for post-treatment period 4: 0.333616
+Mean MAE for 100 simulations for post-treatment period 4: 0.922161
+Standard Deviation MAE for 100 simulations for post-treatment period 4: 0.317075
+Mean MAPE for 100 simulations for post-treatment period 4: 0.169342
+Standard Deviation MAPE for 100 simulations for post-treatment period 4: 0.062083
+Metrics data saved to sheet 'Metrics' in did_dr_CATE_PS_and_PValues_linearity_degree=4.xlsx
+P-Values data saved to sheet 'P_Values' in did_dr_CATE_PS_and_PValues_linearity_degree=4.xlsx

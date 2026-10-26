@@ -1,0 +1,8 @@
+{'N': 200, 'rep': 0, 'true_ATT': 3.84856251356771, 'tauhat_post': 3.6546412963302224, 'tauhat_pre_treated': 3.668666243280477, 'share_recovered': 0.9496120391564803}
+{'N': 200, 'rep': 1, 'true_ATT': 3.6773150870796933, 'tauhat_post': 1.8507274652347585, 'tauhat_pre_treated': 1.872358608344849, 'share_recovered': 0.503282264752705}
+{'N': 800, 'rep': 0, 'true_ATT': 3.780262731435891, 'tauhat_post': 1.7828988363233103, 'tauhat_pre_treated': 1.7292278512953827, 'share_recovered': 0.4716335776074738}
+{'N': 800, 'rep': 1, 'true_ATT': 3.7217471784042906, 'tauhat_post': 1.3445703930671788, 'tauhat_pre_treated': 1.374054213229909, 'share_recovered': 0.3612739739198693}
+{'N': 1600, 'rep': 0, 'true_ATT': 3.7610396037950338, 'tauhat_post': 1.8381407587758485, 'tauhat_pre_treated': 1.801325393802601, 'share_recovered': 0.48873209336086054}
+{'N': 1600, 'rep': 1, 'true_ATT': 3.779757950500175, 'tauhat_post': 2.083770749422304, 'tauhat_pre_treated': 2.112812747668834, 'share_recovered': 0.5512974049427051}
+N': 1600, 'rep': 0, 'true_ATT': 3.7610396037950338, 'tauhat_post': 1.8381407587758485, 'tauhat_pre_treated': 1.801325393802601, 'share_recovered': 0.48873209336086054}
+{'N': 1600, 'rep': 1, 'true_ATT': 3.779757950500175, 'tauhat_post': 2.083770749422304, 'tauhat_pre_treated': 2.112812747668834, 'share_recovered': 0.5512974049427051}

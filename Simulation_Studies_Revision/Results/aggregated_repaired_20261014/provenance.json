@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "main_fits": 5100,
+  "main_cells": 48,
+  "repaired_policy": "GFR50, burn-in0, retained500, thinning5, three chains, IG(2,1)",
+  "historical_aggregated_unchanged": {
+    "metrics_all.csv": "22e59773b2efec81a73cdff8b531f064cea2aec89faf36a43b8413e062ad8445",
+    "surface_all.csv": "78606adc899fd77981b03e1be0434c2a5050a6c3580e8d7ac938b117f129684d",
+    "sqrtn_all.csv": "e67ec659dd940cbb4c3a501e808f87686a53e32a3f026157aefdb1e2e0570cf3",
+    "coverage_grid.csv": "9efc6d65869b4e1c592e06e535fdbc13fb0324cd5dc6bfd4d2259e33c85f916a",
+    "all_summaries.csv.gz": "2bebb54db07eaf469c1295ababaa1a6bc621a7b8ee5fb01021425105a4742857"
+  },
+  "source_manifest_hash": "b93afa87d50e9b20492d40a981d15defdebe0d4562a52289be01505b01b47ac5",
+  "source_hashes": {
+    "status.json": "f53510f6f32bc54bebbdf18613abdd240310a88a0a6fd1501846e2911fb0fb8c",
+    "per_replication.csv": "1bdaa541bd74c232a5e2160f9dbab7eac84d43c4785f2a0d90e43cd7e9df872d",
+    "scalar_metrics.csv": "c29a1bcb28e6364f0b5dd38eac408befd2931d5e340075ad3ec2b0ed12838901",
+    "surface_metrics.csv": "2449df2b328b23399fe3ddc70874d369161e5e792e0f8dd745f602a13897a3b6"
+  },
+  "outputs": {
+    "surface_all.csv": "663d7330dd3cfaf9889501bf28b0f7770bc1d1c3e6477b9562ff6780f78844f3",
+    "sqrtn_all.csv": "5a117abee7b80352263d436454e68a887cdb96daa1313d8f2414c375cae83c51",
+    "main_scalar_metrics.csv": "abb3277aa9be15b23bfe3f5e2e001055c70b88cf6515235081248baa7c835796",
+    "metrics_all.csv": "d9e1fb3b3c36525dd0f11962ee0c3f0f848a6267d9120845e395365559a5fcf7",
+    "coverage_grid.csv": "27ea039044a6b9ac2ec1a161070e50abe02be1502a94c3ebb581ae3a8af46402",
+    "main_per_replication.csv": "4e8732a9707191c1d1f494765bf93d92a101e5b6ee1200c95d28c4fa48fea7fb",
+    "main_surface_metrics.csv": "5864d929e5d9d3591e4373c76fc3122fa743df15d5f1e0402cc7d09e9e3d84eb"
+  },
+  "historical_nonmain_raw_label": "plain_historical",
+  "diagnostic_filtering": false,
+  "new_fits": 0
+}

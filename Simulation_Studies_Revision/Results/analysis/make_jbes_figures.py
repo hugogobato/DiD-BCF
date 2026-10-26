@@ -20,6 +20,8 @@ import os
 import shutil
 import sys
 
+os.environ.setdefault("MPLCONFIGDIR", "/tmp/didbcf-paper-mpl")
+
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -30,7 +32,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 RES = os.path.dirname(HERE)
 ROOT = os.path.dirname(RES)
-AGG = os.path.join(RES, "aggregated")
+AGG = os.path.join(RES, "aggregated_repaired_20261014")
 FIG = os.path.join(RES, "figures")
 JBES = os.path.join(ROOT, "..", "..", "JBES_Submission")
 SIMFIG = os.path.join(JBES, "sim_figures")
@@ -187,14 +189,24 @@ EARLIER_STYLE = {"color": COLOR["corrected"], "marker": "s",
 
 
 def _register_styles():
-    ma.METHOD_ORDER = ["plain", "corrected", "corrected_earlier", "twfe",
+    # Runtime labels apply only to these repaired-main publication figures.
+    for labels in (ma.LABEL, ma.PLAINLABEL, ma.TEXLABEL):
+        labels["plain"] = "DiD-BCF (repaired)"
+        labels["plain_historical"] = "DiD-BCF (historical)"
+        labels["corrected"] = "Ref.-fold DiD (historical)"
+    ma.COLOR["plain_historical"] = "#8a8a8a"
+    ma.MARKER["plain_historical"] = "o"
+    ma.DASH["plain_historical"] = ":"
+    for mapping in (ma.LABEL, ma.PLAINLABEL, ma.TEXLABEL):
+        mapping["corrected_earlier"] = "Earlier correction (historical)"
+    ma.METHOD_ORDER = ["plain", "plain_historical", "corrected", "corrected_earlier", "twfe",
                        "did_dr", "did2s", "doubleml", "synthdid", "wang"]
     ma.COLOR["corrected_earlier"] = COLOR["corrected"]
     ma.MARKER["corrected_earlier"] = "s"
     ma.DASH["corrected_earlier"] = ":"
-    ma.LABEL["corrected_earlier"] = "DiD-BCF (corrected, earlier)"
-    ma.PLAINLABEL["corrected_earlier"] = "DiD-BCF (corrected, earlier)"
-    ma.TEXLABEL["corrected_earlier"] = "DiD-BCF (corrected, earlier)"
+    ma.LABEL["corrected_earlier"] = "Earlier correction (historical)"
+    ma.PLAINLABEL["corrected_earlier"] = "Earlier correction (historical)"
+    ma.TEXLABEL["corrected_earlier"] = "Earlier correction (historical)"
 
 
 PT_ORDER = ["PT_hold", "PT_conditional", "PT_violation_g05", "PT_violation_g10",
@@ -310,7 +322,7 @@ REGENERATED = ["fig_sweep.pdf", "fig_sqrtn.pdf", "fig_calibration.pdf",
                "fig_pretrend.pdf", "fig_pretrend_d3.pdf"]
 
 
-def main():
+def main(include_historical=False):
     os.makedirs(FIG, exist_ok=True)
     _register_styles()
     met = _combined_met()
@@ -325,9 +337,12 @@ def main():
     ma.fig_es_methods()
     ma.fig_es_bias()
     ms.make_figure(met, _combined_surf(), os.path.join(FIG, "fig_smalln.pdf"))
-    fig_pretrend(1, os.path.join(FIG, "fig_pretrend.pdf"))
-    fig_pretrend(3, os.path.join(FIG, "fig_pretrend_d3.pdf"))
+    if include_historical:
+        fig_pretrend(1, os.path.join(FIG, "fig_pretrend.pdf"))
+        fig_pretrend(3, os.path.join(FIG, "fig_pretrend_d3.pdf"))
     for name in REGENERATED:
+        if name.startswith("fig_pretrend") and not include_historical:
+            continue
         shutil.copy(os.path.join(FIG, name), os.path.join(SIMFIG, name))
         print("  -> sim_figures/" + name)
     shutil.copy(os.path.join(FIG, "fig_smalln.pdf"),
@@ -336,4 +351,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--include-historical", action="store_true")
+    main(parser.parse_args().include_historical)

@@ -1,0 +1,123 @@
+linearity_degree=1 
+Number of iterations (out of 100) with at least two p-values above 0.05 (i.e., we assume that the Parallel Trend Assumption holds): 94
+Overall Metrics:
+  ATE_rmse: 0.6598
+  ATE_mae: 0.5227
+  ATE_mape: NA
+  ATE_std_rmse: 0.2233
+  ATE_std_mae: 0.1935
+  ATE_std_mape: NA
+
+Per Time Period Metrics:
+  Time Period 5:
+    ATE_rmse: 0.6362
+    ATE_mae: 0.5180
+    ATE_mape: NA
+    ATE_std_mse: 0.4940
+    ATE_std_mae: 0.3712
+    ATE_std_mape: NA
+  Time Period 6:
+    ATE_rmse: 0.6260
+    ATE_mae: 0.4845
+    ATE_mape: NA
+    ATE_std_mse: 0.6030
+    ATE_std_mae: 0.3983
+    ATE_std_mape: NA
+  Time Period 7:
+    ATE_rmse: 0.6152
+    ATE_mae: 0.4837
+    ATE_mape: NA
+    ATE_std_mse: 0.6250
+    ATE_std_mae: 0.3819
+    ATE_std_mape: NA
+  Time Period 8:
+    ATE_rmse: 0.7525
+    ATE_mae: 0.6046
+    ATE_mape: NA
+    ATE_std_mse: 0.7433
+    ATE_std_mae: 0.4503
+    ATE_std_mape: NA
+[1] "\n"
+[1] "\n"
+linearity_degree=2 
+Number of iterations (out of 100) with at least two p-values above 0.05 (i.e., we assume that the Parallel Trend Assumption holds): 98
+Overall Metrics:
+  ATE_rmse: 1.4174
+  ATE_mae: 1.1308
+  ATE_mape: NA
+  ATE_std_rmse: 0.5224
+  ATE_std_mae: 0.4940
+  ATE_std_mape: NA
+
+Per Time Period Metrics:
+  Time Period 5:
+    ATE_rmse: 1.4219
+    ATE_mae: 1.1373
+    ATE_mape: NA
+    ATE_std_mse: 2.7461
+    ATE_std_mae: 0.8578
+    ATE_std_mape: NA
+  Time Period 6:
+    ATE_rmse: 1.2104
+    ATE_mae: 0.9793
+    ATE_mape: NA
+    ATE_std_mse: 2.3483
+    ATE_std_mae: 0.7150
+    ATE_std_mape: NA
+  Time Period 7:
+    ATE_rmse: 1.3385
+    ATE_mae: 1.0793
+    ATE_mape: NA
+    ATE_std_mse: 2.5788
+    ATE_std_mae: 0.7957
+    ATE_std_mape: NA
+  Time Period 8:
+    ATE_rmse: 1.6606
+    ATE_mae: 1.3275
+    ATE_mape: NA
+    ATE_std_mse: 3.4664
+    ATE_std_mae: 1.0027
+    ATE_std_mape: NA
+[1] "\n"
+[1] "\n"
+linearity_degree=3 
+Number of iterations (out of 100) with at least two p-values above 0.05 (i.e., we assume that the Parallel Trend Assumption holds): 97
+Overall Metrics:
+  ATE_rmse: 1.4787
+  ATE_mae: 1.1585
+  ATE_mape: NA
+  ATE_std_rmse: 0.5510
+  ATE_std_mae: 0.4497
+  ATE_std_mape: NA
+
+Per Time Period Metrics:
+  Time Period 5:
+    ATE_rmse: 1.5102
+    ATE_mae: 1.1698
+    ATE_mape: NA
+    ATE_std_mse: 3.9036
+    ATE_std_mae: 0.9599
+    ATE_std_mape: NA
+  Time Period 6:
+    ATE_rmse: 1.3109
+    ATE_mae: 1.0382
+    ATE_mape: NA
+    ATE_std_mse: 2.8213
+    ATE_std_mae: 0.8044
+    ATE_std_mape: NA
+  Time Period 7:
+    ATE_rmse: 1.3787
+    ATE_mae: 1.0721
+    ATE_mape: NA
+    ATE_std_mse: 3.0067
+    ATE_std_mae: 0.8712
+    ATE_std_mape: NA
+  Time Period 8:
+    ATE_rmse: 1.6872
+    ATE_mae: 1.3540
+    ATE_mape: NA
+    ATE_std_mse: 4.5014
+    ATE_std_mae: 1.0117
+    ATE_std_mape: NA
+[1] "\n"
+[1] "\n"

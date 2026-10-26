@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "archives": 64,
+  "returned_fits": 4844,
+  "verified_reused_fits": 264,
+  "total_fits": 5108,
+  "returned_chain_or_atomic_records": 14528,
+  "all_assignments_complete": true,
+  "all_native_and_feature_controls": "PASS",
+  "source_commit": "3078e2ca1155b932feab92c722d697803370b8c7",
+  "package_hash": "cbb98dd60af77d923ae80c1089ce168af3b8f8e6c95e8290ea2192ea0ca7dc28",
+  "manifest_hash": "b93afa87d50e9b20492d40a981d15defdebe0d4562a52289be01505b01b47ac5",
+  "numeric_looking_ids_preserved_as_text": [
+    "1101199218e104432309",
+    "249334232769636e5037",
+    "29648408944929143979",
+    "32333722229129506345"
+  ],
+  "production_sampling_calls": 0
+}

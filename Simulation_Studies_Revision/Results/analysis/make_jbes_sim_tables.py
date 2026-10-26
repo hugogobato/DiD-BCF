@@ -2,7 +2,8 @@
 """Regenerate the JBES submission sim_tables fragments from the archived runs.
 
 Reads (read-only):
-  Results/aggregated/metrics_all.csv, surface_all.csv      published JBES run
+  Results/aggregated_repaired_20261014/                   repaired main overlay
+  Results/aggregated/                                    immutable historical inputs
   Theory_Calibration/results/aggregated_correction/        correction_audit ETE
   Theory_Calibration/results/aggregated_completion/        completion ETE
   Results/goodman_bacon_*.csv                              TWFE decomposition
@@ -27,8 +28,9 @@ ETE = REPO / "Theory_Calibration"
 JBES = REPO.parent.parent / "JBES_Submission"
 TAB = JBES / "sim_tables"
 
-PUB_MET = pd.read_csv(REPO / "Results" / "aggregated" / "metrics_all.csv")
-PUB_SURF = pd.read_csv(REPO / "Results" / "aggregated" / "surface_all.csv")
+AGG = REPO / "Results" / "aggregated_repaired_20261014"
+PUB_MET = pd.read_csv(AGG / "metrics_all.csv")
+PUB_SURF = pd.read_csv(AGG / "surface_all.csv")
 
 
 def _read_ete(directory: str, name: str) -> pd.DataFrame:
@@ -175,7 +177,7 @@ def longtable(path, colspec, caption, label, header, body, notes):
 
 B1_HEAD = (r"Estimator & $d$ & Bias & SD(err) & RMSE & Cov.90 & Cov.95 & Len.95 & "
            r"$\overline{\mathrm{sd}}/\mathrm{SD}$ \\")
-B1_NOTE = (r"\emph{Note.} $N=200$, 100 replications ($200$ for the null $d=3$ rerun), "
+B1_NOTE = (r"\emph{Note.} $N=200$, 100 replications in each non-null cell, "
            r"$d$ is the linearity degree. Bias and RMSE are Monte-Carlo moments of "
            r"the estimation error and SD(err) is its standard deviation, "
            r"$\sqrt{\text{RMSE}^2-\text{Bias}^2}$ (the target itself varies by "
@@ -183,10 +185,11 @@ B1_NOTE = (r"\emph{Note.} $N=200$, 100 replications ($200$ for the null $d=3$ re
            r"SD); Cov.90/95 are credible/confidence-interval coverage rates; Len.95 "
            r"the average 95\% interval length; $\overline{\mathrm{sd}}/\mathrm{SD}$ "
            r"the calibration ratio of the average reported posterior/standard "
-           r"error to the raw Monte-Carlo SD of the estimates (1 is perfect "
-           r"calibration, $<1$ over-confident). Rows labeled ``earlier'' come from "
+           r"error to the raw Monte-Carlo SD of the estimates. Since realized "
+           r"targets vary across replications, this descriptive ratio alone "
+           r"does not diagnose calibration. Rows labeled ``earlier'' come from "
            r"the same-sample implementation superseded by the reference-fold runs "
-           r"and are not produced by the current corrected estimator; entries "
+           r"and are not produced by the historical corrected comparator; entries "
            r"labeled ``corrected'' are the fixed-$K$ reference-fold convolution "
            r"with random-forest pilots (Algorithm~2), which now covers every "
            r"degree and design shown.")
@@ -239,22 +242,22 @@ def tab_b1(etype, eid, fname, label, caption, methods):
               B1_NOTE)
 
 
-ATT_METHODS = [("DiD-BCF (plain)", "plain"), ("DiD-BCF (corrected)", "corrected"),
+ATT_METHODS = [("DiD-BCF (repaired)", "plain"), ("DiD-BCF (corrected)", "corrected"),
                ("TWFE", "twfe"), ("Synthetic DiD", "synthdid")]
-GATT_METHODS = [("DiD-BCF (plain)", "plain"), ("DiD-BCF (corrected)", "corrected"),
+GATT_METHODS = [("DiD-BCF (repaired)", "plain"), ("DiD-BCF (corrected)", "corrected"),
                 ("Callaway--Sant'Anna", "did_dr"),
                 ("DoubleML DR-DiD", "doubleml"), ("grf-DiD (Wang)", "wang")]
 
 
 def tab_null():
     etypes = [("ATT", "ATT"), ("ES", "k=0"), ("GATT", "g=4_t=4")]
-    method_sets = {"ATT": [("DiD-BCF (plain)", "plain"),
+    method_sets = {"ATT": [("DiD-BCF (repaired)", "plain"),
                            ("DiD-BCF (corrected)", "corrected"),
                            ("TWFE", "twfe"), ("Synthetic DiD", "synthdid")],
-                   "ES": [("DiD-BCF (plain)", "plain"),
+                   "ES": [("DiD-BCF (repaired)", "plain"),
                           ("DiD-BCF (corrected)", "corrected"),
                           ("TWFE", "twfe"), ("Gardner (did2s)", "did2s")],
-                   "GATT": [("DiD-BCF (plain)", "plain"),
+                   "GATT": [("DiD-BCF (repaired)", "plain"),
                             ("DiD-BCF (corrected)", "corrected"),
                             ("Callaway--Sant'Anna", "did_dr"),
                             ("DoubleML DR-DiD", "doubleml"),
@@ -283,17 +286,12 @@ def tab_null():
         body.append(r"\addlinespace")
     head = (r"Estimator & $d$ & Bias & SD(err) & Cov.90 & Cov.95 & "
             r"Size (5\%) & MCSE \\")
-    notes = (r"\emph{Note.} $N=200$; 100 replications for the model-based "
-             r"estimators and 200 for TWFE (the corrected $d=3$ rerun also uses "
-             r"200 replications). A nominal 5\% test should reject in $0.05$ of "
-             r"replications; MCSE is the Monte-Carlo standard error of that "
-             r"rejection rate. Corrected entries at every degree are the fixed-$K$ "
-             r"reference-fold convolution with random-forest pilots (Algorithm~2); "
-             r"at $d=3$ it rejects at $0.10$--$0.13$ across ATT, event-study, and "
-             r"cohort-time cells (about two to three Monte-Carlo standard errors "
-             r"above nominal), against $0.03$--$0.05$ for the raw fit. The same "
-             r"reference-fold runs reject at $0.04$--$0.09$ across degrees and "
-             r"estimands at $N=800$.")
+    notes = (r"\emph{Note.} $N=200$. Repaired DiD-BCF uses 200 replications "
+             r"at each degree; other rows retain their historical replication "
+             r"counts. MCSE is the Monte-Carlo standard error of the rejection "
+             r"rate. A nominal 5\% test has rejection probability 0.05. "
+             r"Corrected rows use the historical fixed-$K$ reference-fold "
+             r"convolution and are a separate reduced-data estimator.")
     longtable(TAB / "tab_null.tex", "lr" + "r" * 6,
               r"Behaviour under the sharp null $\tau\equiv 0$ (scenario "
               r"\texttt{B1\_null}): bias, dispersion, coverage and the empirical size "
@@ -303,7 +301,7 @@ def tab_null():
 SWEEP_NS = [50, 100, 200, 400, 800]
 # DoubleML and grf-DiD were also run at N=1600; DiD-BCF stops at N=800.
 SWEEP_NS_BENCH = [50, 100, 200, 400, 800, 1600]
-SWEEP_METHODS = [("DiD-BCF (plain)", "plain"),
+SWEEP_METHODS = [("DiD-BCF (repaired)", "plain"),
                  ("DiD-BCF (corrected)", "corrected"),
                  ("Callaway--Sant'Anna", "did_dr"),
                  ("DoubleML DR-DiD", "doubleml"), ("grf-DiD (Wang)", "wang")]
@@ -397,7 +395,7 @@ def tab_smalln():
         for target, et, eid in ((r"$\gatt(4,4)$", "GATT", "g=4_t=4"),
                                 (r"$\att$", "ATT", "ATT")):
             rows = []
-            order = (["DiD-BCF (plain)", "DiD-BCF (ref. fold)"]
+            order = (["DiD-BCF (repaired)", "DiD-BCF (ref. fold)"]
                      + (["Callaway--Sant'Anna", "DoubleML DR-DiD",
                          "grf-DiD (Wang)"] if et == "GATT"
                         else ["TWFE", "Synthetic DiD"]))
@@ -405,7 +403,7 @@ def tab_smalln():
                 # (value, decimals, suffix) triples per N column group.
                 cells = []
                 for N in NS:
-                    if lab == "DiD-BCF (plain)":
+                    if lab == "DiD-BCF (repaired)":
                         m = pub_row(s, "plain", 1, N, et, eid)
                         assert m is not None, (s, N, et)
                         star = (r"$^{\dagger}$"
@@ -474,7 +472,7 @@ def _write_smalln_table(body):
               r"only and synthetic DiD a pooled ATT only, so neither appears "
               r"against every target. The ``ref.\ fold'' rows are the fixed-$K$ "
               r"reference-fold convolution with random-forest pilots "
-              r"(Algorithm~2, the current corrected estimator).",
+              r"(Algorithm~2, the historical corrected comparator).",
               r"\end{table}"]
     (TAB / "tab_smalln.tex").write_text("\n".join(lines) + "\n")
     print("  -> tab_smalln.tex")
@@ -484,7 +482,7 @@ def tab_surface():
     blocks = ["B1_baseline", "B1_strong_confounder", "B1_serial_corr",
               "B1_selection_obs", "D_staggered"]
     scen = {s: s.replace("_", r"\_") for s in blocks}
-    order = [("DiD-BCF (plain)", "plain"), ("DiD-BCF (corrected, earlier)", "corrected"),
+    order = [("DiD-BCF (repaired)", "plain"), ("DiD-BCF (corrected, earlier)", "corrected"),
              ("TWFE", "twfe"), ("Callaway--Sant'Anna", "did_dr"),
              ("Gardner (did2s)", "did2s"), ("DoubleML DR-DiD", "doubleml"),
              ("Synthetic DiD", "synthdid"), ("grf-DiD (Wang)", "wang")]
@@ -533,7 +531,7 @@ def pub_row_surface(setting, method, degree):
 
 def tab_smalln_surface():
     NS = [50, 100, 200]
-    order = [("DiD-BCF (plain)", "plain"),
+    order = [("DiD-BCF (repaired)", "plain"),
              ("DiD-BCF (corrected, earlier)", "corrected"),
              ("TWFE", "twfe"), ("Callaway--Sant'Anna", "did_dr"),
              ("Gardner (did2s)", "did2s"), ("DoubleML DR-DiD", "doubleml"),
@@ -632,7 +630,7 @@ def tab_bacon():
 def tab_staggered_es():
     body = []
     body.append(r"\multicolumn{7}{l}{\textit{D\_staggered}} \\")
-    for meth, pub_method in [("DiD-BCF (plain)", "plain"),
+    for meth, pub_method in [("DiD-BCF (repaired)", "plain"),
                              ("DiD-BCF (corrected)", "corrected"),
                              ("TWFE", "twfe"), ("Gardner (did2s)", "did2s")]:
         for k in (0, 1, 2, 3):
@@ -669,7 +667,7 @@ def tab_staggered_es():
 
 
 def tab_staggered_gatt():
-    order = [("DiD-BCF (plain)", "plain"), ("DiD-BCF (corrected)", "corrected"),
+    order = [("DiD-BCF (repaired)", "plain"), ("DiD-BCF (corrected)", "corrected"),
              ("Callaway--Sant'Anna", "did_dr"),
              ("DoubleML DR-DiD", "doubleml"), ("grf-DiD (Wang)", "wang")]
     body = [r"\multicolumn{8}{l}{\textit{D\_staggered}} \\"]
@@ -719,7 +717,7 @@ def tab_staggered_gatt():
 
 
 def tab_staggered_cells():
-    order = [("DiD-BCF (plain)", "plain"), ("DiD-BCF (corrected)", "corrected"),
+    order = [("DiD-BCF (repaired)", "plain"), ("DiD-BCF (corrected)", "corrected"),
              ("Callaway--Sant'Anna", "did_dr"),
              ("DoubleML DR-DiD", "doubleml"), ("grf-DiD (Wang)", "wang")]
     body = [r"\multicolumn{8}{l}{\textit{D\_staggered}} \\"]
@@ -764,7 +762,7 @@ def tab_staggered_cells():
 
 def tab_staggered_deg():
     body = [r"\multicolumn{8}{l}{\textit{D\_staggered}} \\"]
-    for meth, pub_method in [("DiD-BCF (plain)", "plain"),
+    for meth, pub_method in [("DiD-BCF (repaired)", "plain"),
                              ("DiD-BCF (corrected)", "corrected"),
                              ("TWFE", "twfe"), ("Gardner (did2s)", "did2s")]:
         for d in (2, 3):
@@ -895,7 +893,7 @@ def tab_pretrend(degree, fname):
     print("  ->", fname)
 
 
-def main():
+def main(include_historical=False):
     TAB.mkdir(parents=True, exist_ok=True)
     tab_b1("ATT", "ATT", "tab_b1_att.tex", "tab:b1att",
            "Decomposed Monte-Carlo metrics for the overall ATT on the "
@@ -910,14 +908,30 @@ def main():
     tab_smalln()
     tab_smalln_surface()
     tab_surface()
-    tab_bacon()
+    if include_historical:
+        tab_bacon()
     tab_staggered_es()
     tab_staggered_gatt()
     tab_staggered_cells()
     tab_staggered_deg()
-    tab_pretrend(1, "tab_pretrend.tex")
-    tab_pretrend(3, "tab_pretrend_d3.tex")
+    if include_historical:
+        tab_pretrend(1, "tab_pretrend.tex")
+        tab_pretrend(3, "tab_pretrend_d3.tex")
+    origin = (r"\par\smallskip\noindent{\footnotesize Repaired DiD-BCF rows use "
+              r"the proper $\operatorname{IG}(2,1)$ variance prior and repaired "
+              r"tree transition. Corrected and earlier-correction rows are "
+              r"historical reduced-data comparisons, rather than post-processing "
+              r"of the repaired fits. Benchmark rows retain their original runs.}\par")
+    for path in TAB.glob("*.tex"):
+        if (path.name.startswith(("tab_pretrend", "tab_application"))
+                or path.name in {"tab_bacon.tex", "tab_prior_sensitivity.tex"}):
+            continue
+        text = path.read_text()
+        path.write_text(text + "\n" + origin + "\n")
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--include-historical", action="store_true")
+    main(parser.parse_args().include_historical)

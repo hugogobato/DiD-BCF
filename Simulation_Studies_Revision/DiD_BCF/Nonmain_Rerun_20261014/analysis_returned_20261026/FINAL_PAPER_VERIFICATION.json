@@ -1,0 +1,282 @@
+{
+  "status": "PASS",
+  "scope": "Complete planned experiment integration, source-preservation, claim-scope review, numeric recomputation, references and layout",
+  "planned_jobs": 14327,
+  "main_jobs_complete": 5100,
+  "nonmain_jobs_complete": 9227,
+  "nonmain_phase_completed": {
+    "diagnostic": 4000,
+    "pt_impact": 4000,
+    "sensitivity": 1200,
+    "application": 9,
+    "application_sensitivity": 18
+  },
+  "missing_jobs": 0,
+  "failed_or_deferred_jobs": 0,
+  "returned_archives": 132,
+  "returned_archives_mib": 131.62756824493408,
+  "zone_identifier_sidecars_removed": 132,
+  "archive_bytes_preserved": true,
+  "duplicate_or_conflicting_fits": 0,
+  "independent_audits": {
+    "INDEPENDENT_ARCHIVE_AUDIT.json": {
+      "anomalies": [],
+      "anomaly_count": 0,
+      "disk_source_hash_pins_verified": {
+        "chains_checked": 70,
+        "local": 50,
+        "reused": 20
+      },
+      "passed": true,
+      "source_hash_pin_mismatches": []
+    },
+    "INDEPENDENT_METRIC_AUDIT.json": {
+      "anomalies": [],
+      "anomaly_count": 0,
+      "passed": true
+    }
+  },
+  "accepted_theory_sources_preserved": {
+    "raw_continuous_supplement.tex": "e503db7897237a2de9154fae0b46774b068b6c6584035a4a8a5d5c563db1ea67",
+    "raw_finite_algorithm_supplement.tex": "f8b10c7738fa027d4e0ec9b3743e6f9308f3f06c354dea5084aeca8075e99182",
+    "raw_forest_consistency_supplement.tex": "e0f060a5d55e018234c81ebafc1daa076edd6b943c1cab7ce3e257639dc4b1ca",
+    "raw_implementation_supplement.tex": "9077aab567111ef2d3f8667a68a186318954cbf346c143a0ab13564bfb1ff7c7",
+    "raw_inference_diagnostics.tex": "912d44c069d958388fc826edde724c261941bf85cd368d8fb221b091e8b0421a",
+    "raw_native_finite_budget_supplement.tex": "224ba4125bf344ec2e69a07d8f7744fda5c44c31a2b7ec4612d75d2551ab8b92",
+    "raw_theory_main.tex": "82d43ce81bc1afc038c7ec1c36e53a9f8fe60665f395527eeac157fcccd666c5",
+    "raw_unknown_variance_supplement.tex": "bebdf1293a3767198a904baec7f0cd73987041a9fda5c46a51aca69a22be2482",
+    "theory_supplement.tex": "2b94ab67120a3b5cd006557f949ada0310ed630a992c382142ef248ec641abfe"
+  },
+  "other_existing_paper_assets_preserved": {
+    "images/fig_es_bias.pdf": true,
+    "images/fig_mpdta_gate_kde.pdf": true,
+    "images/fig_pretrend_empirical.pdf": true,
+    "images/fig_smalln.pdf": true,
+    "images/fig_sqrtn.pdf": true,
+    "raw_continuous_supplement.tex": true,
+    "raw_finite_algorithm_supplement.tex": true,
+    "raw_forest_consistency_supplement.tex": true,
+    "raw_implementation_supplement.tex": true,
+    "raw_inference_diagnostics.tex": true,
+    "raw_native_finite_budget_supplement.tex": true,
+    "raw_theory_main.tex": true,
+    "raw_unknown_variance_supplement.tex": true,
+    "sim_figures/fig_calibration.pdf": true,
+    "sim_figures/fig_es_bias.pdf": true,
+    "sim_figures/fig_es_methods.pdf": true,
+    "sim_figures/fig_event_study.pdf": true,
+    "sim_figures/fig_smalln.pdf": true,
+    "sim_figures/fig_sqrtn.pdf": true,
+    "sim_figures/fig_surface.pdf": true,
+    "sim_figures/fig_surface_sweep.pdf": true,
+    "sim_figures/fig_sweep.pdf": true,
+    "sim_tables/tab_application_pretrend.tex": true,
+    "sim_tables/tab_application_prior_sensitivity.tex": true,
+    "sim_tables/tab_b1_att.tex": true,
+    "sim_tables/tab_b1_gatt.tex": true,
+    "sim_tables/tab_bacon.tex": true,
+    "sim_tables/tab_null.tex": true,
+    "sim_tables/tab_smalln.tex": true,
+    "sim_tables/tab_smalln_surface.tex": true,
+    "sim_tables/tab_staggered.tex": true,
+    "sim_tables/tab_staggered_cells.tex": true,
+    "sim_tables/tab_staggered_deg.tex": true,
+    "sim_tables/tab_staggered_gatt.tex": true,
+    "sim_tables/tab_surface.tex": true,
+    "sim_tables/tab_sweep.tex": true,
+    "sim_tables/tab_sweep_deg.tex": true,
+    "theory_supplement.tex": true
+  },
+  "existing_application_tables_byte_identical": true,
+  "historical_corrected_numbers_preserved": true,
+  "primary_prior_rate_remains": 1,
+  "new_sampling_calls": 0,
+  "diagnostic_filtering": false,
+  "paper_builds": {
+    "main": {
+      "document": "main",
+      "status": "PASS",
+      "steps": [
+        {
+          "command": [
+            "pdflatex",
+            "-interaction=nonstopmode",
+            "-halt-on-error",
+            "-file-line-error",
+            "main.tex"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "bibtex",
+            "main"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "pdflatex",
+            "-interaction=nonstopmode",
+            "-halt-on-error",
+            "-file-line-error",
+            "main.tex"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "pdflatex",
+            "-interaction=nonstopmode",
+            "-halt-on-error",
+            "-file-line-error",
+            "main.tex"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "source_sha256": "2071bf7b623b15ec4949ea26fb1c868ec0aec9a3488936ab76ea161aa5602e57",
+      "pdf_sha256": "f0df5702e4129bf54f4c90110ea751355daeab7ea1889e30573f84562e2d3a60",
+      "pages": [
+        "35"
+      ],
+      "unresolved_reference_or_error_lines": [],
+      "overfull_boxes": 0,
+      "underfull_boxes": 2
+    },
+    "supplementary_material": {
+      "document": "supplementary_material",
+      "status": "PASS",
+      "steps": [
+        {
+          "command": [
+            "pdflatex",
+            "-interaction=nonstopmode",
+            "-halt-on-error",
+            "-file-line-error",
+            "supplementary_material.tex"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "bibtex",
+            "supplementary_material"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "pdflatex",
+            "-interaction=nonstopmode",
+            "-halt-on-error",
+            "-file-line-error",
+            "supplementary_material.tex"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "pdflatex",
+            "-interaction=nonstopmode",
+            "-halt-on-error",
+            "-file-line-error",
+            "supplementary_material.tex"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "source_sha256": "3a5497c6346769c15fa269c01f698b54d2ce1ce79e6d42a01bb5787f4e3b5249",
+      "pdf_sha256": "bb67a3d39f6a54e7cfc507b826cb788949718afadad272090fc547506b2c9a96",
+      "pages": [
+        "114"
+      ],
+      "unresolved_reference_or_error_lines": [],
+      "overfull_boxes": 0,
+      "underfull_boxes": 3
+    }
+  },
+  "main_body_spacing_unchanged": 1.8,
+  "abstract_words": 170,
+  "new_assets_mirrored_exactly": true,
+  "main_table_regeneration_preserves_all_19_fragments": true,
+  "notebook_migration_tests": {
+    "passed": 2,
+    "deselected": 31
+  },
+  "review_limits": {
+    "new_proof_audit_performed": false,
+    "fresh_independent_final_manuscript_read_completed": false,
+    "reader_interruption_reason": "subagent service usage limit",
+    "coordinator_scope_numerical_layout_checks_complete": true,
+    "official_submission_instructions_access": "HTTP 403, current portal-specific requirements not certified"
+  },
+  "bibliography_corrections": {
+    "before_sha256": "f209f6581f2fd94b217f9d6b4111d8dad7971612c4c356167535b8652bcf345f",
+    "after_sha256": "8d535e5794d1c72b4f8b5c5646f8484ca676c51021b0374f8b50937869f65b42",
+    "changes": [
+      {
+        "key": "Williams2006",
+        "change": "Corrected issue publication year/month to 1993/December; citation key preserved. 2006 is the later online-release date.",
+        "sources": [
+          "https://www.tandfonline.com/toc/raec20/25/12?nav=tocList",
+          "https://journals.sagepub.com/doi/10.1177/001979399404700309",
+          "https://www.nber.org/reporter/fall-2002/raising-incomes-mandating-higher-wages"
+        ]
+      },
+      {
+        "key": "Wang2022",
+        "change": "Added verified DOI and primary publisher URL.",
+        "sources": [
+          "https://pubsonline.informs.org/doi/10.1287/mnsc.2021.4239"
+        ]
+      }
+    ]
+  },
+  "visual_review_pages": [
+    {
+      "stem": "main",
+      "page": 27,
+      "png": ".local_experiment_archive/final_20261026_pages/main_27.png"
+    },
+    {
+      "stem": "main",
+      "page": 29,
+      "png": ".local_experiment_archive/final_20261026_pages/main_29.png"
+    },
+    {
+      "stem": "main",
+      "page": 31,
+      "png": ".local_experiment_archive/final_20261026_pages/main_31.png"
+    },
+    {
+      "stem": "supplementary_material",
+      "page": 38,
+      "png": ".local_experiment_archive/final_20261026_pages/supplementary_material_38.png"
+    },
+    {
+      "stem": "supplementary_material",
+      "page": 41,
+      "png": ".local_experiment_archive/final_20261026_pages/supplementary_material_41.png"
+    },
+    {
+      "stem": "supplementary_material",
+      "page": 43,
+      "png": ".local_experiment_archive/final_20261026_pages/supplementary_material_43.png"
+    }
+  ],
+  "lossless_scalar_diagnostics_storage": {
+    "status": "PASS",
+    "representation": "lossless gzip of scalar diagnostics CSV",
+    "uncompressed_name": "diagnostics.csv",
+    "compressed_name": "diagnostics.csv.gz",
+    "uncompressed_sha256": "0031ac38be8b80229860d93b82dd3a7c0010ec50c535b8171f149e3ab00598f6",
+    "uncompressed_bytes": 133269730,
+    "newline_count": 232240,
+    "compressed_sha256": "39402dd66c3fa4db55b08a828e82cd57c359fc4d11263e07670f4628fffdc96c",
+    "compressed_bytes": 42268584,
+    "values_or_rows_removed": false,
+    "posterior_arrays_present": false,
+    "read_with": "pandas.read_csv('diagnostics.csv.gz') or gzip.open"
+  }
+}

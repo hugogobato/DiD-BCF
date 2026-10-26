@@ -1,0 +1,36 @@
+\begin{table}[htbp]
+\centering
+\scriptsize
+\caption{Prior-rate sensitivity of pooled ATT estimates. Each cell uses 100 replications; the rate-1 results are from the completed main grid.}
+\label{tab:prior_sensitivity}
+\begin{tabular}{lrrr rrrr}
+\toprule
+Error process & $N$ & Prior rate & Bias & RMSE & MAE & 95\% coverage & Mean 95\% length \\
+\midrule
+AR(1) & 50 & 0.1 & -0.043 & 0.294 & 0.234 & 0.810 & 0.779 \\
+AR(1) & 50 & 1.0 & -0.040 & 0.288 & 0.227 & 0.820 & 0.795 \\
+\addlinespace[1pt]
+AR(1) & 50 & 10.0 & -0.036 & 0.290 & 0.234 & 0.890 & 0.992 \\
+AR(1) & 200 & 0.1 & 0.007 & 0.129 & 0.101 & 0.820 & 0.358 \\
+AR(1) & 200 & 1.0 & 0.007 & 0.128 & 0.100 & 0.850 & 0.363 \\
+\addlinespace[1pt]
+AR(1) & 200 & 10.0 & 0.003 & 0.126 & 0.097 & 0.870 & 0.388 \\
+AR(1) & 800 & 0.1 & -0.002 & 0.068 & 0.054 & 0.790 & 0.176 \\
+AR(1) & 800 & 1.0 & -0.003 & 0.067 & 0.054 & 0.790 & 0.175 \\
+\addlinespace[1pt]
+AR(1) & 800 & 10.0 & -0.003 & 0.068 & 0.054 & 0.760 & 0.179 \\
+Independent & 50 & 0.1 & -0.010 & 0.234 & 0.183 & 0.930 & 0.897 \\
+Independent & 50 & 1.0 & -0.007 & 0.236 & 0.185 & 0.940 & 0.921 \\
+\addlinespace[1pt]
+Independent & 50 & 10.0 & 0.002 & 0.248 & 0.195 & 0.960 & 1.081 \\
+Independent & 200 & 0.1 & 0.002 & 0.100 & 0.078 & 0.950 & 0.423 \\
+Independent & 200 & 1.0 & 0.004 & 0.099 & 0.077 & 0.950 & 0.425 \\
+\addlinespace[1pt]
+Independent & 200 & 10.0 & 0.003 & 0.099 & 0.077 & 0.970 & 0.451 \\
+Independent & 800 & 0.1 & -0.001 & 0.052 & 0.041 & 0.970 & 0.208 \\
+Independent & 800 & 1.0 & -0.002 & 0.051 & 0.041 & 0.960 & 0.210 \\
+\addlinespace[1pt]
+Independent & 800 & 10.0 & -0.002 & 0.052 & 0.041 & 0.950 & 0.212 \\
+\bottomrule
+\end{tabular}
+\end{table}

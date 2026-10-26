@@ -368,8 +368,8 @@ def test_multiwave_manifest_bundle_allocation_is_complete_and_disjoint():
 
 def test_notebooks_are_valid_and_download_one_zip():
     revision = Path(__file__).parents[2]
-    root = revision / "DiD_BCF" / "Theory_Calibration"
-    completion = revision / "DiD_BCF" / "Correction_Completion_Notebooks"
+    root = revision.parent / "Old_Simulation_Studies" / "Revision_DiD_BCF" / "DiD_BCF" / "Theory_Calibration"
+    completion = revision.parent / "Old_Simulation_Studies" / "Revision_DiD_BCF" / "DiD_BCF" / "Correction_Completion_Notebooks"
     books = sorted(root.glob("*.ipynb"))
     assert len(books) == 101
     for path in books:
@@ -482,7 +482,8 @@ def test_completion_pairing_formula_covers_original_shards():
 def test_theory_notebook_regeneration_is_byte_identical(tmp_path):
     sys.path.insert(0, str(Path(__file__).parents[1] / "scripts"))
     import generate_notebooks as gn
-    committed = Path(__file__).parents[2] / "DiD_BCF" / "Theory_Calibration"
+    committed = (Path(__file__).resolve().parents[3] / "Old_Simulation_Studies" / "Revision_DiD_BCF"
+                 / "DiD_BCF" / "Theory_Calibration")
     gn.generate(tmp_path, "correction_audit")
     gn.generate(tmp_path, "information_ablation")
     produced = sorted(tmp_path.glob("*.ipynb"))
@@ -491,7 +492,8 @@ def test_theory_notebook_regeneration_is_byte_identical(tmp_path):
                   if (committed / p.name).read_bytes() != p.read_bytes()]
     assert mismatches == []
 
-    committed_completion = Path(__file__).parents[2] / "DiD_BCF" / "Correction_Completion_Notebooks"
+    committed_completion = (Path(__file__).resolve().parents[3] / "Old_Simulation_Studies" / "Revision_DiD_BCF"
+                            / "DiD_BCF" / "Correction_Completion_Notebooks")
     completion_out = tmp_path / "completion"
     gn.generate(completion_out, "correction_completion")
     produced_completion = sorted(completion_out.glob("*.ipynb"))

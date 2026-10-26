@@ -1,0 +1,83 @@
+{
+  "builder": "Results/analysis/update_repaired_nonmain.py",
+  "collector_package_hash": "99c37cf5731cf9d9a10096aefa3df1932c94902ac705f803c350cd2fee5f4487",
+  "completed_nonmain_jobs": 9227,
+  "diagnostic_filtering": false,
+  "expected_nonmain_jobs": 9227,
+  "expected_study_cells": {
+    "pretrend": 20,
+    "prior_sensitivity_cells_per_rate": 6,
+    "prior_sensitivity_rates": [
+      0.1,
+      1.0,
+      10.0
+    ]
+  },
+  "frozen_manifest_hash": "d4c6fe4d5369638885b5d3a9a4f5077e5776990be6aa73d2e000188eb20bddca",
+  "historical_policy": {
+    "pretrend_method_label": "pretrend_historical",
+    "pt_impact_method_label": "plain_historical",
+    "reference_fold_source": "Theory_Calibration/results/aggregated_completion",
+    "twfe_and_external_benchmarks": "retained with historical origin"
+  },
+  "main_scalar_values_unchanged": true,
+  "metrics_rows_added": 780,
+  "new_sampling_calls": 0,
+  "outputs": {
+    "RESULTS_REPORT.md": "e3772e98b28a28d394d6921e133e82935fb416e6e79541eb24f26a904c217ac5",
+    "coverage_grid.csv": "27ea039044a6b9ac2ec1a161070e50abe02be1502a94c3ebb581ae3a8af46402",
+    "main_per_replication.csv": "4e8732a9707191c1d1f494765bf93d92a101e5b6ee1200c95d28c4fa48fea7fb",
+    "main_scalar_metrics.csv": "abb3277aa9be15b23bfe3f5e2e001055c70b88cf6515235081248baa7c835796",
+    "main_surface_metrics.csv": "5864d929e5d9d3591e4373c76fc3122fa743df15d5f1e0402cc7d09e9e3d84eb",
+    "metrics_all.csv": "81532a9935fed07e8fbcef33c842832e40d0806756cfbe72a04fb9a5d7a3cd6f",
+    "nonmain_per_replication.csv": "316f056b52b5a1b5a565e4bb97d7f3d141bdda1b7714d44d656ca48c25c3a6c1",
+    "nonmain_scalar_metrics.csv": "58318a0d9973f5aba17a3b7c97557cf510bd73ff26a0c1f380636ae47c0a12d8",
+    "nonmain_surface_metrics.csv": "341e5c231c38c027441bd44934132d0a2783fc3497c08bd9017a6b14eebc5469",
+    "pretrend_profiles.csv": "99565e35aa7a57735fd07655d6bb4e6c174c2b7fc4488934dc14c194fe200d92",
+    "pretrend_summary.csv": "06496f045f55e32d009ef3c7d4bf81d34b27644001d53a119cabdc0b8bedbfc7",
+    "prior_sensitivity.csv": "8a32300a0f0aee17827fcbc41f4b6739ae114647c9436c8511f6490b9c20fe34",
+    "prior_sensitivity_paired.csv": "05b3838edd4ec8895eef4aade64381fc3d6199cf95197aee5156009329110fa2",
+    "sqrtn_all.csv": "5a117abee7b80352263d436454e68a887cdb96daa1313d8f2414c375cae83c51",
+    "surface_all.csv": "50d14e75e09e27d9e07d4e60b1da1f1ce008b8b96f6a60e8cdd6e19ba36ddf1a"
+  },
+  "package_hash": "99c37cf5731cf9d9a10096aefa3df1932c94902ac705f803c350cd2fee5f4487",
+  "pairing_note": "Prior sensitivity is paired by common seed/index, design config, and exact truth. These summary files do not include dataset byte hashes, so pairing does not establish binary panel identity.",
+  "performance_filtering": false,
+  "phase_completed": {
+    "application": 9,
+    "application_sensitivity": 18,
+    "diagnostic": 4000,
+    "pt_impact": 4000,
+    "sensitivity": 1200
+  },
+  "posterior_arrays_read": false,
+  "prior_main_files_preserved_byte_for_byte": [
+    "sqrtn_all.csv",
+    "coverage_grid.csv",
+    "main_scalar_metrics.csv",
+    "main_surface_metrics.csv",
+    "main_per_replication.csv"
+  ],
+  "source_hashes": {
+    "Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/Results/collected_20261026/per_replication.csv": "316f056b52b5a1b5a565e4bb97d7f3d141bdda1b7714d44d656ca48c25c3a6c1",
+    "Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/Results/collected_20261026/provenance.json": "be5582f3c3b0a78f519bdc67867538885d486ea90bed7a8d4db6420da78a1e90",
+    "Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/Results/collected_20261026/scalar_metrics.csv": "58318a0d9973f5aba17a3b7c97557cf510bd73ff26a0c1f380636ae47c0a12d8",
+    "Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/Results/collected_20261026/status.json": "001104b68976679c5f8d9a0a8ee0a0c8719d912503fc4e7a438b3c1684267be8",
+    "Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/Results/collected_20261026/surface_metrics.csv": "341e5c231c38c027441bd44934132d0a2783fc3497c08bd9017a6b14eebc5469",
+    "Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/manifest.json": "b8206f85f6f073c3e0d84a3a87e64051db5dbded6925cf4384478f99f22599ee",
+    "Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/package.json": "32d279bd0c2095818a42d20355573b8d5d3af4b59e39739a7b57aa6881f45728",
+    "Simulation_Studies_Revision/Results/aggregated_repaired_20261014/coverage_grid.csv": "27ea039044a6b9ac2ec1a161070e50abe02be1502a94c3ebb581ae3a8af46402",
+    "Simulation_Studies_Revision/Results/aggregated_repaired_20261014/main_per_replication.csv": "4e8732a9707191c1d1f494765bf93d92a101e5b6ee1200c95d28c4fa48fea7fb",
+    "Simulation_Studies_Revision/Results/aggregated_repaired_20261014/main_scalar_metrics.csv": "abb3277aa9be15b23bfe3f5e2e001055c70b88cf6515235081248baa7c835796",
+    "Simulation_Studies_Revision/Results/aggregated_repaired_20261014/main_surface_metrics.csv": "5864d929e5d9d3591e4373c76fc3122fa743df15d5f1e0402cc7d09e9e3d84eb",
+    "Simulation_Studies_Revision/Results/aggregated_repaired_20261014/metrics_all.csv": "d9e1fb3b3c36525dd0f11962ee0c3f0f848a6267d9120845e395365559a5fcf7",
+    "Simulation_Studies_Revision/Results/aggregated_repaired_20261014/provenance.json": "9394d436c827f4c53945fadd320f72fe0bc0bce51f486af5f7ab9f2e70ba29a0",
+    "Simulation_Studies_Revision/Results/aggregated_repaired_20261014/sqrtn_all.csv": "5a117abee7b80352263d436454e68a887cdb96daa1313d8f2414c375cae83c51",
+    "Simulation_Studies_Revision/Results/aggregated_repaired_20261014/surface_all.csv": "663d7330dd3cfaf9889501bf28b0f7770bc1d1c3e6477b9562ff6780f78844f3",
+    "Simulation_Studies_Revision/Results/analysis/update_repaired_nonmain.py": "08ff2937ed3057b1e74c599de11bc9b785e13a0603a7b80e3582bd921933f76d",
+    "Simulation_Studies_Revision/Theory_Calibration/results/aggregated_completion/combined_per_replication.csv": "61d5faf3425886b932c6327205f2616ad6255438d221798110757821cab33627",
+    "Simulation_Studies_Revision/Theory_Calibration/results/aggregated_completion/metrics_mean_median.csv": "f6c1b2e73dfefd1d987886460fe9ce308a41d7bf4d72ab026b8ddbcbda65017d"
+  },
+  "status": "PASS",
+  "surface_rows_added": 20
+}

@@ -1,5 +1,8 @@
 # DiD-BCF revision simulations (Workstreams B1, B2, D, PT)
 
+Current completed paper workflow (2026-10-26): all 14,327 original experiment jobs validate. Main results are in `DiD_BCF/Paper_Rerun_20261011/`, and pretrend, sensitivity and application results are in `DiD_BCF/Nonmain_Rerun_20261014/`. Use [Results/README.md](Results/README.md) for the current overlays and publication commands. The older workflows below remain reproducibility history; no new production run is needed.
+
+
 New simulation suite for the JBES revision, built on top of
 `../Simulation_Studies/` but redesigned to address the reviewer comments in
 `../../REVISION_PLAN.md`. It implements:
@@ -64,10 +67,12 @@ original `../Simulation_Studies/`, adapted to the revision DGPs:
 ## Workflow (matches the split: DiD-BCF on Colab, the rest on your PC)
 
 ```
-1. (Colab, slow)   DiD_BCF/Theory_Calibration/*.ipynb   -> Theory_Calibration/results/*.zip
-                   DiD_BCF/Correction_Completion_Notebooks/*.ipynb -> Theory_Calibration/results/*.zip
-                   (the old-generation DiD_BCF/<scen>_lin_<d>.ipynb notebooks and
-                   their summaries now live in the local legacy tree)
+1. (Colab, slow)   DiD_BCF/Paper_Rerun_20261011/Colab/ -> current paper rerun
+                   (see that package's README and upload guide for shard outputs)
+                   Earlier correction-audit and completion notebooks are retained
+                   under Old_Simulation_Studies/Revision_DiD_BCF/DiD_BCF/.
+                   The old-generation DiD_BCF/<scen>_lin_<d>.ipynb notebooks and
+                   their summaries are under Old_Simulation_Studies/_moved_from_repo/.
 1b.(Colab, slow)   Pretrend/Pretrend_<PT>_lin_<d>.ipynb -> Results/summaries_pretrend_<PT>_lin_<d>.csv
 2. (PC, fast)      TWFE/OLS_<scen>_lin_<d>.ipynb        -> Results/summaries_twfe_<scen>_lin_<d>.csv
 3. (PC, fast)      DGPs/data_creation_<scen>.py         -> R_code/<scen>_datasets/.../iteration_*.csv
@@ -144,14 +149,13 @@ so the 54 notebooks cannot drift apart — regenerate them all from
 ## Layout
 
 Mirrors `../Simulation_Studies/`: per-scenario data-creation scripts under
-`DGPs/`, the final-generation DiD-BCF Colab notebooks under `DiD_BCF/`
-(`Theory_Calibration/` for the correction and information families,
-`Correction_Completion_Notebooks/` for the completion cells) and the TWFE notebooks under
+`DGPs/`, the current repaired DiD-BCF campaign under
+`DiD_BCF/Paper_Rerun_20261011/` and the TWFE notebooks under
 `TWFE/`, per-scenario R benchmarks under `R_code/`, and a `Results/` sink, with
 a shared engine package so nothing is duplicated. The old-generation
 `DiD_BCF/<scenario>_lin_<d>.ipynb` notebooks and their summary CSVs were moved
-to the local legacy tree (`Old_Simulation_Studies/_moved_from_repo/Simulation_Studies_Revision/DiD_BCF_old_generation/`,
-gitignored); their published aggregates stay committed under `Results/aggregated/`.
+to `Old_Simulation_Studies/_moved_from_repo/Simulation_Studies_Revision/DiD_BCF_old_generation/`;
+their published aggregates stay committed under `Results/aggregated/`.
 
 The **estimation scenarios** are `B1_baseline`, `B1_strong_confounder`,
 `B1_serial_corr`, `B1_selection_obs`, `B1_selection_both`, `B1_null`,
@@ -448,7 +452,7 @@ heterogeneity that breaks TWFE (R3.1.2).
 
 ## Mathematical Formulations per DGP Scenario
 
-Each of the 9 scenarios is defined by overriding specific parameters in [config.py](file:///home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/did_bcf_revision/config.py) which are passed to the generators in [dgps.py](file:///home/hugo_souto/Stuff/Research/DiD-BCF/DiD-BCF/Simulation_Studies_Revision/did_bcf_revision/dgps.py).
+Each of the 9 scenarios is defined by overriding specific parameters in [config.py](did_bcf_revision/config.py) which are passed to the generators in [dgps.py](did_bcf_revision/dgps.py).
 
 Below is the complete mathematical description for each of the 9 scenarios.
 

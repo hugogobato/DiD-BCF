@@ -1,18 +1,36 @@
-\begin{tabular}{llrrrrrr}
+\begin{tabular}{lllr rrr r r r}
 \toprule
-Scenario & Violation & True & \multicolumn{2}{c}{Detection, slope rule} & \multicolumn{1}{c}{Any-$k$} & \multicolumn{2}{c}{Slope recovery} \\
-\cmidrule(lr){4-5}\cmidrule(lr){6-6}\cmidrule(lr){7-8}
- & & slope & Diagnostic & TWFE ES & Diagnostic & bias & cover.\ 95\% \\
+Scenario & Method & Violation & True slope & Slope & Contrast & Any-$k$ & Bias & Coverage & TWFE \\
 \midrule
-PT\_violation\_het40 & via $\alpha_i$ & -0.001 & 0.100 & 0.065 & 0.090 & 0.048 & 0.94 \\
-PT\_violation\_het10 & via $\alpha_i$ & -0.000 & 0.055 & 0.045 & 0.030 & 0.044 & 0.94 \\
-PT\_violation\_het20 & via $\alpha_i$ & -0.000 & 0.087 & 0.073 & 0.047 & 0.045 & 0.93 \\
-PT\_violation\_a20 & via $\alpha_i$ & 0.207 & 0.910 & 0.705 & 0.840 & 0.019 & 0.97 \\
-PT\_conditional & unconditional only & 0.000 & 0.100 & 0.755 & 0.055 & 0.065 & 0.94 \\
-PT\_violation\_g05 & group slope & 0.050 & 0.230 & 0.100 & 0.110 & 0.034 & 0.95 \\
-PT\_violation\_g10 & group slope & 0.100 & 0.510 & 0.250 & 0.385 & 0.027 & 0.96 \\
-PT\_violation\_g20 & group slope & 0.200 & 0.900 & 0.700 & 0.845 & 0.018 & 0.96 \\
-PT\_violation\_g40 & group slope & 0.400 & 1.000 & 1.000 & 1.000 & 0.011 & 0.95 \\
-PT\_hold & none (PTA holds) & 0.000 & 0.055 & 0.045 & 0.045 & 0.044 & 0.95 \\
+Parallel trends hold & Repaired & None & 0.000 & 0.050 & 0.000 & 0.040 & 0.043 & 0.960 & 0.045 \\
+ & Ref. fold (hist.) &  &  & 0.135 & 0.015 & 0.050 & 0.067 & 0.865 &  \\
+\addlinespace[2pt]
+Conditional PT only & Repaired & Unconditional-only difference & 0.000 & 0.085 & 0.000 & 0.045 & 0.064 & 0.940 & 0.755 \\
+ & Ref. fold (hist.) &  &  & 0.295 & 0.010 & 0.155 & 0.112 & 0.705 &  \\
+\addlinespace[2pt]
+Group slope 0.05 & Repaired & Group trend, 0.05 & 0.050 & 0.200 & 0.000 & 0.105 & 0.034 & 0.965 & 0.100 \\
+ & Ref. fold (hist.) &  &  & 0.360 & 0.000 & 0.200 & 0.056 & 0.910 &  \\
+\addlinespace[2pt]
+Group slope 0.10 & Repaired & Group trend, 0.10 & 0.100 & 0.485 & 0.000 & 0.345 & 0.026 & 0.965 & 0.250 \\
+ & Ref. fold (hist.) &  &  & 0.650 & 0.005 & 0.480 & 0.048 & 0.920 &  \\
+\addlinespace[2pt]
+Group slope 0.20 & Repaired & Group trend, 0.20 & 0.200 & 0.900 & 0.000 & 0.830 & 0.016 & 0.965 & 0.700 \\
+ & Ref. fold (hist.) &  &  & 0.975 & 0.000 & 0.935 & 0.036 & 0.940 &  \\
+\addlinespace[2pt]
+Group slope 0.40 & Repaired & Group trend, 0.40 & 0.400 & 1.000 & 0.000 & 1.000 & 0.009 & 0.955 & 1.000 \\
+ & Ref. fold (hist.) &  &  & 1.000 & 0.010 & 1.000 & 0.003 & 0.990 &  \\
+\addlinespace[2pt]
+Unit-effect slope 0.20 & Repaired & Violation through unit effect & 0.207 & 0.895 & 0.005 & 0.815 & 0.017 & 0.975 & 0.705 \\
+ & Ref. fold (hist.) &  &  & 0.970 & 0.015 & 0.920 & 0.034 & 0.975 &  \\
+\addlinespace[2pt]
+Cancelling heterogeneity 0.10 & Repaired & Heterogeneous, aggregate cancels & -0.000 & 0.050 & 0.035 & 0.035 & 0.044 & 0.955 & 0.045 \\
+ & Ref. fold (hist.) &  &  & 0.150 & 0.035 & 0.090 & 0.071 & 0.865 &  \\
+\addlinespace[2pt]
+Cancelling heterogeneity 0.20 & Repaired & Heterogeneous, aggregate cancels & -0.001 & 0.065 & 0.420 & 0.035 & 0.047 & 0.945 & 0.073 \\
+ & Ref. fold (hist.) &  &  & 0.125 & 0.275 & 0.075 & 0.073 & 0.820 &  \\
+\addlinespace[2pt]
+Cancelling heterogeneity 0.40 & Repaired & Heterogeneous, aggregate cancels & -0.001 & 0.105 & 1.000 & 0.075 & 0.050 & 0.945 & 0.065 \\
+ & Ref. fold (hist.) &  &  & 0.260 & 1.000 & 0.160 & 0.078 & 0.810 &  \\
+\multicolumn{10}{l}{\footnotesize Historical TWFE uses 150 replications for cancelling heterogeneity 0.20 and 200 otherwise.} \\
 \bottomrule
 \end{tabular}

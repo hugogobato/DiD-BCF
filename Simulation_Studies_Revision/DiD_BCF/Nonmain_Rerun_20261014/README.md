@@ -1,5 +1,7 @@
 # Final repaired pretrend, sensitivity and application campaign
 
+**Completed 2026-10-26:** all 132 returned Colab archives validate. Together with the local application and eight registered reuses, all **9,227/9,227 non-main jobs** are complete, with no missing, failed or deferred fits. The paper incorporates these results. No assignment remains to rerun. See [the final results report](analysis_returned_20261026/RESULTS_REPORT.md). Instructions below describe reproducibility.
+
 Run the loose notebooks described in [the Colab upload guide](Colab/UPLOAD_GUIDE.md). There are **132 experiment notebooks**, in waves of **48, 48 and 36**, plus one collector. Each targets about eight hours with two CPU workers. The 9.5-hour session deadline includes setup and export reserve. Runtime varies across Colab machines; a saved metrics ZIP resumes verified complete fits from the same assignment.
 
 You can also use [the direct Colab launch links](Colab/OPEN_IN_COLAB.md) to open each published notebook without uploading it manually.

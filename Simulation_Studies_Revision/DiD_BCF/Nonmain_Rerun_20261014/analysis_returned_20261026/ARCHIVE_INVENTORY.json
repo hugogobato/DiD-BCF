@@ -1,0 +1,802 @@
+{
+  "created_epoch": 1793037910.5761087,
+  "archives": [
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_00.zip",
+      "bytes": 1038466,
+      "sha256": "c8fdf53e39df9c77fd9bb86e68a7d412d30f83e6ffbcf001b2b22669dc17e55d"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_01.zip",
+      "bytes": 1038447,
+      "sha256": "32fd5a2c2ba7da276a5826e715110feccbe6cbe9916795e976a30c48bca437e4"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_02.zip",
+      "bytes": 1038926,
+      "sha256": "3898e719f0a2593993a9f55ca61faf06feb1e8d9c2e4d98d3b453f35ba3ed867"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_03.zip",
+      "bytes": 1038609,
+      "sha256": "0cb4cc6588a4003cc887dd592ea0a319f964dc3514f2cb51725fd0a926e9d2d0"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_04.zip",
+      "bytes": 1045877,
+      "sha256": "a922c1eb95b39eb65113e8580450d24f8fff71e1684f10b6897227afde99e3ca"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_05.zip",
+      "bytes": 1045579,
+      "sha256": "c8fd1315f57991c8c5673cbb2e2f205258e3d656b3f144f41b83bebf9b45ea91"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_06.zip",
+      "bytes": 1046214,
+      "sha256": "cb511b46274aaacc173ddd4422ced0dfd388f7126419e9726796b23dfdb669db"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_07.zip",
+      "bytes": 1046911,
+      "sha256": "33d23be04b3de61b1081a5930f8ae58aac69ba4b384745ac2ed3bc56d7e446fa"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_08.zip",
+      "bytes": 1046983,
+      "sha256": "7a7a6f1340540a5c92b2e137c4e5b4f3320f9002ccd8b72ddb55c6f4ef61ffd9"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_09.zip",
+      "bytes": 1045288,
+      "sha256": "ec95df18fdcad2bbfacac23a8ec2464e59584c0d7c8161b8c3c864e2a6d8b1d9"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_10.zip",
+      "bytes": 1049139,
+      "sha256": "090a8b8ad46e04e68f49c4292023df221bbdf13db6ef12c62e6c1954fd995e37"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_11.zip",
+      "bytes": 1048605,
+      "sha256": "db0a876c5d4a5401d0eb0396ef045f006b4d7605fc7faa64554acd3c7ea83513"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_12.zip",
+      "bytes": 1048264,
+      "sha256": "1a0fca57d724d4ed397d372ffc8689b1bce95ddb354df171465e5ade90744b29"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_13.zip",
+      "bytes": 1047853,
+      "sha256": "65a02c910fe16602eae2dcf86f58c63f38778ad44582ea6707d4de47a4967aa5"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_14.zip",
+      "bytes": 1047602,
+      "sha256": "470ab76be610f777f79e066baaf1193556f68ddf9b7cef794293f288c8a74c2d"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_15.zip",
+      "bytes": 1046752,
+      "sha256": "8f4b1703406282e8abff89f305f95575abdb87749b6f5e543475b702555ed366"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_16.zip",
+      "bytes": 1048922,
+      "sha256": "f1f1dcd49140120a8346a37328bc1aeea77384f450a8e652c26dd8711d8e7d92"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_17.zip",
+      "bytes": 1045663,
+      "sha256": "cee7b695fa4346dacfaa9b61d958b9a29db1d1a2f864db305455ebbdccd87c6b"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_18.zip",
+      "bytes": 1047650,
+      "sha256": "15657d577af402cf67211bcde8422beb9d60495bf8d5d783c1a59dede998bed1"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_19.zip",
+      "bytes": 1046222,
+      "sha256": "ba41f2d55c400c035f3834cb4e5c35d9f9a1092778f25771d643334f84f9dff4"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_20.zip",
+      "bytes": 1047619,
+      "sha256": "4d87cb3a9dd7380399ab29fc5310d14136a1694fca0fe7e72b9fc97896694660"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_21.zip",
+      "bytes": 1046903,
+      "sha256": "a4e87f5639417cd5bf22703776660a3aaac311db0d5fb56bab9459b905790c3d"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_22.zip",
+      "bytes": 1047505,
+      "sha256": "0be538f2d510d8b47e14239286947c2ddeb593f44d25271be92f3076c60451b0"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_23.zip",
+      "bytes": 1046276,
+      "sha256": "1998a125751f5cbeae639d6aa60977920ce19c9cfb2d6683610f0852f447c54a"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_24.zip",
+      "bytes": 1047833,
+      "sha256": "b6c8fbfb35ed16e815a59616937f6024e734839316bf8ccb149ceb3e101af0dd"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_25.zip",
+      "bytes": 1047476,
+      "sha256": "26aeb1e2293bf9e7f2632bac751d614cb886d8a2f4c305dd9559f572063c996e"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_26.zip",
+      "bytes": 1048062,
+      "sha256": "d696ca999445d0a9807bbfb4179ef000631fbd24cdb938f26aee9f284fcdbbc5"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_27.zip",
+      "bytes": 1047846,
+      "sha256": "b23dfa69911347e8e8c0498dc6e13200481e45e3d8d78e0d753ab5329f1ac1c0"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_28.zip",
+      "bytes": 1046844,
+      "sha256": "c92d1545ddd69901649679fefa0fb85dff7de87a9dba63a7afe4f2a1fcef9628"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_29.zip",
+      "bytes": 1046164,
+      "sha256": "0d504e5df469c2d3e2f966d2e872f8185eb69e873202352240cbc69a1a48c718"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_30.zip",
+      "bytes": 1049153,
+      "sha256": "4359c28b0700721c99726abf78e8ae645b9ff946a0f4ce3c940ed3670beb010b"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_31.zip",
+      "bytes": 1047635,
+      "sha256": "892ba3249ce25b72157f03ba66a4f2fd4bf6c10505cdf74f10b7adaa3630958d"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_32.zip",
+      "bytes": 1042780,
+      "sha256": "533531d4ce30344f2a8972fbbd4387a39aa4a59ced9691e38135ad4d059c3a71"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_33.zip",
+      "bytes": 1043535,
+      "sha256": "12beb6a3c0ef83c6a25a4e27152ea8d0f16b9ecd20c72b5315452f85c5afc9c8"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_34.zip",
+      "bytes": 1043334,
+      "sha256": "3dd8f2a7af63deca578f6cf0e99448a23457dcbf96c1ca3676d6552845d4fcea"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_35.zip",
+      "bytes": 1041723,
+      "sha256": "f936b6f5e5595cc115daa3ac773d61d5678e0f9268830ca30cbf667463800c7a"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_36.zip",
+      "bytes": 1042790,
+      "sha256": "4377e07fae0967372e885fab722d459a53e11ef4e02bb6a9877bfb07a330bd7b"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_37.zip",
+      "bytes": 1042402,
+      "sha256": "7232dc3912eb96852932768322496039a29bb35266d7f992924037a74ad1482e"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_38.zip",
+      "bytes": 1042233,
+      "sha256": "2bad076da13f61e4ac8ccc9a81cdd3597f6920da3d410778352c072752b3ef14"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_39.zip",
+      "bytes": 1043188,
+      "sha256": "f580fae51d52a1ab4814b58bf928bdae591def0c35fda94efd9c4ee32884d8be"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_40.zip",
+      "bytes": 1043178,
+      "sha256": "a90234ac68efdff94f95f5d716bd82a8b94f0211cb4600f9c0e818f08e03653d"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_41.zip",
+      "bytes": 1062222,
+      "sha256": "a676ce071af5053157527849ff7ad57feed986a11b3bd5d1286a9f6ddcd619f2"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_42.zip",
+      "bytes": 1061005,
+      "sha256": "1dc36b6c16c25d83764b83037eda74e49ca9684fad2e4ba4113456cdbc09f54f"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_43.zip",
+      "bytes": 1060113,
+      "sha256": "d20f23540f86b9b7faadbd663a284374f6eb3c294c388bb057613321f90a840f"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_44.zip",
+      "bytes": 1061290,
+      "sha256": "0a9cf4c04cb34d4fe6e11a2115d59012f19f56b7df902709ee77782102e89f69"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_45.zip",
+      "bytes": 1060503,
+      "sha256": "cb90a34a1be648c3c666e1772cd302aca940ddfc9d558f60ed6513403e0c59dc"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_46.zip",
+      "bytes": 1060506,
+      "sha256": "ccf2f5112db59ebe3c81d5a8f54b7eca2958b63f555b9d75123f0d69f5160f99"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_01_shard_47.zip",
+      "bytes": 1061530,
+      "sha256": "8ebf5a2653f516200568741d08da723ca15e08c812bb6e3dd89eb6d3428eee37"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_00.zip",
+      "bytes": 1061290,
+      "sha256": "e9397de50fcc3c2d98f4e3954c17552ca93bdb9876ae58621f3bdcd33451ba28"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_01.zip",
+      "bytes": 1060697,
+      "sha256": "221102bcc54cdf1626991b3fbbc4526f386a0281246f1a3e91cc62e3439f5aea"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_02.zip",
+      "bytes": 1043336,
+      "sha256": "146d2fa0073fd06f196b663d989994cbdaeb72e92b56f28fa6dcc74195c8f5a0"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_03.zip",
+      "bytes": 1042922,
+      "sha256": "e5976d39da1e4c3dac4e52dc772703983aa4c0f350f02348577bd13af0a57a94"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_04.zip",
+      "bytes": 1040854,
+      "sha256": "5a3051ae3be6ee62348e9c6bc2cf1c1933de450adc5924f76435c23fffe2ece8"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_05.zip",
+      "bytes": 1043080,
+      "sha256": "a3f008af41260b39f81abd9a662be52c5a079ebf7103c54fd1d1d04c90b81183"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_06.zip",
+      "bytes": 1045048,
+      "sha256": "14115ca66448d2185da69d20ae68b5dc6743b7d8904a683c009c4b82ba4cc1b2"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_07.zip",
+      "bytes": 1040698,
+      "sha256": "d99366f3e0abad6106d47d0ce91ec1ecb2e8e090140bdc92d6b05742467cb68b"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_08.zip",
+      "bytes": 1043257,
+      "sha256": "10c370d4b8035f32d80eca178bee3a385b62840ec029440c265283b9aee40a76"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_09.zip",
+      "bytes": 1043782,
+      "sha256": "e40199eb71f21fa8e44a5c7961016c7084740983a77d49b5ef5d7404083c9752"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_10.zip",
+      "bytes": 1042730,
+      "sha256": "a803d664d9a034430c4c79d54f78a8791df8df40a6e5aa825da19ebfd44878d2"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_11.zip",
+      "bytes": 1042981,
+      "sha256": "15df59ae2532f29a4adfe91d7a459f6ff76e295b95567ee754ff93e3a1bc6465"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_12.zip",
+      "bytes": 1042496,
+      "sha256": "52c0bb87c881dfccdbe04d07919f1af2983b188588ad20b829539918937ea79f"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_13.zip",
+      "bytes": 1042419,
+      "sha256": "229e3d7ab59f1d32250e8e38508a197e92e9be159e7ece032cc8344199c76bfe"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_14.zip",
+      "bytes": 1043008,
+      "sha256": "4e5ee4b7de6006750e1b7a81ca004bc770df2a69d48368a1198fbe704874fb48"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_15.zip",
+      "bytes": 1040440,
+      "sha256": "0ab30c8d9aa83a41ce08e3cbb91bf7ed247703776d88372874258192b8b9d4af"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_16.zip",
+      "bytes": 1041970,
+      "sha256": "504f732926da29a385ff9cd8b611d50d3dd267ac76d0931c747e3d7df3ba8fe0"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_17.zip",
+      "bytes": 1043438,
+      "sha256": "92cebd5eda30d27395c55799e1f917ddf2cdb9656e8bd848c3c32858ac4be995"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_18.zip",
+      "bytes": 1041955,
+      "sha256": "6b770f4a5d0655011aa3a348fccdd1478a3e1a4f0131c69ed7a20c6ed787289f"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_19.zip",
+      "bytes": 1044388,
+      "sha256": "787394f074650b8b5b66633ba4f64edb2c55f917b7ee2970d43ecac1a9db3351"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_20.zip",
+      "bytes": 1043821,
+      "sha256": "b1dc8fce7f236f80a2d78480920b5ab1a6a80518522d76c812748d6549442605"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_21.zip",
+      "bytes": 1044291,
+      "sha256": "01f71ab649690e36c65ec3a7672a4cbee4067aaef2f5fcec5b0e78c58b0adc2e"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_22.zip",
+      "bytes": 1042247,
+      "sha256": "9c389c8147f29effbbab489d9a76abfb732a3c243053f1039bc7a3e725c4cbad"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_23.zip",
+      "bytes": 1044564,
+      "sha256": "6edeb3deeccafa100355702cfe2d04628d4c3a6d3984e4d2c4374e3fd911a4c8"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_24.zip",
+      "bytes": 1042175,
+      "sha256": "535cc6a291eb913c62041f8b60e12e3bfdcd7aaeb546fd280f26097ebc4d950e"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_25.zip",
+      "bytes": 1040993,
+      "sha256": "ffb23d89b7503769c6c8807061e1ab80527241bb27ab3b2282588f2faa56fa0e"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_26.zip",
+      "bytes": 1042207,
+      "sha256": "73798bd66982eaaccf490b27b341d7ccb4fdf37e0ab427118ea1307ba700d9e7"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_27.zip",
+      "bytes": 1042006,
+      "sha256": "6a8e88a907990f4429ac0fb5df580e6f97a84c7606feeba035c8876788307236"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_28.zip",
+      "bytes": 1044228,
+      "sha256": "94fd92d04f8d262cef929ac6de63ec8ac2117f2884ec1aaa7fcf7899ead2c3cc"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_29.zip",
+      "bytes": 1044298,
+      "sha256": "7ee126f8d62600414dfb8072cf4f639535f89ee7c28b0392bc1d917ceb91abd7"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_30.zip",
+      "bytes": 1042172,
+      "sha256": "35ee93e4b2929c785543f82d137b3252a5eaab5484942ceadb647051256dde2b"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_31.zip",
+      "bytes": 1047499,
+      "sha256": "f3db5ca6df5117ffc2256b563569f01ca1c8cd08c6812040373235fd64269372"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_32.zip",
+      "bytes": 1049437,
+      "sha256": "e6431c86cc072740d2e64829145d4346a5f2b1fad2066b99c369160d8cdbd09f"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_33.zip",
+      "bytes": 1048602,
+      "sha256": "bf31eee75995a5ce398f187d20293a3982ca6347b9826ab8c3bf42d807225de8"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_34.zip",
+      "bytes": 1046312,
+      "sha256": "37fd27c0cc32603e64725b436c0a61c5c1bbd9e9727082ffdf4216ca33b10069"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_35.zip",
+      "bytes": 1047961,
+      "sha256": "bccf7f9715cca4026d653f5ac9269651e4c8f60499ee5785359c26b729ef2afb"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_36.zip",
+      "bytes": 1049568,
+      "sha256": "84bf7659dbc8f4aedaf24b1f8058a5446da0d0f3b6ba076610e51af520b0fbb0"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_37.zip",
+      "bytes": 1048017,
+      "sha256": "e3f332cb603928e5de8bcbc30f747eec99af72576bd80167878a9e53943db8db"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_38.zip",
+      "bytes": 1046414,
+      "sha256": "24282c1f8dccc6f883a802182ef8eb8b7316f819c7f2c073380b66aab228cda6"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_39.zip",
+      "bytes": 1046229,
+      "sha256": "4decf6170767bdb3e097c4bcf1ebf3555f9e267892ddbc9aa3fd1df1f208bf07"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_40.zip",
+      "bytes": 1046058,
+      "sha256": "3cb7fa03eda77c03233c764d1e5313b8876caebf8768dbbbee887b1c29ff27a1"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_41.zip",
+      "bytes": 1047322,
+      "sha256": "2eaf65de3f86a28613e0d9395ac293a677f75a771fbb15d131514f04c50e646d"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_42.zip",
+      "bytes": 1047693,
+      "sha256": "d457efe4143d02fb4481022052f89bdf4a1a8e99e9fa97134cbe838abbe5d0cc"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_43.zip",
+      "bytes": 1046046,
+      "sha256": "046445f77c2306cd760b6c91c09584fe535568d6d834cbc5db1be516fc6a0cb6"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_44.zip",
+      "bytes": 1047455,
+      "sha256": "8568be700b84fc2c7a893ccf3498e6d82d6814347d30e0d62bc050e3adc22a64"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_45.zip",
+      "bytes": 1047674,
+      "sha256": "6ec456008cf9df65edbdb97d8cbc23e647803cdb9830e7866118e73ca0657708"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_46.zip",
+      "bytes": 1048301,
+      "sha256": "eba43bef5093e522c678de8cbc47f01a4dd1194e44fc7f0b2355d5495de6eab8"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_02_shard_47.zip",
+      "bytes": 1049511,
+      "sha256": "86fb1889e6a6911bfab7903252d12f0d47c33832f289d9640507a79347b375ed"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_00.zip",
+      "bytes": 1047670,
+      "sha256": "599bdaecb68e24a4ce9a484c69c2809054a60e551d6400bda8fb73470ca290ea"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_01.zip",
+      "bytes": 1046067,
+      "sha256": "521a4ca5356d265b530f085ed8c39605c0ef37b0130f78e5c846871b579f32c7"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_02.zip",
+      "bytes": 1048636,
+      "sha256": "3f57b68b4cc5df3bf6e0aadb6b887a22aafe3dc7a44de256b53a6e8008db8b0b"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_03.zip",
+      "bytes": 1045512,
+      "sha256": "dfe214f3ecd730705db4bb4a3872b69b2822fbf077c27bef5dd1d97748382eb3"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_04.zip",
+      "bytes": 1046625,
+      "sha256": "77cddd53c5768dd6b890c2968ca1b935907d2e42939b7fd9b146f475740ce1ca"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_05.zip",
+      "bytes": 1046320,
+      "sha256": "bb3871a012d3eccc48558bfc2134511d1d68c207c99154d8a07978e552739ca3"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_06.zip",
+      "bytes": 1046800,
+      "sha256": "dc8ab20334c1f2752b8de5262617b3852886b97b628842104bced9a491412c03"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_07.zip",
+      "bytes": 1046395,
+      "sha256": "0d8b0aefab758482acb8898b52c619692b0805adeb534187240c36ba6769e6bf"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_08.zip",
+      "bytes": 1048255,
+      "sha256": "5842ceda97150112dcf9403a4237bccdf5e558e5f2b2aa1d471a64505a5b6f6e"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_09.zip",
+      "bytes": 1047113,
+      "sha256": "a075e6dfb35445a294ff9cea0cf833ce3c46c8863fde5ee160552520318f8569"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_10.zip",
+      "bytes": 1047644,
+      "sha256": "2e441764c4ba22aacfe28d0473198d4affff72beb428a47103d0685180ced750"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_11.zip",
+      "bytes": 1046949,
+      "sha256": "1b5257aaf8a2dcd8d1f678ffcaec277acb25a47042309896a52e88e7df8afec4"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_12.zip",
+      "bytes": 1046293,
+      "sha256": "a799fa06c7866ae5fa0be96d1d55c270ffd6d344e2764c7191d026bc7c9842dd"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_13.zip",
+      "bytes": 1046701,
+      "sha256": "a8167505c29e78798f8f7a2b3c260f8059a64b7a3decff65254ebaa0945fc65e"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_14.zip",
+      "bytes": 1046653,
+      "sha256": "875ae708cb28441e278e2b6b99676974107385ecbf752465d04d74b972ae8ca8"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_15.zip",
+      "bytes": 1046000,
+      "sha256": "a030b99d544995fd0022ed1c548fee43969cd085a47c1c6f5d3fbf5e36f61b5c"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_16.zip",
+      "bytes": 1046495,
+      "sha256": "e23d579f34c5c5ead25d26fbcda46a403f93abd7c1b14f0a73416459c83decbb"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_17.zip",
+      "bytes": 1048496,
+      "sha256": "920a1f2c91a296daebae68c67d15a98b58008c0c2d278642cc24d529e3fdf9cc"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_18.zip",
+      "bytes": 1047096,
+      "sha256": "da34d3b69373115f330718035088d4be1969d8bd7fdc9d292cf61d543bc57f9a"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_19.zip",
+      "bytes": 1046646,
+      "sha256": "0e81618569ff76936c776ea84ca351ba30f42c37bb0303f6acd8da7d83b6ac61"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_20.zip",
+      "bytes": 1037838,
+      "sha256": "c8351d318ac7783c6a077091ae267d6a8a575784d301f0ec3f31607e1d466adb"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_21.zip",
+      "bytes": 1039000,
+      "sha256": "f24593d3f3b583ee273000c03fbc1ea914f7a0f452d12d7f626306bc9eab2492"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_22.zip",
+      "bytes": 1036813,
+      "sha256": "c533709d4995700715461fc293db34145362ec01892a2d937014a528f765ce41"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_23.zip",
+      "bytes": 1036340,
+      "sha256": "305b899d9424eda7d8473d8d3793c68b9d66cb04aad83e08eec848d6ec663085"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_24.zip",
+      "bytes": 1037351,
+      "sha256": "b09a097762709b91cd9bdc61f24aea8f89e223c760b3ea740e73fa98f58de890"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_25.zip",
+      "bytes": 1037890,
+      "sha256": "bac9ba80fe4b21637d5c6cfad1a4ed3e53e0a7c417412018cede5db9b62d0bea"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_26.zip",
+      "bytes": 1038420,
+      "sha256": "3de3cc0d6bbae6e95fcdd376ca3f5ad4a2f52a8d46fbd75164caad19baafd090"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_27.zip",
+      "bytes": 1035554,
+      "sha256": "3f21a83422326f7c25da144c609bc288d6554aef3271ae9daaf732e7fec1ffa9"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_28.zip",
+      "bytes": 1037457,
+      "sha256": "2d50a04bfe765d86790b4121ea2a1bfb905f8625c0add706c0ddb0824cf3f9ec"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_29.zip",
+      "bytes": 1036935,
+      "sha256": "eafa7489cfb7df6d459a5f556c1f7ce4af4c3524dee469bc7e9a251ea0238e1c"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_30.zip",
+      "bytes": 1039212,
+      "sha256": "2d7f831f10b53052db6bc32c792443be3d958a731775c02303d5d2275b92c7ff"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_31.zip",
+      "bytes": 1037157,
+      "sha256": "e3a6ba02ddd5627cc51128baddf0f72d91c1acd7b57b2cefb32ec6aa72614aeb"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_32.zip",
+      "bytes": 1037462,
+      "sha256": "17082bdade32eeb181b718982dc9b9288ecc1976239c3b3529154b2d27283e1c"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_33.zip",
+      "bytes": 1037276,
+      "sha256": "89363a95bb93d0f2b52c4d3423ffb37ae568dd5f0a15ffe9482071b0a3354ab6"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_34.zip",
+      "bytes": 1048448,
+      "sha256": "2aff0211898b8d86a59a4ecf581422fa90cec0ca6728acdbc1af883a05d47fdb"
+    },
+    {
+      "path": "Colab/didbcf_nonmain_nonmain_wave_03_shard_35.zip",
+      "bytes": 1046480,
+      "sha256": "58630328cb2eea44e8d80deb193c886dd9ec07dd726ab4864e459bcb4f06e5f4"
+    }
+  ],
+  "archive_count": 132,
+  "total_mib": 131.62756824493408,
+  "zone_identifier_files_removed": [
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_30.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_46.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_17.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_11.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_13.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_29.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_08.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_19.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_46.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_11.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_07.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_15.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_35.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_01.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_37.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_02.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_00.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_37.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_40.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_22.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_09.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_23.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_12.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_07.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_30.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_17.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_10.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_18.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_41.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_03.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_16.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_34.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_20.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_25.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_19.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_31.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_39.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_18.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_43.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_06.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_05.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_26.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_01.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_21.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_23.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_31.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_33.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_36.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_28.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_01.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_22.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_34.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_33.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_00.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_04.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_42.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_42.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_20.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_31.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_28.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_44.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_03.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_23.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_10.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_47.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_02.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_21.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_12.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_20.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_33.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_40.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_16.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_19.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_13.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_25.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_04.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_14.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_09.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_12.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_13.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_25.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_35.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_14.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_04.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_27.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_38.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_29.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_26.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_27.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_30.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_21.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_28.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_27.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_06.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_24.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_32.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_47.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_29.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_17.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_06.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_32.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_00.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_02.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_05.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_10.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_38.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_22.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_35.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_18.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_15.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_34.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_36.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_45.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_14.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_32.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_03.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_11.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_05.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_41.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_39.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_45.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_09.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_24.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_24.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_08.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_16.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_03_shard_15.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_44.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_43.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_02_shard_08.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_07.zip:Zone.Identifier",
+    "Colab/didbcf_nonmain_nonmain_wave_01_shard_26.zip:Zone.Identifier"
+  ],
+  "zip_bytes_unchanged": true
+}
