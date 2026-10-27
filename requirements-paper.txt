@@ -1,0 +1,8 @@
+# Exact dependency versions in the final paper campaign manifest.
+# The repaired native engine is built separately; do not add a global stochtree wheel.
+numpy==2.4.6
+pandas==3.0.3
+scipy==1.18.0
+scikit-learn==1.9.0
+cmake==4.3.4
+matplotlib==3.11.0

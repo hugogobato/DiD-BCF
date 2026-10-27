@@ -1,0 +1,465 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=2.6cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage[round,authoryear]{natbib}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  frame=single,
+  framesep=4pt,
+  rulecolor=\color{black!25},
+  backgroundcolor=\color{black!3},
+  showstringspaces=false,
+}
+
+\newcommand{\att}{\mathrm{ATT}}
+\newcommand{\catt}{\mathrm{CATT}}
+\newcommand{\gatt}{\mathrm{GATT}}
+\newcommand{\Xb}{\mathbf{X}}
+
+\title{Prognostic--treatment identification in DiD-BCF,\\
+       and two repairs to the revision simulation design}
+\author{Technical note accompanying the revision}
+\date{23 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This note does three things. First, it records two repairs made to the revision
+simulation suite: the linearity-degree axis, which previously changed nothing
+any estimator could observe, now changes the covariate parameterisation handed
+to the estimators (degree~2) and the shape of the treatment-effect surface
+(degree~3); and the pre-trend recentring, which annihilated the plain DiD-BCF
+estimate, is disabled. Second, and more importantly, it addresses a question
+raised by the growing-with-$N$ bias of the posterior correction: whether the
+prognostic and treatment forests of DiD-BCF are separately identified. They are
+not, and the failure is not an artefact of the revision code. It is present in
+the model equation of the submitted paper and in every notebook of the original
+simulation study. It does not, however, bite there: refitting the published
+specification on the original data-generating process recovers the true effect
+to within one per cent at every panel size tested, so the published results
+stand. What activates the latent failure is the canonical design the reviewers
+asked for, in which an unobserved unit effect correlated with assignment forces
+the prognostic forest to split on the treated-group indicator. Third, the note
+argues that the failure has a clean interpretation and a clean fix: the
+parallel-trends assumption is exactly the restriction that the untreated
+outcome has no group-by-time interaction, the current specification does not
+encode that restriction, and imposing it additively restores identification.
+\end{abstract}
+
+% =============================================================================
+\section{The identification problem}
+% =============================================================================
+
+\subsection{Statement}
+
+DiD-BCF fits, in the reparameterised form the paper adopts,
+\begin{equation}\label{eq:model}
+  Y_{it} = \mu(D_i, t, \Xb_{it}) + \tau(\Xb_{it}, k_{it})\, D_{it}
+           + \varepsilon_{it},
+\end{equation}
+where $D_i = \mathbb{I}(G_i \neq \infty)$ is time-invariant ever-treated status,
+$D_{it} = D_i \cdot \mathbb{I}(k_{it} \geq 0)$ is the post-treatment indicator,
+and $\mu$ and $\tau$ are given independent BART priors. The reparameterisation
+is the paper's own contribution and it is a good one: because $\tau$ is
+multiplied by $D_{it}$, the estimation problem for $\tau$ is confined to the
+post-treatment region and $\tau$ is not asked to learn a structural zero.
+
+The difficulty is on the other side. Write the treatment effect term as a
+function of the arguments $\mu$ already has. Since
+\[
+  D_{it} = \mathbb{I}(D_i = 1)\cdot\mathbb{I}(t \geq g),
+\]
+the product $\tau(\Xb, k)\,D_{it}$ is a function of $(D_i, t, \Xb)$ and nothing
+else. It therefore lies in the domain of $\mu$. For any $c \in [0,1]$ the pair
+\begin{equation}\label{eq:flat}
+  \bigl(\mu + c\,\tau(\Xb,k)D_{it},\;\; (1-c)\,\tau\bigr)
+\end{equation}
+produces exactly the same fitted values, the same residuals and the same
+likelihood as $(\mu, \tau)$. The data contain no information whatever about
+$c$. What separates the two forests is only the prior: in the default
+configuration $\mu$ has 200 trees and a diffuse leaf scale while $\tau$ has 50
+trees and an aggressive shrinkage prior, so the posterior prefers to place the
+effect in $\mu$.
+
+In tree terms the reconstruction is trivial. A single tree in the prognostic
+forest that splits once on the group indicator and once on \texttt{time}
+isolates the treated post-treatment cells exactly. No approximation, no
+smoothing, and no large sample is required.
+
+\subsection{This is regularisation-induced confounding, with the usual guard removed}
+
+The phenomenon is the one Bayesian Causal Forests was designed to prevent.
+\citet{Hahn2020} construct BCF precisely so that the treatment indicator does
+\emph{not} enter the prognostic function; instead $\mu$ receives an estimate of
+the propensity score, $\mu(\Xb, \hat\pi(\Xb))$, which supplies the information
+about selection that $\mu$ needs without handing it the ability to reproduce
+the treatment assignment itself. The submitted paper reverses both halves of
+that prescription: the group indicator is placed inside $\mu$, and the
+propensity is omitted, with the justification (Section 3.3 of the paper) that
+$\hat\pi$ has been found unimportant for BCF's predictive performance in
+ablation studies. Predictive unimportance and identification are different
+questions. In the original BCF the propensity is not there to predict; it is
+there to be the only channel through which treatment-related information
+reaches $\mu$, so that the treatment indicator can be excluded.
+
+\subsection{Parallel trends is the missing restriction}
+
+There is a more useful way to see what has gone wrong, and it points directly
+at the fix.
+
+The paper's own description of $\mu$ is that it "captures the expected outcome
+trajectory for units in the absence of treatment $\ldots$ while allowing for
+\emph{static} differences between the eventually-treated and control groups".
+That word is the whole of the parallel-trends assumption. Conditional parallel
+trends says that, given covariates, the untreated potential outcome of the
+treated group and that of the control group move together; the two groups may
+sit at different levels, but the group may not interact with time. Formally,
+the assumption is that $\mu$ is additively separable in the sense
+\begin{equation}\label{eq:pta}
+  \mu(D_i, t, \Xb_{it}) = a(D_i, \Xb_{it}) + b(t, \Xb_{it}),
+\end{equation}
+so that the group enters only through a level and the time path is common
+across groups conditional on $\Xb$.
+
+Equation~\eqref{eq:model} as implemented does not impose \eqref{eq:pta}. A
+single unrestricted BART over $(D_i, t, \Xb)$ can represent arbitrary
+group-by-time interaction in the untreated outcome, and a group-by-time
+interaction in $\mu$ is observationally indistinguishable from a treatment
+effect. The model therefore does not encode the identifying assumption that the
+DiD framework rests on, and the ATT is not identified within it. Under
+\eqref{eq:pta} the flat direction \eqref{eq:flat} disappears: $a(D_i,\Xb)$ has
+no time argument and $b(t,\Xb)$ has no group argument, so their sum cannot
+represent $\tau(\Xb,k)\mathbb{I}(D_i=1)\mathbb{I}(t\geq g)$, and $c$ is pinned
+at zero.
+
+This also explains why the symptom is a bias that \emph{grows} with the sample
+size rather than one that shrinks. Nothing about the flat direction is a
+finite-sample matter. What changes with $N$ is only how sharply the prognostic
+forest can resolve the group-by-time cells against its own shrinkage prior:
+with more units per cell the leaf posteriors concentrate, $\mu$ takes a larger
+share, and the estimator drifts further from the truth. An estimator whose bias
+increases in $N$ is not noisy, it is inconsistent.
+
+% =============================================================================
+\section{Is the problem present in the original paper and code?}
+% =============================================================================
+
+The specification is, in both, and by design rather than by accident. The
+\emph{symptom} is not: the published results are unaffected, for reasons that
+turn out to be informative.
+
+\subsection{In the submitted manuscript}
+
+Equation~(1) of \texttt{JBES\_Submission/main.tex} (page~6) defines the
+prognostic function as $\mu(D_i, t, \Xb_{it})$, with the group indicator and
+calendar time as explicit arguments. Equation~(4) (page~9), the estimated
+specification, repeats them. The sentence immediately following Equation~(4)
+states that
+$\hat\pi(\Xb_i, G_i)$ is deliberately not used. The manuscript therefore
+specifies exactly the configuration analysed in Section~1: the group indicator
+inside $\mu$, calendar time inside $\mu$, and no propensity. Nothing in the
+manuscript restricts $\mu$ to the additively separable form \eqref{eq:pta}
+that its own prose describes.
+
+\subsection{In the original simulation code}
+
+Every notebook under \texttt{Simulation\_Studies/Original/DiD\_BCF/} uses the
+same design matrix and the same forest restrictions. Taking
+\texttt{DiD\_BCF\_ATE\_lin\_1.ipynb} as representative,
+
+\begin{lstlisting}[language=Python]
+data_linear['pi_hat'] = 0.5
+data_linear['D'] = data_linear['post_treatment'] * data_linear['treated_group']
+X = np.array(data_linear[["treated_group"] + x_columns + ["time"]])
+prognostic_forest_params = {"keep_vars": np.array([0, 1] + list(range(2, 8)) + [8])}
+treatment_effect_forest_params = {"keep_vars": np.array([8])}
+bcf_model.sample(X_train=X, Z_train=Z, y_train=y,
+                 pi_train=np.array(data_linear['pi_hat']), ...)
+\end{lstlisting}
+
+Column~0 is \texttt{treated\_group} and column~8 is \texttt{time}, and the
+prognostic \texttt{keep\_vars} retains both. The propensity passed to the
+sampler is the constant $0.5$, which carries no information, so the guard that
+BCF would normally provide is switched off. The GATE and CATE notebooks differ
+only in which columns the \emph{treatment} forest may split on; in all of them
+the prognostic forest keeps the ever-treated indicator together with time. The
+revision code inherited the specification unchanged, in the constants
+\texttt{PROGNOSTIC\_COLS} and \texttt{TREATMENT\_COLS} of
+\texttt{did\_bcf\_revision/did\_bcf.py}, where the group indicator appears twice
+(as \texttt{eventually\_treated} and again as \texttt{treatment\_group}).
+
+\subsection{Does it bite in the original design? No.}
+
+The flat direction exists in the published specification, but whether the
+posterior actually travels along it is an empirical question, and the answer
+for the original simulation study is that it does not.
+
+Reproducing the published configuration exactly (the design matrix, the forest
+restrictions and the constant propensity of the code listing above, on the
+original \texttt{generate\_did\_data} DGP) and reading the treatment forest
+directly, the share of the true effect retained by $\hat\tau$ on treated
+post-treatment rows is flat in $N$ and indistinguishable from one:
+
+\begin{table}[htbp]
+\centering
+\caption{Share of the true effect retained by the treatment forest,
+$\hat\tau/\att$, on treated post-treatment rows. Upper panel: the published
+specification on the original DGP. Lower panel: the same estimator family on
+the revision's canonical DGP, which adds an unobserved unit effect
+$\alpha_i$ correlated with assignment. Replication counts in parentheses.}
+\label{tab:leak}
+\begin{tabular}{lccc}
+\toprule
+$N$ & 200 & 800 & 1600 \\
+\midrule
+\multicolumn{4}{l}{\emph{Original design (random assignment, no $\alpha_i$, time-varying covariates)}}\\
+$\hat\tau/\att$ & 1.028 \; (3) & 1.009 \; (2) & 1.008 \; (2) \\[4pt]
+\multicolumn{4}{l}{\emph{Revision canonical design (selection on an unobserved unit effect)}}\\
+$\hat\tau/\att$ & 0.95,\; 0.50 & 0.47,\; 0.36 & 0.49 \\
+Attenuation implied by the sweep bias & 0.83 & 0.50 & 0.43 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This matters for how the revision should describe the problem, and it is a
+better story than the one the diagnosis first suggested. The published results
+are not merely defensible at the reported panel size; the estimator shows no
+leakage at all in the design it was published on, at any $N$ tested. What
+activates the flat direction is the canonical design that Reviewers~1.4
+and~2.3 asked for.
+
+The mechanism is plausible although it has not been isolated, and the
+difference between the two designs is not subtle. In the original DGP,
+treatment is assigned at random, there is no unobserved unit effect, and the
+group indicator carries only a constant level shift of $0.75$, so the
+prognostic forest has almost no reason to split on it; the covariates, drawn
+per unit-period, give $\mu$ ample legitimate structure to fit instead. In the
+revision DGP, $\alpha_i$ has unit standard deviation and is correlated with
+assignment, so the treated and control groups differ substantially in level and
+$\mu$ \emph{must} split on the group indicator to fit at all. Once a tree is
+already split on the group, capturing the treatment effect costs one further
+split on \texttt{time}. On this reading the unobserved confounder is what
+converts a latent identification failure into an active one, which is a
+testable claim: setting \texttt{alpha\_sd = 0} and \texttt{conf\_strength = 0}
+in the revision DGP should restore $\hat\tau/\att \approx 1$.
+
+The lower panel is the revision's own measurement, and there the attenuation
+implied by the observed bias of the corrected estimator over the sweep,
+$1 + \mathrm{bias}/\tau$, reproduces the directly measured retention to within
+replication noise. The correction is not introducing that bias; it is
+faithfully propagating a split between $\mu$ and $\tau$ that the likelihood
+never identified.
+
+The summary for the revision is therefore that the published numbers stand, and
+that the specification nevertheless needs the restriction of Section~3 before
+the paper can make any claim under selection on unobserved fixed effects. That
+is a considerably more comfortable position than a correction notice, and it
+turns the reviewers' request into the reason the weakness was found: the harder
+canonical design they asked for is exactly what exposed it.
+
+% =============================================================================
+\section{The fix}
+% =============================================================================
+
+The requirement is to make the prognostic function unable to represent a
+group-by-time interaction, while leaving it able to represent a static group
+level difference, covariate-dependent trends, and arbitrary non-linearity in
+the covariates. Three routes are available and they are not equally good.
+
+The first, and the one recommended here, is to impose \eqref{eq:pta}
+structurally by moving the group level out of the forest. Fit the prognostic
+forest on $(\Xb, t)$ only, with the group indicator removed from its split set,
+and carry the static group difference as an additive random-effect intercept.
+In \texttt{stochtree} this is a single argument:
+
+\begin{lstlisting}[language=Python]
+PROGNOSTIC_COLS = ["X1", "X2", "X3", "X4", "X5", "time"]   # no group indicator
+model.sample(
+    X_train=X, Z_train=Z, y_train=y,
+    rfx_group_ids_train=df["treatment_group"].to_numpy(dtype=np.int32),
+    prognostic_forest_params={"keep_vars": prog_idx},
+    treatment_effect_forest_params={"keep_vars": treat_idx},
+)
+\end{lstlisting}
+
+The fitted prognostic surface is then $f(\Xb, t) + a_{G_i}$, which is exactly
+\eqref{eq:pta}: the forest sees time but not the group, the random effect sees
+the group but not time, and no combination of the two can produce
+$\mathbb{I}(D_i{=}1)\mathbb{I}(t \geq g)$. Covariate-dependent trends
+$s(\Xb)\,t$ remain expressible inside the forest, so conditional parallel
+trends is imposed rather than assumed away. The cost is that group-specific
+\emph{non-linear} level effects must now come through $\Xb$ rather than through
+free interaction with the group indicator, which is precisely the restriction
+the DiD framework asks for.
+
+The second route is the \citet{Hahn2020} prescription: drop the group indicator
+from $\mu$ and add the estimated propensity $\hat\pi(\Xb_i, G_i)$ in its place.
+This is a real improvement over the status quo and it is what BCF was built to
+do, but it is a mitigation rather than a guarantee. When selection is sharp,
+$\hat\pi$ separates the groups well, and a tree that splits on
+$\hat\pi > \text{threshold}$ and again on \texttt{time} can approximate the
+interaction. It protects well in the settings where selection runs through
+unobservables and less well in \texttt{B1\_selection\_obs}. It composes with
+the first route and both can be used together.
+
+The third route is to sidestep the levels entirely by fitting the model in
+first differences, so that the unit effect and the static group difference are
+removed before estimation. This is closest to what the posterior correction
+already does internally and it would make the correction's nuisance estimate
+$m^s$ coherent with the model that produced it, but it is a larger change to
+the estimator than the revision needs.
+
+Whichever route is taken, the acceptance test is the same and it should become
+a permanent part of the suite: on \texttt{B2\_sweep}, the bias of both plain and
+corrected DiD-BCF must \emph{decrease} in $N$. That single check would have
+caught this before publication.
+
+% =============================================================================
+\section{Two repairs to the simulation design}
+% =============================================================================
+
+\subsection{The linearity-degree axis}
+
+The axis was vacuous as delivered. In the revision DGPs the covariates are
+drawn once per unit, deliberately, so that $\alpha_i$ and $f(\Xb_i)$ are
+genuinely time-invariant and the design tests selection on unobserved
+\emph{fixed} heterogeneity. The linearity degree entered only through
+$f(\Xb_i)$, a unit constant, and through $\gamma_t$, a time constant, and both
+are removed by any two-way within transformation. On a fixed seed the demeaned
+outcome was identical across degrees to $2\times10^{-15}$, and
+Callaway--Sant'Anna, Gardner and synthetic DiD returned bit-identical estimates
+at $d=1,2,3$.
+
+It is worth recording that this was a regression relative to the original
+study, and that the cause was a deliberate and correct design choice. In
+\texttt{Simulation\_Studies/Original/}, covariates are drawn per unit-period,
+so the non-linear covariate contribution is time-varying and survives
+differencing: on a fixed seed the two-way demeaned outcome moves by up to
+$47.8$ across degrees and the naive $2\times2$ DiD moves from $3.35$ to $2.93$
+to $3.97$. Drawing covariates once per unit is what the canonical design
+requires; it simply removed the only channel the degree had.
+
+The repaired axis puts the non-linearity where a differencing estimator must
+confront it. The data-generating process is now written entirely in latent
+covariates and does not vary with the degree at all. What varies is the
+parameterisation handed to the estimators.
+
+At $d=1$ the estimators observe the latent covariates, so the trend, the
+propensity and the prognostic level are all linear in the data they see and
+linear adjustment is correctly specified. At $d=2$ the three nuisance
+covariates are replaced by their \citet{KangSchafer2007} transforms, as used
+for the misspecified designs of \citet{SantAnna2020}: a cubic of an
+interaction, $\exp(X_4/2)$, and the square of a sum. The outcome and every true
+estimand are bit-identical to $d=1$; only the difficulty of recovering the
+nuisance functions changes, so any difference in estimator performance is
+misspecification and nothing else. At $d=3$ the effect surface additionally
+becomes quadratic in $X_2$ with an $X_1$-by-$X_2$ interaction, so $\tau$ is
+non-linear and non-additive in the modifiers, with $\mathrm{Var}(\tau)$ held
+fixed so that the CATT-surface metrics stay comparable across the axis. The
+effect modifiers $X_1$ and $X_2$ are never transformed, which keeps
+"non-linear nuisance" and "non-linear effect" as separate axes.
+
+The axis now has measurable content. Regressing the untreated outcome change on
+the observed covariates and a treatment dummy, the residual violation of
+conditional parallel trends that linear adjustment cannot remove is $-0.001$ at
+$d=1$ and $+0.037$ at $d \geq 2$; the treatment-effect surface is identical at
+$d=1$ and $d=2$ and differs by up to $10.5$ at $d=3$, with
+$\mathrm{SD}(\tau)$ moving only from $1.063$ to $1.069$. These are asserted by
+\texttt{Results/\_staging/check\_linearity\_axis.py}, which should be run
+whenever the DGP module is touched.
+
+One consequence should be stated plainly. Under
+\texttt{selection="unobservable"}, which is the setting of
+\texttt{B1\_baseline}, \texttt{B1\_strong\_confounder},
+\texttt{B1\_serial\_corr}, \texttt{B1\_null} and both sweep scenarios, the
+covariates are balanced across arms by construction, so no adjustment at all is
+needed and the linearity degree loads only through nuisance-fitting variance.
+It moves \emph{bias} only where assignment depends on the covariates. That was
+true of \texttt{B1\_selection\_obs} alone, so a scenario
+\texttt{B1\_selection\_both} has been added, combining an unobserved confounder
+with covariate-driven assignment. It is the only cell of the design in which
+conditional parallel trends is genuinely violated, and it is where the repaired
+axis does its work.
+
+\subsection{The pre-trend recentring}
+
+\texttt{plain\_estimands} defaulted to reporting
+$\hat\tau(i,t) - \hat\tau(i,g-1)$, on the documented reasoning that under
+conditional parallel trends the subtracted term is approximately zero. The
+premise is right and the conclusion does not follow. Because $Z = D_{it}$ is
+zero on every pre-treatment row, those rows contribute nothing to the
+likelihood of $\tau$; the treatment forest has no gradient with which to split
+on time before adoption, and $\hat\tau(i, g-1)$ is not an estimate of a
+pre-treatment effect but the post-treatment estimate re-evaluated at a
+different time value. The subtraction removes the entire estimate rather than a
+small correction. Measured on one \texttt{B1\_baseline} replication,
+$\hat\tau$ is $3.655$ on treated post rows and $3.669$ at $g-1$ against a true
+ATT of $3.849$, so the reported ATT is $3.655$ with the flag off and $-0.014$
+with it on; the same near-equality holds at every panel size tested.
+
+The default is now \texttt{False} and the flag is retained only to reproduce
+the earlier runs. The command-line switch in \texttt{scripts/run\_did\_bcf.py}
+has been inverted accordingly, from \texttt{--no-pretrend-recenter} to
+\texttt{--pretrend-recenter}.
+
+This leaves the revision without a pre-trend diagnostic, which
+Reviewer~3.2.3 asked for, and the reason is structural rather than incidental.
+A pre-trend test requires $\tau$ to be estimable before adoption, which means
+the unconstrained specification with $Z = \mathbb{I}(G_i \neq \infty)$ active in
+all periods. That is Equation~(1) of the manuscript, the specification the
+paper argues against on complexity grounds, and the earlier experience that it
+estimates treatment effects less well is consistent with that argument. The two
+goals are in tension and the sensible resolution is to run the unconstrained
+specification as a \emph{diagnostic} fit alongside the constrained one used for
+estimation, reporting $\hat\tau(\Xb, k)$ for $k<0$ from the former and the ATT
+from the latter. This costs one extra fit per replication and asks the
+unconstrained model only for the thing it is good at.
+
+% =============================================================================
+\section{Status}
+% =============================================================================
+
+The code changes described in Section~4 are in place in
+\texttt{did\_bcf\_revision/} and pass the smoke and acceptance tests. They do
+not require re-running the R benchmarks, whose estimates depend only on the
+observed panel, but they do change the panels at $d \geq 2$, so every estimator
+must be re-run to produce a coherent comparison. The identification fix of
+Section~3 is not yet implemented, because it changes the estimator rather than
+the design and should be validated on its own before the full grid is
+committed. The recommended sequence is to implement the additive
+group-effect specification, run \texttt{B2\_sweep} alone at all four panel
+sizes, confirm that the bias of both plain and corrected DiD-BCF decreases in
+$N$, and only then re-run the remaining scenarios.
+
+\begin{thebibliography}{9}
+\bibitem[Hahn et al.(2020)]{Hahn2020}
+Hahn, P. R., Murray, J. S., and Carvalho, C. M. (2020).
+Bayesian regression tree models for causal inference: regularization,
+confounding, and heterogeneous effects.
+\emph{Bayesian Analysis} 15(3), 965--1056.
+\url{https://doi.org/10.1214/19-BA1195}
+
+\bibitem[Kang and Schafer(2007)]{KangSchafer2007}
+Kang, J. D. Y. and Schafer, J. L. (2007).
+Demystifying double robustness: a comparison of alternative strategies for
+estimating a population mean from incomplete data.
+\emph{Statistical Science} 22(4), 523--539.
+\url{https://doi.org/10.1214/07-STS227}
+
+\bibitem[Sant'Anna and Zhao(2020)]{SantAnna2020}
+Sant'Anna, P. H. C. and Zhao, J. (2020).
+Doubly robust difference-in-differences estimators.
+\emph{Journal of Econometrics} 219(1), 101--122.
+\url{https://doi.org/10.1016/j.jeconom.2020.06.003}
+\end{thebibliography}
+
+\end{document}

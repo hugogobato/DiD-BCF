@@ -1,34 +1,44 @@
-# Simulation results and paper assets
+# Final paper results and publication assets
 
-**Final update (2026-10-26):** all 14,327 planned jobs are complete. The current combined main/non-main simulation overlay is `aggregated_repaired_20261026/`. It adds all 4,000 diagnostic, 4,000 pretrend-impact and 1,200 simulation sensitivity fits while preserving the completed main values. All 27 application jobs remain in `empirical_repaired_20261014/`. No planned reruns remain.
+The complete simulation overlay is [`aggregated_repaired_20261026/`](aggregated_repaired_20261026/). The complete application is [`empirical_repaired_20261014/`](empirical_repaired_20261014/). All 14,327 planned final jobs are complete. For exact file descriptions, method labels, filtering examples and uncertainty conventions, use the [visualization handoff](../../RESULTS_VISUALIZATION_HANDOFF.md).
 
-After the main-overlay commands below, run:
+| Directory | Role |
+|---|---|
+| `aggregated_repaired_20261026/` | Current combined main/non-main simulation metrics and retained benchmark comparisons. Start here for new analysis. |
+| `empirical_repaired_20261014/` | Current application group, county-year, contrast, diagnostic and prior/bundle summaries. |
+| `tables/`, `figures/` | Current publication LaTeX fragments and vector figures mirrored from the manuscript integration. |
+| `analysis/` | Builders for current overlays, table/figure adapters and shared plotting helpers. |
+| `aggregated_repaired_20261014/` | Validated main-only intermediate dependency of the final combined builder. Its main values are preserved in the current overlay. |
+| `aggregated/`, `empirical/` | Historical-generation inputs, retained for benchmarks and explicit historical comparisons. These are not the current proposed-method results. |
 
-```sh
-python Results/analysis/update_repaired_nonmain.py
-python Results/analysis/publish_nonmain_assets.py
-```
+The older main-only overlay remains because `update_repaired_nonmain.py` consumes it and verifies unchanged main results. It is a required build input, not a competing final result release. Similarly, historical benchmark and reference-fold inputs remain because the paper still compares those estimators.
 
-These commands validate the complete non-main collection, retain each prior rate separately, and generate the final pretrend/sensitivity tables and figures. Historical benchmark inputs remain unchanged. The main simulation adapters preserve the new non-main and application table fragments. The dated descriptions below explain the preceding main update.
+## Read results without sampling
 
-The current repaired main results are in `aggregated_repaired_20261014/`. They cover all 5,100 main fits across 48 cells, with 100 replications per cell except 200 in each of the three sharp-null cells. The main sampling budget is 50 GFR sweeps, no extra burn-in, 500 retained draws, thinning five and three chains, with the proper IG(2,1) variance prior and repaired native tree transition.
+Load the current CSVs directly with pandas. `main_scalar_metrics.csv` and `main_surface_metrics.csv` isolate final main DiD-BCF. `metrics_all.csv` and `surface_all.csv` add benchmark/historical rows. `pretrend_summary.csv`, `pretrend_profiles.csv`, `prior_sensitivity.csv` and `prior_sensitivity_paired.csv` support the non-main figures. The visualization handoff explains the additional reference-fold selection used by existing manuscript adapters.
 
-`aggregated/` remains the immutable historical result set. It is needed for the original-raw comparison and benchmark evidence. The versioned current overlay replaces only the repaired main DiD-BCF cells, preserves historical benchmark rows, and labels any historical non-main raw rows `plain_historical`. Historical corrected/reduced-data comparisons are separate from the repaired posterior. The repaired simulation pretrend and sensitivity campaigns are complete in the 2026-10-26 overlay; the returned eight non-main checks are supporting budget evidence.
+Main and non-main replication summaries are included. No posterior effect arrays, native compilation or ZIP extraction are needed for the reported paper metrics. The complete non-main scalar diagnostic table is committed losslessly as `DiD_BCF/Nonmain_Rerun_20261014/Results/collected_20261026/diagnostics.csv.gz`; pandas reads that gzip directly. Its storage record preserves the uncompressed checksum.
 
-`empirical_repaired_20261014/` contains the completed repaired-engine application inputs, all prior-rate and computational-bundle summaries, two supplementary table fragments, and the updated application figure. All 27 jobs are validated, comprising 22 new local fits and five verified reuses. `empirical/` remains the historical application input. The [current application report](../DiD_BCF/Nonmain_Rerun_20261014/analysis/application_report.md) and [non-main Colab guide](../DiD_BCF/Nonmain_Rerun_20261014/Colab/OPEN_IN_COLAB.md) document the completed local branch and completed three simulation waves.
+## Regenerate existing simulation tables and figures
 
-The current loose notebooks, returned ZIPs, compact summaries and validation records live in [`../DiD_BCF/Paper_Rerun_20261011/`](../DiD_BCF/Paper_Rerun_20261011/README.md). No posterior arrays are needed to regenerate the reported paper metrics. Older experiment workflows are under `../../Old_Simulation_Studies/Revision_DiD_BCF/`; the old proper-prior paths have documented compatibility redirects.
-
-From `Simulation_Studies_Revision/`, regenerate the repaired main overlay and publication assets with:
+From `Simulation_Studies_Revision/`, run in this order:
 
 ```sh
 python Results/analysis/update_repaired_main.py
 python Results/analysis/make_jbes_sim_tables.py
 python Results/analysis/make_jbes_figures.py
+python Results/analysis/update_repaired_nonmain.py
+python Results/analysis/publish_nonmain_assets.py
 ```
 
-The overlay builder validates the sealed campaign and its completed-fit status, copies the verified scalar/surface metrics, rebuilds sqrt(N) error summaries from all repaired replications, and records source/output checksums. Historical `aggregated/` is not overwritten. The table and figure adapters retain existing benchmark and reference-fold data, update the repaired main rows, and write the affected assets to `JBES_Submission/`. Pretrend tables and figures remain historical and are regenerated only with `--include-historical`.
+The first builder validates the sealed 5,100-fit main collection and preserves benchmark inputs. The final combined builder validates all 9,227 non-main jobs, merges the repaired diagnostic and pretrend-impact results, retains each prior rate separately, and records hashes. The final asset publisher writes pretrend/sensitivity tables and figures. The main adapters preserve those non-main and application table fragments on subsequent runs. The historical `aggregate_all.py` rebuilds historical-generation inputs and is not part of this current workflow.
 
-`Results/figures/` contains updated main simulation figures mirrored into `JBES_Submission/sim_figures/`; the main small-panel figure is also mirrored into its existing image location. `JBES_Submission/sim_tables/` contains the updated numerical table fragments. The paired main comparison and all supporting diagnostics are in the campaign's `analysis_returned_20261014/` folder. The manuscript evidence and integration checks are recorded in `JBES_Submission/audit/results_update_20261014/` at the project root.
+Publication scripts locate `JBES_Submission/` beside the Git checkout in the author's workspace and mirror generated assets into this Results directory. They may create that sibling asset directory in a standalone checkout. These commands do not run MCMC or regenerate application fits.
 
-The legacy `aggregate_all.py` and `make_analysis.py` commands rebuild historical-generation reports. They are not the repaired main update commands above. The earlier Results README is preserved under `Old_Simulation_Studies/Revision_DiD_BCF/Results_README_before_repaired_20261014.md`.
+The [application reporting and integration scripts](../DiD_BCF/Nonmain_Rerun_20261014/analysis/) retain their original input validation and dry-run integration support. The current application outputs already contain all 27 validated jobs; primary bundle 0 and computational repetitions remain separate. To create new application visualizations, load the current application CSVs rather than reapplying old manuscript text replacements.
+
+## Evidence and historical scope
+
+The final campaign packages contain returned compact ZIPs, source pins, manifests, assignments, reuse records, collection status and independent numerical audit reports. [Main report](../DiD_BCF/Paper_Rerun_20261011/analysis_returned_20261014/) and [non-main report](../DiD_BCF/Nonmain_Rerun_20261014/analysis_returned_20261026/) document validation. The [application report](../DiD_BCF/Nonmain_Rerun_20261014/analysis/application_report.md) documents its separate local branch.
+
+Development history is preserved visibly under [Old_Simulation_Studies](../../Old_Simulation_Studies/README.md). Historical method outputs are not relabeled as the repaired posterior. Finite-chain diagnostics and interval-coverage limitations remain part of the paper's evidence.

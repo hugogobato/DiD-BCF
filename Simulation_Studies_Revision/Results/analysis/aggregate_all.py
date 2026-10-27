@@ -9,7 +9,7 @@ DiD_BCF_old_generation/summaries_*.csv      plain + corrected DiD-BCF (old
                                             generation; moved out of the tracked
                                             tree to the local legacy folder, see
                                             the note below)
-Pretrend/summaries_pretrend_*.csv           DiD-BCF pre-trend diagnostic + TWFE
+Archived Pretrend/summaries_pretrend_*.csv           DiD-BCF pre-trend diagnostic + TWFE
                                             event-study placebo, 200 reps, at
                                             linearity degrees 1 and 3
 Results/summaries_twfe_*.csv                TWFE / OLS
@@ -19,7 +19,7 @@ Results/_staging/**/summaries_*.csv         wang (grf-DiD), doubleml  [unzipped 
 The committed ``Results/aggregated/`` files remain the published copy of the
 old-generation runs.  Rebuilding them requires the legacy summaries that sit on
 disk under ``Old_Simulation_Studies/_moved_from_repo/Simulation_Studies_Revision/DiD_BCF_old_generation/``
-(a pre-existing local legacy folder); without it the rebuild
+(the public development archive); without it the rebuild
 simply omits the old-generation rows.
 """
 from __future__ import annotations
@@ -36,9 +36,8 @@ sys.path.insert(0, ROOT)
 from did_bcf_revision.metrics import compute_metrics, surface_metrics, sqrt_n_summary  # noqa: E402
 
 OUT = os.path.join(ROOT, "Results", "aggregated")
-# The old-generation DiD-BCF notebooks and summaries were moved out of the
-# tracked tree; they stay on disk under the repo-level legacy folder
-# (Old_Simulation_Studies/; retained legacy paths are documented).
+# Historical DiD-BCF and diagnostic summaries remain tracked in the public
+# Old_Simulation_Studies archive; current repaired builders do not use this CLI.
 LEGACY_OLD_GENERATION = os.path.join(
     os.path.dirname(ROOT), "Old_Simulation_Studies", "_moved_from_repo",
     "Simulation_Studies_Revision", "DiD_BCF_old_generation")
@@ -52,7 +51,8 @@ PATTERNS = [
     # (verified identical where they overlap), so the drop_duplicates below
     # keeps whichever is read first without changing any value.  _retired/ holds
     # superseded blocks and is deliberately not globbed.
-    os.path.join(ROOT, "Pretrend", "summaries_pretrend_*.csv"),
+    os.path.join(os.path.dirname(ROOT), "Old_Simulation_Studies",
+                 "Revision_DiD_BCF", "Pretrend", "summaries_pretrend_*.csv"),
     os.path.join(ROOT, "R_code", "*_datasets", "**", "summaries_*.csv"),
     os.path.join(ROOT, "Results", "_staging", "**", "summaries_*.csv"),
 ]

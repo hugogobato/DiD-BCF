@@ -1,74 +1,61 @@
 # DiD-BCF
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-This is the Github Repository for the paper "Forests for Differences: Robust Causal Inference Beyond Parametric DiD" (https://doi.org/10.48550/arXiv.2505.09706).
+Replication code and results for **Forests for Differences: Robust Causal Inference Beyond Parametric DiD**, by Hugo Gobato Souto and Francisco Louzada Neto. [Paper/preprint](https://doi.org/10.48550/arXiv.2505.09706).
 
-## Paper abstract
+DiD-BCF estimates heterogeneous treatment effects in panel difference-in-differences designs using Bayesian forests. The final implementation separates the baseline into cohort/covariate levels and calendar-time/covariate trends, with a treatment-effect forest and optional unit random intercepts. The paper evaluates treated overall, cohort-time and conditional effects, pretrend diagnostics, prior sensitivity, and a minimum-wage application. Its application finds a negative overall employment effect; the primary population-group contrast intervals include zero.
 
-This paper introduces the Difference-in-Differences Bayesian Causal Forest (DiD-BCF), a novel non-parametric model addressing key challenges in DiD estimation, such as staggered adoption and heterogeneous treatment effects. DiD-BCF provides a unified framework for estimating Average (ATE), Group-Average (GATE), and Conditional Average Treatment Effects (CATE). A core innovation, its Parallel Trends Assumption (PTA)-based reparameterization, enhances estimation accuracy and stability in complex panel data settings. Extensive simulations demonstrate DiD-BCF's superior performance over established benchmarks, particularly under non-linearity, selection biases, and effect heterogeneity. Applied to U.S. minimum wage policy, the model uncovers significant conditional treatment effect heterogeneity related to county population, insights obscured by traditional methods. DiD-BCF offers a robust and versatile tool for more nuanced causal inference in modern DiD applications.
+## Find what you need
 
-## Completed paper campaign (2026-10-26)
-
-All 14,327 planned jobs are complete: 5,100 main fits and 9,227 non-main fits. The current repaired campaign packages are `Simulation_Studies_Revision/DiD_BCF/Paper_Rerun_20261011/` and `Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/`. Current publication inputs are in `Simulation_Studies_Revision/Results/aggregated_repaired_20261026/`; completed empirical inputs are in `Results/empirical_repaired_20261014/`. See the [Results workflow](Simulation_Studies_Revision/Results/README.md). No original notebook assignment remains to rerun.
-
-## Repository layout
-
-The repository keeps the current repaired paper rerun beside the revision code and preserves older DiD-BCF experiments under `Old_Simulation_Studies/`. Historical experiment code and results remain ordinary publishable files. Only the separately documented `.local_experiment_archive/` is excluded from Git.
-
-### `Simulation_Studies_Revision/`
-
-Final simulation suite for the paper. Its own `README.md` documents the full workflow.
-
-| path | contents |
+| Task | Start here |
 |---|---|
-| `DiD_BCF/Paper_Rerun_20261011/` | Current repaired paper campaign, including uploadable notebooks, sealed source snapshots, verified reuse, and collected results. See its README and Colab upload guide |
-| `Pretrend/` | pre-trend diagnostic notebooks and per-replication summaries |
-| `TWFE/` | TWFE/OLS benchmark notebooks |
-| `R_code/` | Callaway-Sant'Anna (`did`), Gardner (`did2s`), DoubleML and synthetic DiD benchmark scripts with dataset-generation scaffolds; generated panels are local-only and gitignored |
-| `DoubleML_Colab/`, `CFFE_Wang_Colab/` | Colab notebooks and result archives for the DoubleML and grf-DiD (Wang) benchmarks |
-| `Benchmark_Results/` | decomposed benchmark metric CSVs |
-| `DGPs/` | scenario data-generating processes |
-| `did_bcf_revision/` | revision library (DGPs, runners, metrics, posterior correction, pre-trend diagnostics) |
-| `scripts/` | dataset generation and aggregation runners |
-| `Results/` | published result archive: `aggregated/` (tidy `all_summaries.csv.gz`, metrics, CATT surfaces, sqrt(N) stabilization), `tables/` and `figures/` (the LaTeX fragments and vector PDFs used by the paper), `empirical/` (mpdta empirical outputs), plus `summaries_twfe_*.csv`, `goodman_bacon_*.csv` and `twfe_event_study_*.csv` |
-| `Theory_Calibration/` | theory-aligned correction package: `src/`, `configs/`, `scripts/`, `tests/`, `results/` and `reconciliation/`. Earlier correction and completion notebook workflows are preserved under `Old_Simulation_Studies/Revision_DiD_BCF/` |
+| Fit the proposed model to a new panel | [Model setup and Python usage](MODEL_USAGE.md), [new-panel example](examples/fit_panel.py), [model library](didbcf_structured/) |
+| Read or visualize the final results | [Result file dictionary and visualization handoff](RESULTS_VISUALIZATION_HANDOFF.md) |
+| Main simulation replication | [Final main campaign](Simulation_Studies_Revision/DiD_BCF/Paper_Rerun_20261011/README.md) |
+| Pretrend, sensitivity and application replication | [Final non-main campaign](Simulation_Studies_Revision/DiD_BCF/Nonmain_Rerun_20261014/README.md) |
+| Regenerate tables and figures from saved results | [Results workflow](Simulation_Studies_Revision/Results/README.md) |
+| Inspect development history and unsuccessful/intermediate experiments | [Archive guide](Old_Simulation_Studies/README.md) |
 
-### Other top-level folders
+All **14,327 planned final jobs** are complete: 5,100 main fits and 9,227 diagnostic, pretrend-impact, sensitivity and application fits. The saved metrics can be analyzed without rerunning experiments or exporting posterior effect arrays.
 
-- `didbcf_structured/`: the structured DiD-BCF production package used by the experiments.
-- `Empirical_Study/`: U.S. minimum wage (`mpdta`) empirical notebooks and figures.
-- `Old_Simulation_Studies/`: publishable historical DiD-BCF experiments and outputs, including older simulation studies and archived revision correction workflows.
+## Current paper results
 
-## Reproducing the paper results
+The current combined simulation results are in [`Simulation_Studies_Revision/Results/aggregated_repaired_20261026/`](Simulation_Studies_Revision/Results/aggregated_repaired_20261026/). Current application results are in [`Simulation_Studies_Revision/Results/empirical_repaired_20261014/`](Simulation_Studies_Revision/Results/empirical_repaired_20261014/). Ready-made vector figures and table fragments are in [`Results/figures/`](Simulation_Studies_Revision/Results/figures/) and [`Results/tables/`](Simulation_Studies_Revision/Results/tables/).
 
-The final metrics, returned ZIPs, source pins, and validation records are committed. Posterior effect arrays are not needed to regenerate the paper metrics. The immutable historical benchmark inputs remain in `Simulation_Studies_Revision/Results/aggregated/`; the current repaired overlays are separate.
+Storage labels preserve earlier interfaces: `plain` identifies the final main DiD-BCF in the current overlay; `plain_historical`, `pretrend_historical` and earlier posterior-correction results are explicitly separate. See the handoff before combining methods or target types. Original benchmark and reference-fold comparator inputs remain available because the final paper uses them.
 
-From `Simulation_Studies_Revision/`, regenerate the simulation overlays and publication assets in this order:
+## Code and replication layout
 
-```sh
-python Results/analysis/update_repaired_main.py
-python Results/analysis/make_jbes_sim_tables.py
-python Results/analysis/make_jbes_figures.py
-python Results/analysis/update_repaired_nonmain.py
-python Results/analysis/publish_nonmain_assets.py
-```
+| Path | Role |
+|---|---|
+| `didbcf_structured/` | Model, design matrices, priors, posterior estimands and model tests. Use the verified repaired engine described in `MODEL_USAGE.md`. |
+| `examples/`, `requirements-paper.txt` | New-panel example and the exact final campaign dependency pins. |
+| `Simulation_Studies_Revision/DiD_BCF/` | Two final campaign packages: loose Colab notebooks, helpers, frozen model/native source, assignments, seeds, verified reuse, returned results and validation. |
+| `Simulation_Studies_Revision/Results/` | Current result overlays, retained comparator inputs, publication code, tables and figures. |
+| `Simulation_Studies_Revision/DGPs/`, `did_bcf_revision/`, `R_code/`, `TWFE/`, `DoubleML_Colab/`, `CFFE_Wang_Colab/`, `Benchmark_Results/` | Shared scenario and metric code, benchmark replication workflows and saved benchmark summaries. The frozen campaign copies define the exact final DiD-BCF runs. |
+| `Simulation_Studies_Revision/Theory_Calibration/` | Source and saved inputs for the paper's explicitly labeled reference-fold/correction and information comparisons. These are separate estimators, not the final native-engine repair. |
+| `Empirical_Study/` | Application dataset and links to the final application workflow. |
+| `Old_Simulation_Studies/` | Visible historical studies, superseded notebooks, initial reruns, development notes and migration inventories. |
 
-The publication scripts write paper assets when the `JBES_Submission/` sources are beside this repository. The non-main builder requires the complete collected results and validates phase counts, source hashes, targets and replication counts. Application data and seed-specific summaries are in `Results/empirical_repaired_20261014/`; the application reporting code is in the non-main campaign's `analysis/` directory. The old `aggregate_all.py` and `make_analysis.py` rebuild historical-generation results and are not the final overlay commands.
+The dated final package names are immutable experiment identifiers. Their source snapshots retain original internal paths so that source checksums and the existing notebooks remain reproducible. Older development entry points are archived rather than mixed into the main workflow.
 
-Earlier correction and completion workflows remain under `Old_Simulation_Studies/Revision_DiD_BCF/`. Historical reduced-data estimator results are distinct from the repaired posterior. The covariance, finite-chain and interval-coverage limitations remain documented in the manuscript and result reports.
+## Reproducibility
+
+The experiment notebooks build a pinned, repaired native engine in isolation and verify its controls. Installing an arbitrary upstream `stochtree` wheel does not reproduce the paper. Follow [MODEL_USAGE.md](MODEL_USAGE.md) or the final campaign guides for sampling. For figures and tables, only Python analysis dependencies and the committed metrics are needed.
+
+The current [Results workflow](Simulation_Studies_Revision/Results/README.md) gives the regeneration commands. In the author's workspace the manuscript directory `JBES_Submission/` is beside this repository; publication scripts write assets there and mirror them into `Results/`. The public result CSVs remain usable independently of the manuscript workspace.
+
+The theoretical results concern the exact posterior under the manuscript's stated identification and approximation assumptions. The finite sampling budget, serial-correlation coverage limitations and diagnostic evidence remain reported separately; the repository does not certify convergence of every finite MCMC run.
 
 ## Citation
 
-```
-@misc{https://doi.org/10.48550/arxiv.2505.09706,
-  doi = {10.48550/ARXIV.2505.09706},
-  url = {https://arxiv.org/abs/2505.09706},
-  author = {Souto,  Hugo Gobato and Neto,  Francisco Louzada},
-  keywords = {Methodology (stat.ME),  Machine Learning (cs.LG),  Machine Learning (stat.ML),  FOS: Computer and information sciences,  FOS: Computer and information sciences},
+```bibtex
+@misc{souto2025forests,
   title = {Forests for Differences: Robust Causal Inference Beyond Parametric DiD},
-  publisher = {arXiv},
+  author = {Souto, Hugo Gobato and Neto, Francisco Louzada},
   year = {2025},
-  copyright = {Creative Commons Attribution Non Commercial No Derivatives 4.0 International}
+  doi = {10.48550/arXiv.2505.09706},
+  url = {https://arxiv.org/abs/2505.09706}
 }
 ```
